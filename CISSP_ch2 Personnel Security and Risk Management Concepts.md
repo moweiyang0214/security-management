@@ -341,3 +341,454 @@ These risk responses are all related to an organization’s risk appetite and ri
 ✅ **Risk Tolerance** 是你对“某个风险的容忍范围”
 ✅ **Risk Target** 是你“理想中希望保持的风险状态”
 ✅ **Risk Limit** 是你“绝对不能超过的临界线”
+
+**Inherent risk** is the level of natural, native, or default risk that exists in an environment, system, or product prior to any risk management efforts being performed. Inherent risk can exist due to the supply chain, developer operations, design and architecture of a system, or the knowledge and skill base of an organization. Inherent risk is also known as initial risk or starting risk. This is the risk that is identified by the risk assessment process.
+
+Once safeguards, security controls, and countermeasures are implemented, the risk that remains is known as residual risk. **Residual risk** consists of threats to specific assets against which upper management chooses not to implement a response. In other words, residual risk is the risk that management has chosen to accept rather than mitigate. 
+
+**Total risk** is the amount of risk an organization would face if no safeguards were implemented. A conceptual formula for total risk is as follows:
+
+**threats * vulnerabilities * asset value = total risk**
+
+The controls gap is the amount of risk that is reduced by implementing safeguards.
+
+**total risk – controls gap = residual risk**
+
+**Control risk** is the risk that is introduced by the introduction of the countermeasure to an environment. Most safeguards, security controls, and countermeasures are themselves some sort of technology.
+
+Although a control may reduce the risk of a threat to an asset, it may also introduce a new risk of a threat that can compromise the control itself. Thus, risk assessment and response must be an iterative operation that looks back on itself to make continuous improvements.
+
+### Cost vs. Benefit of Security Controls
+
+An estimation of the yearly costs for the safeguard to be present in the organization is needed. This estimation can be called the **annual cost of the safeguard (ACS)**. Several common factors affect ACS:
+
+- Cost of purchase, development, and licensing
+- Cost of implementation and customization
+- Cost of annual operation, maintenance, administration, and so on
+- Cost of annual repairs and upgrades
+- Productivity improvement or loss
+- Changes to environment
+- Cost of testing and evaluation
+
+**cost/benefit calculation**, or cost/benefit analysis. This calculation is used to determine whether a safeguard actually improves security without costing too much. To determine whether the safeguard is financially equitable, use the following formula:
+
+**[ALE pre-safeguard – ALE post-safeguard] – annual cost of safeguard (ACS)** = value of the safeguard to the company
+
+- If the result is negative, the safeguard is not a financially responsible choice. 
+
+- If the result is positive, then that value is the annual savings your organization may reap by deploying the safeguard because the rate of occurrence is not a guarantee of occurrence. 
+- If multiple safeguards seem to have a positive cost/benefit result, then the safeguard with the **largest benefit** is the most cost-effective option.
+
+In review, to perform the cost/benefit analysis of a safeguard, you must calculate the following three elements:
+
+- The pre-safeguard ALE for an asset-threat pairing
+- The potential post-safeguard ALE for an asset-threat pairing
+- The ACS (annual cost of the safeguard)
+
+**(ALE1 – ALE2) – ACS,**
+
+The countermeasure with the greatest resulting value from this cost/benefit formula makes the most economic sense to deploy against the specific asset-threat pairing.
+
+![image-20250515112846290](/Users/TODO/Library/Application Support/typora-user-images/image-20250515112846290.png)
+
+To effectively manage the security function, you must assess the budget, the benefit and performance metrics, and the necessary resources of each security control. Only after a thorough evaluation can you determine which controls are essential and beneficial not only to security, but also to your bottom line.
+
+Keep in mind that organizational security should be based on a business case, be legally justifiable, and be reasonably in line with security frameworks, regulations, and best practices.
+
+### Countermeasure Selection and Implementation
+
+Keep in mind that security should be designed to support and enable business tasks and functions. Thus, countermeasures and safeguards need to be evaluated in the context of a business process. If there is no clear business case for a safeguard, it is probably not an effective security option.
+
+Security controls, countermeasures, and safeguards can be implemented **administratively**, **logically/technically**, or **physically**. These three categories of security mechanisms should be implemented in a conceptual layered **defense-in-depth manner** in order to provide **maximum benefit.**
+
+![image-20250515113512402](/Users/TODO/Library/Application Support/typora-user-images/image-20250515113512402.png)
+
+1. Administrative Controls
+
+The category of administrative controls are the policies and procedures defined by an organization’s security policy and other regulations or requirements. They are sometimes referred to as management controls, managerial controls, or procedural controls.
+
+These controls focus on personnel oversight and business practices. Examples of administrative controls include policies, procedures, hiring practices, background checks, data classifications and labeling, security awareness and training efforts, reports and reviews, work supervision, personnel controls, and testing.
+
+2. Technical or Logical Controls
+
+It involves the hardware or software mechanisms used to manage access and provide protection for IT resources and systems. Examples of logical or technical controls include authentication methods (such as passwords, smartcards, and biometrics), encryption, constrained interfaces, access control lists, protocols, firewalls, routers, intrusion detection systems (IDSs), and clipping levels.
+
+3. Physical Controls
+
+Physical controls are security mechanisms focused on providing protection to the facility and real-world objects. Examples of physical controls include guards, fences, motion detectors, locked doors, sealed windows, lights, cable protection, laptop locks, badges, swipe cards, guard dogs, video cameras, access control vestibules, and alarms.
+
+### Applicable Types of Controls
+
+security control refers to a broad range of controls that perform such tasks as ensuring that only authorized users can log on and preventing unauthorized users from gaining access to resources. Controls mitigate a wide variety of information security risks.
+
+#### Preventive Control
+
+A preventive control (aka preventative control) is deployed to thwart or stop unwanted or unauthorized activity from occurring. Examples of preventive controls include fences, locks, authentication, access control vestibules, alarm systems, separation of duties, job rotation, data loss prevention (DLP), penetration testing, access control methods, encryption, auditing, security policies, security-awareness training, antimalware software, firewalls, and intrusion prevention systems (IPSs).
+
+#### Deterrent Control
+
+A deterrent control is deployed to discourage security policy violations. Deterrent and preventive controls are similar, but deterrent controls often depend on individuals being convinced not to take an unwanted action. Some examples include policies, securityawareness training, locks, fences, security badges, guards, access control vestibules, and security cameras.
+
+#### Detective Control
+
+A detective control is deployed to discover or detect unwanted or unauthorized activity. Detective controls operate after the fact and can discover the activity only after it has occurred. Examples of detective controls include security guards, motion detectors, recording and reviewing of events captured by security cameras or CCTV, job rotation, mandatory vacations, audit trails, honeypots or honeynets, intrusion detection systems (IDSs), violation reports, supervision and review of users, and incident investigations.
+
+#### Compensation Control
+
+A compensation control is deployed to provide various options to other existing controls to aid in enforcement and support of security policies. They can be any controls used in addition to, or in place of, another control. They can be a means to improve the effectiveness of a primary control or as the alternate or failover option in the event of a primary control failure. For example, if a preventive control fails to stop the deletion of a file, a backup can be a compensation control, allowing for restoration of that file. Here’s another example: if a building’s fire prevention and suppression systems fail and the building is damaged by fire so that it is not inhabitable, a compensation control would be having a disaster recovery plan (DRP) with an alternate processing site available to support work operations.
+
+#### Corrective Control
+
+A corrective control modifies the environment to return systems to normal after an unwanted or unauthorized activity has occurred. It attempts to correct any problems resulting from a security incident. Corrective controls can be simple, such as terminating malicious activity or rebooting a system. They also include antimalware solutions that can remove or quarantine a virus, backup and restore plans to ensure that lost data can be restored, and intrusion prevention systems (IPSs) that can modify the environment to stop an attack in progress. The control is deployed to repair or restore resources, functions, and capabilities after a violation of security policies. Examples include installing a spring on a door so that it will close and relock, and using file integrity–checking tools, such as sigverif from Windows, which will replace corrupted boot files upon each boot event to protect the stability and security of the booted OS.
+
+#### Recovery Control
+
+Recovery controls are an extension of corrective controls but have more advanced or complex abilities. A recovery control attempts to repair or restore resources, functions, and capabilities after a security policy violation. Recovery controls typically address more significant damaging events compared to corrective controls, especially when security violations may have occurred. Examples of recovery controls include backups and restores, fault-tolerant drive systems, system imaging, server clustering, antimalware software, and database or virtual machine shadowing. In relation to business continuity and disaster recovery, recovery controls can include hot, warm, and cold sites; alternate processing facilities; service bureaus; reciprocal agreements; cloud providers; rolling mobile operating centers; and multisite solutions.
+
+#### Directive Control
+
+A directive control is deployed to direct, confine, or control the actions of subjects to force or encourage compliance with security policies. Examples of directive controls include security policy requirements or criteria, posted notifications, guidance from a security guard, escape route exit signs, monitoring, supervision, and procedures.
+
+#### 七大控制类型对比解析
+
+| 控制类型         | 目的（做什么）                               | 何时起作用            | 常见例子                                              |
+| ---------------- | -------------------------------------------- | --------------------- | ----------------------------------------------------- |
+| **Preventive**   | **预防** → 阻止不该发生的事情                | **事前**              | 门禁、锁、访问控制、MFA、防火墙、加密、DLP、IPS、培训 |
+| **Deterrent**    | **威慑** → 吓阻攻击者不敢做不该做的事情      | **事前（心理影响）**  | 监控摄像头标志、法律警告、警卫、告示、政策培训、徽章  |
+| **Detective**    | **侦测** → 识别、发现违规行为                | **事中/事后**         | IDS、摄像头录像、审计日志、蜜罐、强制休假、作业轮换   |
+| **Corrective**   | **纠正** → 尝试修复问题或停止恶意行为        | **事后立即**          | 杀毒软件、终止进程、替换文件、重启、门弹簧、自修脚本  |
+| **Recovery**     | **恢复** → 恢复服务、系统和数据              | **严重问题后**        | 备份/恢复、灾备站点、镜像、热/冷备、RAID、云容灾      |
+| **Compensating** | **补偿/替代** → 辅助或替代主控制策略的效果   | **辅助层面/替代措施** | 备用网点、冗余机制、补救协议、次要控制手段、灾备计划  |
+| **Directive**    | **指令/引导** → 告诉人们该做什么，强制合规性 | **事前行为引导**      | 指示牌、逃生路线、SOP流程、安全指南、管理监督         |
+
+易混淆澄清
+
+| 易混组合                    | 区别点                                                       |
+| --------------------------- | ------------------------------------------------------------ |
+| **Preventive vs Deterrent** | Preventive 是**技术上阻止**攻击，Deterrent 是**心理上威慑**攻击 |
+| **Detective vs Corrective** | Detective 是**发现问题**，Corrective 是**修复问题**          |
+| **Corrective vs Recovery**  | Corrective 是“微修”，Recovery 是“灾难后大修复”               |
+| **Compensating vs Backup**  | Backup 是技术手段，Compensating 是**策略性备用控制**，可包含多个措施 |
+
+一句话记忆口诀（考试速记）
+
+✅ **阻、吓、查、修、复、补、管**
+
+| 类型缩写 | 中文 | 英文         | 口诀含义       |
+| -------- | ---- | ------------ | -------------- |
+| **阻**   | 阻止 | Preventive   | 阻止风险发生   |
+| **吓**   | 威慑 | Deterrent    | 吓退坏人心理   |
+| **查**   | 检测 | Detective    | 发现违规行为   |
+| **修**   | 纠正 | Corrective   | 恢复初步功能   |
+| **复**   | 恢复 | Recovery     | 灾后系统重建   |
+| **补**   | 补偿 | Compensating | 替代或补足控制 |
+| **管**   | 指引 | Directive    | 明确规定流程   |
+
+### Security Control Assessment(SCA)
+
+A security control assessment (SCA) is the formal evaluation of a security infrastructure’s individual mechanisms against a baseline or reliability expectation.
+
+The goals of an SCA are to ensure the effectiveness of the security mechanisms, evaluate the quality and thoroughness of the risk management processes of the organization, and produce a report of the relative strengths and weaknesses of the deployed security infrastructure.
+
+✅ **风险评估（RA）** 是识别“**有什么风险**”和“**我们怕什么**”；
+✅ **安全控制评估（SCA）** 是验证“**我们做的控制有没有效果、有没有执行到位**”。
+
+#### SCA vs RA 定义对比
+
+| 项目       | **Risk Assessment（风险评估）**              | **Security Control Assessment（安全控制评估）**  |
+| ---------- | -------------------------------------------- | ------------------------------------------------ |
+| 📌 中文名   | 风险评估                                     | 安全控制评估                                     |
+| 🎯 目的     | 识别、评估、分析**资产面临的威胁和风险水平** | 评估现有**安全控制措施是否有效、是否按设计执行** |
+| 🔍 关注点   | 风险（威胁 × 脆弱性 × 影响）                 | 控制措施（设计、部署、操作）是否符合预期         |
+| 🎯 核心问题 | “有哪些风险存在？”、“哪个资产最脆弱？”       | “我们的安全控制做得够不够好？”、“控制是否落地？” |
+| 📄 输出结果 | 风险等级列表、优先级排序、风险应对建议       | 控制的合规性评估报告、改进建议、认证依据         |
+| 🧭 依据参考 | **NIST 800-30**、ISO 27005、OCTAVE           | **NIST 800-53A**、ISO 27001审核、FedRAMP等       |
+
+### 场景：你公司部署了一个客户服务系统
+
+- **Risk Assessment 做什么？**
+  - 识别系统面临的威胁（如数据泄露、DDoS）
+  - 分析漏洞（如弱密码、不加密传输）
+  - 评估潜在影响和发生概率
+  - 结果：建议优先加密数据、限制访问权限、部署WAF等
+- **Security Control Assessment 做什么？**
+  - 审查系统是否**真的部署了WAF？是否启用了HTTPS？**
+  - 检查权限控制是否符合策略
+  - 验证配置与标准一致（如NIST 800-53控制要求）
+  - 结果：指出某台服务器没加密、某日志没保留、权限配置过宽 → 提交整改建议
+
+| 对比维度     | 风险评估（RA）                           | 安全控制评估（SCA）                        |
+| ------------ | ---------------------------------------- | ------------------------------------------ |
+| **起点**     | 资产/业务                                | 安全控制措施                               |
+| **作用阶段** | 安全生命周期早期（识别阶段）             | 中期/后期（验证与评审阶段）                |
+| **执行方式** | 风险评分、资产分类、威胁建模（如STRIDE） | 文档审查、系统测试、技术验证               |
+| **执行角色** | 风险分析师、信息安全管理人员             | 安全审核员、安全架构师、第三方审计员       |
+| **输出用途** | 决定优先控制哪些风险                     | 判断控制设计和执行是否达标，支持认证或整改 |
+
+#### Monitoring and Measurement
+
+Security controls should provide benefits that can be monitored and measured. If a security control’s benefits cannot be quantified, evaluated, or compared, then it does not actually provide any security. A security control may provide native or internal monitoring, or external monitoring may be required. You should take this into consideration when making initial countermeasure selections.
+
+#### Risk Reporting and Documentation 
+
+**Risk reporting** is a key task to perform at the conclusion of a risk analysis. Risk reporting involves the production of a risk report and a presentation of that report to the interested/ relevant parties.
+
+A **risk report** should be accurate, timely, comprehensive of the entire organization, clear and precise to support decision making, and updated on a regular basis.
+
+A **risk register** or **risk log** is a document that inventories all the identified risks to an organization or system or within an individual project. A risk register is used to record and track the activities of risk management, including the following:
+
+- Identifying risks
+- Evaluating the severity of and prioritizing those risks
+- Prescribing responses to reduce or eliminate the risks
+- Tracking the progress of risk mitigation
+
+A risk register can serve as a project management document to track completion of risk response activities as well as a historical record of risk management over time.
+
+A risk matrix or risk heat map is a form of risk assessment that is performed on a basic graph or chart. It is sometimes labeled as a qualitative risk assessment. The simplest form of a risk matrix is a 3×3 grid comparing probability and damage potential.
+
+#### Continuous Improvement
+
+Risk analysis identifies risks, quantifies the impact of threats, and aids in budgeting for security. It helps integrate the needs and objectives of the security policy with the organization’s business goals and intentions. 
+
+The risk analysis/risk assessment is a “point in time” metric. Threats and vulnerabilities constantly change, and the risk assessment needs to be redone periodically in order to support continuous improvement.
+
+| 概念                       | 定义                                                         | 特点                           | 举例                               |
+| -------------------------- | ------------------------------------------------------------ | ------------------------------ | ---------------------------------- |
+| **Risk Assessment**        | 在特定时间点对组织资产的威胁、漏洞和影响进行识别、分析和评估 | **“一次性”/“定期更新”的活动**  | 每年Q1对所有系统做一次全面安全评估 |
+| **Continuous Improvement** | 通过不断反思、修正、升级，以**动态应对风险与业务变化**       | **持续、周期性、与运营一体化** | 每季度复审风险控制有效性，优化策略 |
+
+**总结区别**：
+
+- Risk Assessment 是一张照片（point-in-time snapshot）📸
+- Continuous Improvement 是一个视频（不断调整迭代）🎥
+
+##### RMM
+
+An **enterprise risk management (ERM)** program can be evaluated using the **Risk Maturity Model (RMM).** An RMM assess the key indicators and activities of a mature, sustainable, and repeatable risk management process. There are several RMM systems, each prescribing various means to achieve greater risk management capability.
+
+RMM 衡量的是你风险管理体系的成熟度，而管理 EOSL 设备是你实际操作中安全成熟度的重要体现。
+
+The typical RMM levels are as follows:
+
+1. **Ad hoc**—A chaotic starting point from which all organizations initiate risk management.
+
+2. **Preliminary**—Loose attempts are made to follow risk management processes, but each department may perform risk assessment uniquely.
+
+3. **Defined**—A common or standardized risk framework is adopted organization-wide.
+
+4. **Integrated**—Risk management operations are integrated into business processes, metrics are used to gather effectiveness data, and risk is considered an element in business strategy decisions.
+
+5. **Optimized**—Risk management focuses on achieving objectives rather than just reacting to external threats; increased strategic planning is geared toward business success rather than just avoiding incidents; and lessons learned are reintegrated into the risk management process.
+
+##### RMM（Risk Maturity Model）各等级对比
+
+| 级别               | 特征描述                                 | 管理状态               | 举例                                                         |
+| ------------------ | ---------------------------------------- | ---------------------- | ------------------------------------------------------------ |
+| **1. Ad hoc**      | 混乱、无流程、临时响应                   | 几乎没有正式的风险管理 | 某中小企业从未评估过其IT资产面临的威胁                       |
+| **2. Preliminary** | 有人尝试管理风险，但方式零散             | 部门各自为政           | 财务部门做自己的风险表，技术部门做自己的评估                 |
+| **3. Defined**     | 有标准流程，全组织统一框架               | 开始制度化             | 统一使用NIST RMF 或 ISO 27005 进行评估                       |
+| **4. Integrated**  | 风险管理内嵌于业务流程，形成闭环反馈     | 成熟运营               | 所有新项目上线前必须进行自动化风险评分，并输出风险接受/缓解决策 |
+| **5. Optimized**   | 以目标为导向，主动推动业务成功、持续学习 | 高度成熟               | 用历史事件教训不断调整策略，建立内部知识库，风险管理推动战略落地 |
+
+**重点区分：**
+
+- “Defined” 是**标准化**；
+- “Integrated” 是**嵌入业务决策**；
+- “Optimized” 是**从应对威胁 → 转向达成目标**
+
+An often-overlooked area of risk is that of legacy devices, which may be EOL and/or EOSL
+
+EOL vs EOSL（遗留系统风险管理）
+
+- **End-of-life (EOL)** is the point at which a manufacturer no longer produces a product. Service and support may continue for a period of time after EOL, but no new versions will be made available for sale or distribution. An EOL product should be scheduled for replacement before it fails or reaches end-of-support (EOS) or end-of-service life (EOSL).
+- **End-of-service-life (EOSL)** or **end-of-support (EOS)** are those systems that are no longer receiving updates and support from the vendor. If an organization continues to use an EOSL system, then the risk of compromise is high because any future exploitation will never be patched or fixed. It is of utmost importance to move off EOSL systems in order to maintain a secure environment. It might not seem initially cost-effective or practical to move away from a solution that still works just because the vendor has terminated support. However, the security management efforts you will expend will likely far exceed the cost of developing and deploying a modern system–based replacement. For example, Adobe Flash Player reached its EOSL on December 31, 2020, and should be uninstalled, as recommended by Adobe.
+
+| 概念                            | 定义                                       | 风险程度 | 举例                                              |
+| ------------------------------- | ------------------------------------------ | -------- | ------------------------------------------------- |
+| **EOL（End-of-Life）**          | 厂商停止生产产品（但可能仍支持）           | 中等     | 某老旧网络设备不再销售，但还能打补丁              |
+| **EOSL（End-of-Service-Life）** | 厂商完全停止支持和补丁服务                 | 高危     | Windows Server 2008、Adobe Flash 不再收到任何更新 |
+| **继续使用EOSL的后果**          | 高风险、无补丁、漏洞永久存在，合规审计失败 | 危险行为 | 2024年还在用Win7+IE浏览器系统支撑内部OA           |
+
+**CISSP观点：**
+
+- **应制定计划迁移EOL/EOSL系统**
+- **使用遗留系统要纳入风险管理体系，不能因为“还能用”就忽视其威胁**
+
+| 易混点                                | 正确理解                                                     |
+| ------------------------------------- | ------------------------------------------------------------ |
+| 风险评估 vs 安全控制评估              | 前者是识别风险（找问题），后者是检查控制是否有效（解决方案是否做得好） |
+| EOL ≠ EOSL                            | EOL是“产品不卖了”，但可能还有补丁；EOSL是“彻底没人管”，安全风险最大 |
+| Continuous Improvement ≠ 风险定期评估 | 持续改进是整个管理流程的迭代，不只是“多做几次风险评估”       |
+
+### Risk Frameworks
+
+A risk framework is a guideline or recipe for how risk is to be assessed, resolved, and monitored.
+
+**NIST** 提供的两大**风险管理框架**：
+
+- Risk Management Framework (**RMF**) , establishes mandatory requirements for federal agencies; established in 2010
+- Cybersecurity Framework (**CSF**), designed for critical infrastructure and commercial organizations; established in 2014
+
+| 维度       | **RMF**（Risk Management Framework）             | **CSF**（Cybersecurity Framework）                        |
+| ---------- | ------------------------------------------------ | --------------------------------------------------------- |
+| 📌 全称     | 风险管理框架                                     | 网络安全框架                                              |
+| 🧭 初衷     | 为**美国政府机构**提供强制性信息系统安全管理流程 | 为**关键基础设施与商业机构**提供自愿性、灵活的安全框架    |
+| 🏛️ 应用对象 | 联邦政府机构、国防系统、承包商（必须遵循）       | 金融、电网、制造业、医疗等私营组织（推荐性）              |
+| 🎯 核心功能 | 管理信息系统生命周期内的**风险控制决策**         | 帮助组织理解、沟通、评估并提升其**整体网络安全能力**      |
+| 📆 发布年份 | 2010                                             | 2014（**最新版是CSF 2.0，2024发布**）                     |
+| 📄 架构结构 | 严格流程（6步：Categorize → Monitor）            | 五大功能域（Identify、Protect、Detect、Respond、Recover） |
+| 📊 目标导向 | 以**系统为中心（system-centric）**               | 以**组织为中心（organization-centric）**                  |
+| ⚖️ 法规属性 | **强制执行**（适用于政府采购、FedRAMP等）        | **自愿采纳**（但广泛用于业界评估、沟通）                  |
+
+The RMF, establishes mandatory security requirements for federal agencies. This is the primary risk framework referenced by the CISSP exam. 
+
+The RMF has six cyclical phases.
+
+![image-20250515152455592](/Users/TODO/Library/Application Support/typora-user-images/image-20250515152455592.png)
+
+**Prepare** to execute the RMF from an organization- and system-level perspective by establishing a context and priorities for managing security and privacy risk.
+
+- **Categorize** the system and the information processed, stored, and transmitted by the system based on an analysis of the impact of loss.
+- **Select** an initial set of controls for the system and tailor the controls as needed to reduce risk to an acceptable level based on an assessment of risk.
+- **Implement** the controls and describe how the controls are employed within the system and its environment of operation.
+- **Assess** the controls to determine if the controls are implemented correctly, operating as intended, and producing the desired outcomes with respect to satisfying the security and privacy requirements.
+- **Authorize** the system or common controls based on a determination that the risk to organizational operations and assets, individuals, other organizations, and the nation is acceptable.
+- **Monitor** the system and the associated controls on an ongoing basis to include assessing control effectiveness, documenting changes to the system and environment of operation, conducting risk assessments and impact analyses, and reporting the security and privacy posture of the system.
+
+### 🔹 **RMF 六大阶段（必须记住！）**
+
+1. **Categorize** – 分类系统与数据重要性
+2. **Select** – 选择控制措施（参考 **NIST 800-53**）
+3. **Implement** – 实施控制
+4. **Assess** – 评估控制效果（对接 **NIST 800-53A**）
+5. **Authorize** – 授权系统运行
+6. **Monitor** – 持续监控安全态势
+
+📌 **关键词记忆：CS-IAM（Categorize, Select, Implement, Assess, Authorize, Monitor）**
+
+The CSF is not a checklist or procedure—it is a prescription of operational activities that are to be performed on an ongoing basis for the support and improvement of security over time. The CSF is more of an improvement system rather than its own specific risk management process or security infrastructure.
+
+### 🔹 **CSF 五大功能（功能导向）**
+
+1. **Identify** – 资产、风险、业务环境识别
+2. **Protect** – 加强控制措施、培训、数据防护
+3. **Detect** – 事件检测、监控、报警
+4. **Respond** – 响应流程、通报、修复
+5. **Recover** – 恢复能力、业务连续性、教训总结
+
+📌 **关键词记忆：IPDRR**
+
+实用场景举例
+
+| 应用场景                                 | 推荐框架 | 理由                                                 |
+| ---------------------------------------- | -------- | ---------------------------------------------------- |
+| 联邦政府采购新系统需建立安全控制         | **RMF**  | 符合 FedRAMP、FISMA 要求，需严格控制流程与授权       |
+| 金融行业提升企业整体网络安全成熟度       | **CSF**  | 可灵活自定义优先级，适合与业务流程结合，评估成熟度   |
+| 某医疗公司希望用标准框架引导安全投资方向 | **CSF**  | 面向组织整体能力构建，支持沟通、优先排序和预算制定   |
+| 国防承包商上线系统需授权使用             | **RMF**  | 遵循 **NIST 800-53** 控制集，支持系统授权流程（ATO） |
+
+考试易混淆
+
+| 考题角度                     | 答题关键                           |
+| ---------------------------- | ---------------------------------- |
+| 哪个是强制性的？             | **RMF** 针对政府、承包商，强制执行 |
+| 哪个更灵活、适用于商业组织？ | **CSF** 是自愿性框架，面向业界     |
+| 哪个基于系统生命周期？       | **RMF**（系统为中心）              |
+| 哪个用于评估组织安全成熟度？ | **CSF**（组织为中心）              |
+| 哪个与 NIST 800-53 强关联？  | **RMF** 直接引用该控制列表         |
+
+The **NIST RMF** is the primary focus of the **CISSP exam**, but you might want to review other risk management frameworks for use in the real world. Please consider the following for future research:
+
+- The Committee of Sponsoring Organizations **(COSO)** of the Treadway Commission’s Enterprise Risk Management **(ERM)**— Integrated Framework
+- **ISACA’s Risk IT Framework**
+- Operationally Critical Threat, Asset, and Vulnerability Evaluation **(OCTAVE)**
+- Factor Analysis of Information Risk **(FAIR)**
+- Threat Agent Risk Assessment **(TARA)**
+
+| 框架名称          | 类型           | 核心特点                                 | 适合对象/环境                   |
+| ----------------- | -------------- | ---------------------------------------- | ------------------------------- |
+| **COSO ERM**      | 企业治理级     | 宏观、战略导向，强调内部控制与财务合规性 | 企业高层、审计、合规、金融行业  |
+| **ISACA Risk IT** | IT治理级       | 专注IT风险与业务目标对齐，基于 COBIT     | CIO、安全策略制定者、审计师     |
+| **OCTAVE**        | 组织驱动型     | 自上而下识别风险，聚焦信息资产与业务影响 | 中大型组织、政策导向环境        |
+| **FAIR**          | 定量建模型     | 基于概率的财务风险量化（用美元衡量）     | CISO、CFO、需量化风险的人       |
+| **TARA**          | 威胁情报驱动型 | 用威胁场景优先排序，筛选最重要的风险对   | 高技术企业、APT防护、国防承包商 |
+
+### 🎯 **1. COSO ERM**
+
+> **Committee of Sponsoring Organizations – Enterprise Risk Management**
+
+- 目标：将风险管理与组织整体战略、价值创造对齐
+- 强调 **内部控制（Internal Control）+ 财务合规 + 高管职责**
+- 八大元素：目标设定、事件识别、风险评估、控制活动等
+
+📌 **举例：** 上市公司需向SEC展示全面风险管理架构时采用 COSO。
+
+------
+
+### 🎯 **2. ISACA Risk IT Framework**
+
+> 来自 COBIT 背后的组织 ISACA，强调 **IT风险与业务目标的整合**
+
+- 包含三个主要领域：**风险治理、风险评估、风险响应**
+- 关注如何从战略层面将 IT 风险映射为业务影响
+- 可结合 COBIT、Val IT 使用
+
+📌 **举例：** 一个金融机构将 IT 系统风控与其贷款、客户交易系统进行对齐。
+
+------
+
+### 🎯 **3. OCTAVE**
+
+> **Operationally Critical Threat, Asset, and Vulnerability Evaluation**
+
+- 由 Carnegie Mellon CERT 开发
+- 自上而下，由业务部门主导风险识别
+- 强调“业务视角”而不是“技术漏洞视角”
+
+📌 **举例：** 医疗机构进行基于资产的风险识别时，使用 OCTAVE 定义核心病患数据系统和威胁场景。
+
+------
+
+### 🎯 **4. FAIR**
+
+> **Factor Analysis of Information Risk**
+
+- 强调 **定量分析**，可将风险转化为美元损失（Loss Event Value）
+- 支持建模、优先排序、可视化报告
+- 可结合 GRC 工具使用（如 RiskLens）
+
+📌 **举例：** CISO 希望用**金钱语言与 CFO 交流**，比较投资安全控制 vs 避免的潜在损失。
+
+------
+
+### 🎯 **5. TARA**
+
+> **Threat Agent Risk Assessment** — 来自 MITRE
+
+- 基于威胁建模（threat agent profiling）的方法
+- 按 **攻击者能力/意图 + 攻击路径 + 缺口** 优先筛选风险
+- 常配合 MITRE ATT&CK、CAPEC 使用
+
+📌 **举例：** 某国防供应商希望防御特定APT组织 → 用 TARA 针对攻击者画像进行风险建模。
+
+| 目标导向 | 框架         | 关键词助记                        |
+| -------- | ------------ | --------------------------------- |
+| 企业战略 | **COSO ERM** | CFO & CEO 看的框架（重治理）      |
+| IT治理   | **Risk IT**  | 和 COBIT 最搭，关注IT对业务的影响 |
+| 组织资产 | **OCTAVE**   | 从业务角度识别风险，自上而下      |
+| 定量决策 | **FAIR**     | 用钱衡量风险，和 CFO 说话用的     |
+| 威胁画像 | **TARA**     | 专打黑客/APT，用威胁情报驱动决策  |
+
+## Social Engineering
+
+Social engineering is a form of attack that exploits human nature and human behavior.
+
+People are a weak link in security because they can make mistakes, be fooled into causing harm, or intentionally violate company security.
+
+It is important to consider the risks that personnel represent to your organization and implement security strategies to minimize and handle those risks.
+
+**Social engineering attacks** take two primary forms: 
+
+- convincing someone to perform an unauthorized operation 
+- convincing someone to reveal confidential information.
+

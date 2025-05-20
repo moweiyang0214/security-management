@@ -6,11 +6,11 @@ Security is the business management tool that ensures the reliable and protected
 
 3 common types of security evaluation: risk assessment, vulnerability assessment and penetration testing.
 
-Risk assessment: a process of identifying assets, threats, and vulnerabilities, and then using that information to calculate risk. Once risk is understood, it is used to guide the improvement of the existing security infrastructure.
+- **Risk assessment**: a process of identifying assets, threats, and vulnerabilities, and then using that information to calculate risk. Once risk is understood, it is used to guide the improvement of the existing security infrastructure.
 
-Vulnerability assessment: uses automated tools to locate known security weaknesses, which can be addressed by adding in more defenses or adjusting the existing protections.
+- **Vulnerability assessment**: uses automated tools to locate known security weaknesses, which can be addressed by adding in more defenses or adjusting the existing protections.
 
-Penetration testing uses trusted individuals to stress-test the security infrastructure to find issues that may not be discovered by the prior 2 means, with the goal of finding those concerns before an adversary takes advantage of them.
+- **Penetration testing** uses trusted individuals to stress-test the security infrastructure to find issues that may not be discovered by the prior 2 means, with the goal of finding those concerns before an adversary takes advantage of them.
 
 Security should be cost-effective. Select security controls that provide the greatest protection for the lowest resource cost.
 

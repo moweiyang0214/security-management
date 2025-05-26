@@ -54,7 +54,7 @@ Keep in mind that criminal law is a serious matter. If you find yourself involve
 | 📌 安全场景常见           | 数据泄露、IP侵权、合同违约、员工滥用系统             |
 | 📌 CISSP重点：            | 学会识别民事责任、责任界定和举证责任（谁举证谁负责） |
 
-Civil laws form the bulk of the U.S. body of laws. They are designed to provide for an orderly society and govern matters that are not crimes but that require an **impartial(公正的) arbiter(仲裁者) ** to settle between individuals and organizations.
+Civil laws form the bulk of the U.S. body of laws. They are designed to provide for an orderly society and govern matters that are not crimes but that require an **impartial(公正的)** **arbiter(仲裁者)** to settle between individuals and organizations.
 
 Examples of the types of matters that may be judged under civil law include contract disputes, real estate transactions, employment matters, and estate/probate procedures. Civil laws also are used to create the framework of government that the executive branch uses to carry out its responsibilities. These laws provide budgets for governmental activities and lay out the authority granted to the executive branch to create administrative laws.
 
@@ -180,7 +180,7 @@ The first major piece of cybercrime-specific legislation in the United States, a
 
 | 修订前                               | 修订后                                                   |
 | ------------------------------------ | -------------------------------------------------------- |
-| 仅保护**“处理敏感信息的联邦计算机”** | 扩展到所有具有“**联邦利益（federal interest）**”的计算机 |
+| 仅保护 **“处理敏感信息的联邦计算机”** | 扩展到所有具有“**联邦利益（federal interest）**”的计算机 |
 | 损害赔偿门槛为 **\$1,000**           | 上调为 **\$5,000**                                       |
 
 ##### “Federal Interest Computers” 的含义与范围
@@ -282,7 +282,7 @@ The first major piece of cybercrime-specific legislation in the United States, a
 | ⚡ 电网系统   | SCADA系统、电力配电监控系统    |
 | 📞 电信线路   | 光纤主干、电信交换平台         |
 
-**关键词：Critical Infrastructure（关键基础设施）**这也是日后政府定义 CIKR（Critical Infrastructure and Key Resources）体系的基础。
+**关键词：Critical Infrastructure（关键基础设施）** 这也是日后政府定义 CIKR（Critical Infrastructure and Key Resources）体系的基础。
 
 3. **恶意攻击关键基础设施 = 升级为“重罪”（Felony）**
 
@@ -471,7 +471,7 @@ FISMA 指出，联邦机构与其承包商(Contractors)必须建立一整套**�
 
 ■✓ Procedures for detecting, reporting, and responding to security incidents
 
-安排报告、溯源、隔离、修复、通报等流程。要求 ： 需建立**标准操作流程（SOP）**与通报机制，联动US-CERT等单位 
+安排报告、溯源、隔离、修复、通报等流程。要求 ： 需建立 **标准操作流程（SOP）** 与通报机制，联动US-CERT等单位 
 
 8. **业务连续性（Continuity of Operations）**
 
@@ -493,7 +493,7 @@ FISMA places a significant burden on federal agencies and government contractors
 ##### FISMA 与 NIST RMF 的关系（CISSP 常考）
 
 FISMA 作为法律，**定义“必须做什么”**
-NIST RMF（Risk Management Framework）提供**“怎么做”**的方法
+NIST RMF（Risk Management Framework）提供 **“怎么做”** 的方法
 
 | NIST RMF 步骤       | 对应 FISMA 要求        |
 | ------------------- | ---------------------- |
@@ -519,8 +519,8 @@ NIST RMF（Risk Management Framework）提供**“怎么做”**的方法
 | 项目        | 说明                                                         |
 | ----------- | ------------------------------------------------------------ |
 | 🎯 目的      | 对 2002 年版 FISMA 进行修订，更明确权责体系                  |
-| 📌 变化      | 将联邦网络安全责任从各机构转移至**DHS（国土安全部）**        |
-| ❗ 例外      | 国防相关 → 由**国防部长（DoD）**负责<br/>情报相关 → 由**国家情报总监（DNI）**负责 |
+| 📌 变化      | 将联邦网络安全责任从各机构转移至 **DHS（国土安全部）**        |
+| ❗ 例外      | 国防相关 → 由 **国防部长（DoD）** 负责<br/>情报相关 → 由 **国家情报总监（DNI）** 负责 |
 | 🧑‍⚖️ 实务重点 | 中央统一防护、跨部门协调、联邦承包商也需纳入                 |
 
 2. **Cybersecurity Enhancement Act**
@@ -529,7 +529,7 @@ NIST RMF（Risk Management Framework）提供**“怎么做”**的方法
 | ----------- | ------------------------------------------------------------ |
 | 📌 主导单位  | **NIST**（国家标准与技术研究院）                             |
 | 🎯 任务      | 推动开发**自愿性、可操作、基于风险**的全国网络安全标准       |
-| 📘 重点产出  | NIST SP 800-53：政府系统安全控制清单（信息安全业界标杆）<br/>NIST SP 800-171：保护**非联邦系统中 CUI（受控非机密信息）**的控制标准<br/>NIST CSF：自愿框架，五大功能：识别（Identify）→ 保护（Protect）→ 检测（Detect）→ 响应（Respond）→ 恢复（Recover） |
+| 📘 重点产出  | NIST SP 800-53：政府系统安全控制清单（信息安全业界标杆）<br/>NIST SP 800-171：保护 **非联邦系统中 CUI（受控非机密信息）** 的控制标准<br/>NIST CSF：自愿框架，五大功能：识别（Identify）→ 保护（Protect）→ 检测（Detect）→ 响应（Respond）→ 恢复（Recover） |
 | 🧑‍💼 实务影响 | 政府承包商在合同中往往会要求 SP 800-171 合规<br/>NIST 标准也被业界作为 通用安全参考模型 |
 
 3. **National Cybersecurity Protection Act**
@@ -607,7 +607,7 @@ We’ll explore the laws surrounding the **four major types of intellectual prop
 
 #### **1. Copyright（版权)** & DMCA
 
-✅**总结：**版权保护的是“创作表达”不是“创意本身”，而 DMCA 则是“数字时代版权的防护盾”，强化了加密防护、ISP豁免与在线内容合规边界
+✅**总结**：版权保护的是“创作表达”不是“创意本身”，而 DMCA 则是“数字时代版权的防护盾”，强化了加密防护、ISP豁免与在线内容合规边界
 
 Copyright law guarantees the creators of “original works of authorship” protection against the unauthorized duplication of their work. Eight broad categories of works qualify for copyright protection:
 
@@ -717,7 +717,7 @@ Finally, the DMCA spells out the application of copyright law principles to the 
 
 商标是指**用于识别产品或服务来源的文字、图形、口号、标识**等符号。
 
-✅**总结：**商标保护的是品牌身份而非创意内容。即使未注册也有法律效力，但注册后才能真正用®符号、获得完整诉讼权与市场独占权。
+✅**总结**：商标保护的是品牌身份而非创意内容。即使未注册也有法律效力，但注册后才能真正用®符号、获得完整诉讼权与市场独占权。
 
 Copyright laws are used to protect creative works; there is also protection for trademarks, which are words, slogans, and logos used to identify a company and its products or services.
 
@@ -866,7 +866,7 @@ In the technology field, patents have long been used to protect hardware devices
 
 #### 4. Trade Secrets (商业机密)
 
-**✅总结：**商业秘密靠你“保密”才有保护力，失了控就永远失去了。而《经济间谍法》是你最后的维权利剑，但你得证明自己值得保护。
+**✅总结**：商业秘密靠你“保密”才有保护力，失了控就永远失去了。而《经济间谍法》是你最后的维权利剑，但你得证明自己值得保护。
 
 商业秘密指的是：**没有公开、具有商业价值、被企业有意保密的知识或信息**。
 
@@ -949,7 +949,7 @@ The terms of the Economic Espionage Act give true teeth to the intellectual prop
 
 ### Licensing Agreement（软件许可协议）
 
-✅**总结：**理解软件授权条款有助于避免企业误触侵权或绑定不合理义务，而识别进出口控制则是信息安全合规防火墙中不可缺失的一环，尤其在数据出境与跨境产品部署中。
+✅**总结**：理解软件授权条款有助于避免企业误触侵权或绑定不合理义务，而识别进出口控制则是信息安全合规防火墙中不可缺失的一环，尤其在数据出境与跨境产品部署中。
 
 Security professionals should also be familiar with the legal issues surrounding software licensing agreements. 
 
@@ -1051,7 +1051,7 @@ Although there is no explicit constitutional guarantee of privacy, a myriad of f
 
 #### **Fourth Amendment** 
 
-**美国宪法第四修正案（Fourth Amendment）**是美国整个隐私权体系的核心基石，它限制政府在没有正当理由和令状的前提下搜查或获取公民的数据、通信与财产，是数字隐私与信息保护的重要起点。很多隐私和数据保护法规（如FISA、ECPA、GDPR中的国际互认讨论）都可追溯到它。
+**美国宪法第四修正案（Fourth Amendment）** 是美国整个隐私权体系的核心基石，它限制政府在没有正当理由和令状的前提下搜查或获取公民的数据、通信与财产，是数字隐私与信息保护的重要起点。很多隐私和数据保护法规（如FISA、ECPA、GDPR中的国际互认讨论）都可追溯到它。
 
 The basis for privacy rights is in the **Fourth Amendment** to the **U.S. Constitution**. It reads as follows:
 
@@ -1081,7 +1081,7 @@ The basis for privacy rights is in the **Fourth Amendment** to the **U.S. Consti
 
 **搜索令必须由宣誓支持，明确指出要搜索的地点与目标**
 
-这是对**“范围和对象的限制”**的要求：
+这是对 **“范围和对象的限制”** 的要求：
 
 - 搜查范围不能“笼统”或“随意扩大”
 
@@ -1093,27 +1093,27 @@ The direct interpretation of this amendment prohibits government agents from sea
 
 | 关联点                                 | 安全/隐私实务影响                                            |
 | -------------------------------------- | ------------------------------------------------------------ |
-| 📱 手机、云端是否受保护？               | 是的，很多案例（如 **Riley v. California**）确认**数字设备也属个人财产**，受第四修正案保护 |
+| 📱 手机、云端是否受保护？               | 是的，很多案例（如 **Riley v. California** ）确认 **数字设备也属个人财产** ，受第四修正案保护 |
 | 🕵️‍♂️ 国家监控（如 PRISM 项目）是否合法？ | 若无法院令状或超出授权 → ⚠️ 可能侵犯第四修正案                |
 | 🔍 公司是否可以搜索员工资料？           | 公私领域有别 → 政府限制更严，私营组织需根据合同、隐私政策与合理期望决定边界 |
-| 🛡️ 法律授权是否足够？                   | 数据访问/取证前必须依据**正当理由 + 令状 + 限定范围**，尤其对执法机关而言 |
+| 🛡️ 法律授权是否足够？                   | 数据访问/取证前必须依据 **正当理由 + 令状 + 限定范围** ，尤其对执法机关而言 |
 
-虽然第四修正案本身**没有写出“privacy”这个词**，但它为隐私权提供了**宪法级别的间接支撑**，尤其是：
+虽然第四修正案本身**没有写出“privacy”这个词** ，但它为隐私权提供了 **宪法级别的间接支撑** ，尤其是：
 
 - 数据主权权利（Data Sovereignty）
 - 不被无理由监控的权利（Right to be left alone）
 - 合法搜查需授权、有限范围
 
-美国最高法院也多次通过判例**解释它涵盖“合理隐私期待”（reasonable expectation of privacy）**。
+美国最高法院也多次通过判例 **解释它涵盖“合理隐私期待”（reasonable expectation of privacy）**。
 
 ##### 美国隐私法关键事件时间轴总览图
 
 | 年份     | 法律/事件              | 关键词/重点内容                                     |
 | -------- | ---------------------- | --------------------------------------------------- |
-| **1974** | Privacy Act            | 📌 政府部门如何管理公民数据；仅适用于**联邦机构**    |
+| **1974** | Privacy Act            | 📌 政府部门如何管理公民数据；仅适用于 **联邦机构**    |
 | **1974** | FERPA                  | 📘 教育机构管理学生记录；家长/学生有查阅和更正权     |
 | **1986** | ECPA                   | 🔐 禁止非法监听电子通信；扩展原“物理线路”法规        |
-| **1994** | CALEA                  | ☎️ 要求运营商提供**可被监听的技术**接口              |
+| **1994** | CALEA                  | ☎️ 要求运营商提供 **可被监听的技术** 接口              |
 | **1996** | HIPAA                  | 🏥 医疗信息隐私与安全；保护 PHI（受保护健康信息）    |
 | **1996** | Economic Espionage Act | 🏢 商业秘密盗窃刑事化；定义经济信息为“财产”          |
 | **1998** | COPPA                  | 👶 保护13岁以下儿童隐私；需可验证父母同意            |
@@ -1142,9 +1142,9 @@ One of the most notable provisions of the **ECPA** is that it makes it illegal t
 
 HIPAA also clearly defines the rights of individuals who are the subject of medical records and requires organizations that maintain such records to disclose these rights in writing.
 
-**Health Information Technology for Economic and Clinical Health Act of 2009 (HITECH) ** In 2009, Congress amended HIPAA by passing HITECH Act. This law updated many of HIPAA’s privacy and security requirements and was implemented through the HIPAA Omnibus Rule in 2013.
+**Health Information Technology for Economic and Clinical Health Act of 2009 (HITECH)**  In 2009, Congress amended HIPAA by passing HITECH Act. This law updated many of HIPAA’s privacy and security requirements and was implemented through the HIPAA Omnibus Rule in 2013.
 
-HITECH also introduced new data breach notification requirements. Under the **HITECH Breach Notification Rule**, HIPAA-covered entities that experience a data breach must notify affected individuals of the breach and must also notify both the secretary of health and human services and the media when the breach affects more than 500 individuals.
+HITECH also introduced new data breach notification requirements. Under the **HITECH Breach Notification Rule** , HIPAA-covered entities that experience a data breach must notify affected individuals of the breach and must also notify both the secretary of health and human services and the media when the breach affects more than 500 individuals.
 
 **In 2002, California passed SB 1386** and became the first state to immediately disclose to individuals the known or suspected breach of personally identifiable information.
 
@@ -1174,7 +1174,7 @@ In the years following SB 1386, other states passed similar laws modeled on the 
 
 ■✓ Parents must give verifiable consent to the collection of information about children younger than the age of 13 prior to any such collection. Exceptions in the law allow websites to collect minimal information solely for the purpose of obtaining such parental consent.
 
-**Gramm–Leach–Bliley Act of 1999（GLBA 1999）**Until the GLBA became law in 1999, there were strict governmental barriers between financial institutions. Banks, insurance companies, and credit providers were severely limited in the services they could provide and the information they could share with each other. GLBA somewhat relaxed the regulations concerning the services each organization could provide. When Congress passed this law, it realized that this increased latitude could have far-reaching privacy implications. Because of this concern, it included a number of limitations on the types of information that could be exchanged even among subsidiaries of the same corporation and required financial institutions to provide written privacy policies to all their customers.
+**Gramm–Leach–Bliley Act of 1999（GLBA 1999）** Until the GLBA became law in 1999, there were strict governmental barriers between financial institutions. Banks, insurance companies, and credit providers were severely limited in the services they could provide and the information they could share with each other. GLBA somewhat relaxed the regulations concerning the services each organization could provide. When Congress passed this law, it realized that this increased latitude could have far-reaching privacy implications. Because of this concern, it included a number of limitations on the types of information that could be exchanged even among subsidiaries of the same corporation and required financial institutions to provide written privacy policies to all their customers.
 
 ##### **USA PATRIOT Act of 2001** 
 
@@ -1193,9 +1193,9 @@ The PATRIOT Act has a complex legislative history. Many of the key provisions of
 | 比较维度                   | PATRIOT Act（2001）                                      | USA Freedom Act（2015）                                      |
 | -------------------------- | -------------------------------------------------------- | ------------------------------------------------------------ |
 | 📡 **大规模数据收集权**     | **允许**政府大规模收集电话元数据（如电话号码、通话时间） | ❌ **禁止**政府大规模元数据收集，转由**电信公司保留**，政府需通过法院逐案索取 |
-| 🔍 **搜查令种类**           | 可申请**“通用搜查令”**（一份令状监控某人所有通信）       | 保留，但要求**更高的证明标准**和**更清晰的目标限制**         |
+| 🔍 **搜查令种类**           | 可申请 **“通用搜查令”**（一份令状监控某人所有通信）       | 保留，但要求**更高的证明标准**和**更清晰的目标限制**         |
 | 🕵️ **国家安全信函（NSLs）** | 扩大使用范围，且默认**附带保密令**，禁止披露             | 要求 DOJ 定期审查保密令，并为 NSL 被告人设立更多申诉权       |
-| ⚖️ **FISA 法院审查机制**    | 审理过程不透明，公众无从知晓                             | 要求建立**“公众代表”机制**（Amicus），为 FISA 审查引入反对意见与更广泛视角 |
+| ⚖️ **FISA 法院审查机制**    | 审理过程不透明，公众无从知晓                             | 要求建立 **“公众代表”机制**（Amicus），为 FISA 审查引入反对意见与更广泛视角 |
 | 🗓️ **时效性**               | 授权有效期无限延长，除非国会取消                         | **3年定期审查更新机制**，2020年再次失效未续期                |
 | 🛡️ **信息共享权**           | 强化情报、执法、移民、金融等多部门信息共享               | 保留共享权，但附加更多合规与审查要求                         |
 | 👥 **影响群体**             | 不限于恐怖嫌疑人，广泛适用于外国人/美国人                | 更强调基于具体行为的授权，限制对普通民众的无理由收集         |
@@ -1266,7 +1266,7 @@ PATRIOT Act 的关键监控条款在 2015 年曾失效、随后以 Freedom Act �
 
 ### European Union Privacy Law
 
-**✅总结：**欧盟GDPR代表全球最严格隐私法规，强调用户权利与企业责任；美国则以行业/州分散监管为主；加拿大强调可识别信息的商业用途管控；亚太倡导跨境兼容性。
+**✅总结：** 欧盟GDPR代表全球最严格隐私法规，强调用户权利与企业责任；美国则以行业/州分散监管为主；加拿大强调可识别信息的商业用途管控；亚太倡导跨境兼容性。
 
 The European Union (EU) has served as a leading force in the world of information privacy, passing a series of regulations designed to protect individual privacy rights. These laws function in a comprehensive manner, applying to almost all individually identifiable information, unlike U.S. privacy laws, which generally apply to specific industries or categories of information.
 
@@ -1580,7 +1580,7 @@ What types of sensitive information are stored, processed, or transmitted by the
 | **3. 如何与其他客户的数据隔离？**                   | 公有云 / SaaS 服务中，需确保数据逻辑隔离（multi-tenancy 安全） |
 | **4. 加密控制细节？算法？密钥管理？**               | AES-256是否到位？TLS版本？密钥由谁持有？有HSM吗？            |
 | **5. 审计机制？我方能否获取审计报告？**             | SOC 2、ISO 27001、PCI DSS 报告是否可用？是否含红线事件披露？ |
-| **6. 是否涉及**第四方**？我方数据是否外包再外包？** | 是否会引入未经批准的子承包商？对其有安全责任传导机制吗？     |
+| **6. 是否涉及 **第四方**？我方数据是否外包再外包？** | 是否会引入未经批准的子承包商？对其有安全责任传导机制吗？     |
 | **7. 数据存储/处理/传输位置？是否跨境？**           | GDPR下尤为关键。跨境传输需依据 SCC、BCR 等机制合规           |
 | **8. 安全事件响应机制？何时通知？**                 | 是否承诺72小时内通知？是否明确沟通窗口与应急联系人？         |
 | **9. 数据完整性与可用性保障？**                     | 是否有备份机制？冗余架构？业务连续性计划？灾难恢复测试频率？ |

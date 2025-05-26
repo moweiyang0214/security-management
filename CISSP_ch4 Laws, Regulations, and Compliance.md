@@ -1340,9 +1340,9 @@ The key provisions of the GDPR include the following:
 
 GDPR is of particular concern when transferring information across international borders. Organizations needing to conduct transfers between their subsidiaries have two options available for complying with EU regulations:
 
--  Organizations may adopt a set of standard contractual clauses that have been approved for use in situations where information is being transferred outside of the EU. 
+-  Organizations may adopt a set of **Standard Contractual Clauses(SCC)** that have been approved for use in situations where information is being transferred outside of the EU. 
 
-- Organizations may adopt binding corporate rules that regulate data transfers between internal units of the same firm. This is a very time-consuming process—the rules must be approved by every EU member nation where they will be used, so typically this path is only adopted by very large organizations.
+- Organizations may adopt **Binding Corporate Rules(BCR)** that regulate data transfers between internal units of the same firm. This is a very time-consuming process—the rules must be approved by every EU member nation where they will be used, so typically this path is only adopted by very large organizations.
 
 | 方法                           | 说明                                                 |
 | ------------------------------ | ---------------------------------------------------- |

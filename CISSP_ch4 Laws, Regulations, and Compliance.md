@@ -988,7 +988,7 @@ Until recently, it was difficult to export high-powered computers outside the Un
 | 法规                         | 管理范围                                           | 执行机构                 | 相关清单            |
 | ---------------------------- | -------------------------------------------------- | ------------------------ | ------------------- |
 | **ITAR**（国际武器贸易条例） | 军事用途产品及其技术信息                           | 国务院                   | USML（军需品清单）  |
-| **EAR**（出口管理条例）      | 商业用途但具有潜在军用价值的技术，包括信息安全产品 | 商务部 BIS（工业安全局） | CCL（商业控制清单） |
+| **EAR**（出口管理条例）      | 商业用途但具有潜在军用价值的技术，包括信息安全产品 | **商务部 BIS（工业安全局）** | CCL（商业控制清单） |
 
 Two sets of federal regulations governing imports and exports are of particular interest to cybersecurity professionals:
 
@@ -999,7 +999,7 @@ Two sets of federal regulations governing imports and exports are of particular 
 
 #### Countries of Concern（出口国家限制）
 
-Currently, U.S. firms can export high-performance computing systems to virtually any country without receiving prior approval from the government. There are exceptions to this rule for countries designated by the Department of Commerce’s Bureau of Industry and Security (BIS) as countries of concern based on the fact that they pose a threat of nuclear proliferation, they are classified as state sponsors of terrorism, or other concerns. These countries include North Korea, Sudan, and Syria.
+Currently, U.S. firms can export high-performance computing systems to virtually any country without receiving prior approval from the government. There are exceptions to this rule for countries designated by the Department of Commerce’s **Bureau of Industry and Security (BIS)** as countries of concern based on the fact that they pose a threat of nuclear proliferation, they are classified as state sponsors of terrorism, or other concerns. These countries include North Korea, Sudan, and Syria.
 
 - 被 BIS 指定为高风险国家，不可自由出口
 - 原因可能包括：核扩散、恐怖主义支持、恶意国家行为等
@@ -1007,7 +1007,7 @@ Currently, U.S. firms can export high-performance computing systems to virtually
 
 #### Encryption Export Controls（加密产品出口控制）
 
-The Department of Commerce’s Bureau of Industry and Security (BIS) sets forth regulations on the export of encryption products outside the United States. Under previous regulations, it was virtually impossible to export even relatively low-grade encryption technology outside the United States. This placed U.S. software manufacturers at a great competitive disadvantage to foreign firms that faced no similar regulations. After a lengthy lobbying campaign by the software industry, the president directed the Commerce Department to revise its regulations to foster the growth of the American security software industry.
+The Department of Commerce’s **Bureau of Industry and Security (BIS)** sets forth regulations on the export of encryption products outside the United States. Under previous regulations, it was virtually impossible to export even relatively low-grade encryption technology outside the United States. This placed U.S. software manufacturers at a great competitive disadvantage to foreign firms that faced no similar regulations. After a lengthy lobbying campaign by the software industry, the president directed the Commerce Department to revise its regulations to foster the growth of the American security software industry.
 
 | 历史                                       | 当前规定                                                     |
 | ------------------------------------------ | ------------------------------------------------------------ |

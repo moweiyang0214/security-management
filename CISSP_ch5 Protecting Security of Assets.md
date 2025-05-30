@@ -1097,7 +1097,7 @@ Even if your organization isn’t legally required to comply with a specific sta
 - **选择标准后要映射控制** → 用 Tailoring/Scoping 方法调整控制集；
 - **记录每项调整理由**，以备合规审查。
 
-### Summary
+## Summary
 
 Asset security focuses on **collecting**, **handling**, and **protecting** information throughout its **lifecycle**. This includes sensitive information stored or processed on computing systems or transferred over a network and the assets used in these processes. **Sensitive information** is any information that an organization keeps private and can include multiple levels of classifications. Proper destruction methods ensure that data can’t be retrieved after destruction.
 
@@ -1107,7 +1107,7 @@ Personnel can fulfill many different roles when handling data. **Data owners** a
 
 **Security baselines** provide a set of security controls that an organization can implement as a **secure starting point**. Some publications (such as NIST SP 800-53B) identify security control baselines. However, these baselines don’t apply equally to all organizations. Instead, organizations use **scoping and tailoring** techniques to identify the security controls to implement after selecting baselines. Additionally, organizations ensure that they implement security controls mandated by external standards that apply to their organization.
 
-### Exam Essentials
+## Exam Essentials
 
 - **Understand the importance of data and asset classifications.** Data owners are responsible for defining data and asset classifications and ensuring that data and systems are properly marked. Additionally, data owners define requirements to protect data at different classifications, such as encrypting sensitive data at rest and in transit. Data classifications are typically defined within security policies or data policies.
 - **Define PII and PHI.** Personally identifiable information (PII) is any information that can identify an individual. Protected health information (PHI) is any health-related information that can be related to a specific person. Many laws and regulations mandate the protection of PII and PHI.

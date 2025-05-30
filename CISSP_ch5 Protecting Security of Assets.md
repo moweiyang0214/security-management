@@ -748,7 +748,7 @@ Unlike pseudonymization and tokenization, anonymization cannot be reversed. Afte
 | 应用场景               | 数据共享、研究等     | 支付处理、认证系统等    | 研究、统计、AI建模等 |
 | 安全性（泄露后后果）   | 需要映射表才可识别   | 需要Token Vault支持识别 | 无法识别，最安全     |
 
-### Understanding Data Roles
+## Understanding Data Roles
 
 Many people within an organization manage, handle, and use data, and they have different requirements based on their roles. Different documentation refers to these roles a little differently. Some of the terms you may see match the terminology used in some NIST documents, and other terms match some of the terminology used in the EU GDPR. When appropriate, we’ve listed the source so that you can dig into these terms a little deeper if desired.
 
@@ -927,7 +927,7 @@ The GDPR defines a data subject (not just a subject) as a person who can be iden
 
 **User 用数据，Subject 是访问者，Data Subject 是对象人**
 
-### Using Security Baselines
+## Using Security Baselines
 
 “**Baseline = 最低要求 + 持续应用 + 分级保护**”
 

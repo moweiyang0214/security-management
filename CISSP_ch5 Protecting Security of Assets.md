@@ -100,11 +100,11 @@ As an example, consider a web application that retrieves credit card data for qu
 
 Database administrators take steps to encrypt sensitive data stored on the database server (data at rest). They would typically **encrypt columns holding sensitive data** such as credit card data. Additionally, they would **implement strong authentication and authorization** controls to prevent unauthorized entities from accessing the database.
 
-#### Determining Compliance Requirements
+### Determining Compliance Requirements
 
 Some organizations have created a formal position called a compliance officer. The person filling this role ensures that the organization is conducting all business activities by following the laws and regulations that apply to the organization. Of course, this starts by first determining everywhere the organization operates, and what compliance requirements apply.
 
-#### Determining Data Security Controls
+### Determining Data Security Controls
 
 After defining data and asset classifications, you must define the security requirements and identify security controls to implement those requirements. Management then decides on a data security policy dictating the use of specific security controls to protect data in these categories. The policy will likely address data stored in files, in databases, on servers such as email servers, on user systems, sent via email, and stored in the cloud.
 
@@ -124,7 +124,7 @@ Additionally, identity and access management security controls help ensure that 
 
 A key goal of managing sensitive data is to prevent data breaches. A data breach is an event in which an unauthorized entity can view or access sensitive data. If you pay attention to the news, you probably hear about data breaches quite often. Large data breaches such as the Marriott data breach of 2020 hit the mainstream news. Marriott reported that attackers stole personal data, including names, addresses, email addresses, employer information, and phone numbers, of approximately 5.2 million guests.
 
-#### Data Maintenance
+### Data Maintenance
 
 Data maintenance refers to ongoing efforts to organize and care for data throughout its lifetime. In general, if an organization stores all sensitive data on one server, it is relatively easy to apply all the appropriate controls to this one server. In contrast, if sensitive data is stored throughout an organization on multiple servers and end-user computers and mixed with nonsensitive data, it becomes much harder to protect it.
 
@@ -138,7 +138,7 @@ Still, there are times when personnel need to add data to the classified network
 
 Additionally, an organization should routinely review data policies to ensure that they are kept up to date and that personnel are following the policies. It’s often **a good practice to review the causes of recent data breaches and ensure that similar mistakes are not causing needless vulnerabilities.**
 
-#### Data Loss Prevention
+### Data Loss Prevention
 
 Data loss prevention (DLP) systems attempt to detect and block data exfiltration attempts. These systems have the capability of **scanning unencrypted data looking for keywords and data patterns**. For example, imagine that your organization uses data classifications of **Confidential**, **Proprietary**, **Private**, and **Sensitive**. **A DLP system can scan files for these words and detect them.**
 
@@ -155,7 +155,7 @@ DLP systems typically can perform deep-level examinations. For example, if users
 
 Most DLP solutions also include discovery capabilities. **The goal is to discover the location of valuable data within an internal network.** When security administrators know where the data is, they can take additional steps to protect it. As an example, a database server may include unencrypted credit card numbers. When the DLP discovers and reports this, database administrators can ensure the numbers are encrypted. As another example, company policy may dictate that employee laptops do not contain any PII data. A DLP content discovery system can search these and discover any unauthorized data. Additionally, many content discovery systems can search cloud resources used by an organization.
 
-#### Marking Sensitive Data and Assets
+### Marking Sensitive Data and Assets
 
 **Marking (or labeling)** **sensitive information** ensures that users can easily identify the classification level of any data. The most important information that a mark or a label provides is the classification of the data. For example, a label of top secret makes it clear to anyone who sees the label that the information is classified top secret. When users know the value of the data, they are more likely to take appropriate steps to control and protect it based on the classification. Marking includes both physical and electronic marking and labels.
 
@@ -175,7 +175,7 @@ However, many organizations prohibit downgrading media at all. For example, a da
 
 Note: If media or a computing system needs to be downgraded to a less sensitive classification, it must be sanitized using appropriate procedures.
 
-#### Handling Sensitive Information and Assets
+### Handling Sensitive Information and Assets
 
 Handling refers to the secure transportation of media through its lifetime. Personnel handle data differently based on its value and classification, and as you’d expect, highly classified information needs much greater protection. Even though this is common sense, people still make mistakes. Many times, people get accustomed to handling sensitive information and become lackadaisical about protecting it.
 
@@ -183,7 +183,7 @@ A common occurrence is the loss of control of backup tapes. Backup tapes should 
 
 Policies and procedures need to be in place to ensure that people understand how to handle sensitive data. This starts by ensuring that systems and media are labeled appropriately. Logging, monitoring, and auditing verify that sensitive information is handled appropriately before a significant loss occurs. If a loss does occur, investigators use audit trails to help discover what went wrong. Any incidents that occur because personnel didn’t handle data appropriately should be quickly investigated and actions taken to prevent a reoccurrence.
 
-#### Data Collection Limitation
+### Data Collection Limitation
 
 **One of the easiest ways to prevent the loss of data is to simply not collect it.** As an example, consider a small ecommerce company that allows customers to make purchases with a credit card. It uses a credit card processor to process credit card payments. If the company just passes the credit card data to the processor for approval and never stores it in a company server, the company can never lose the credit card data in a breach.
 
@@ -191,7 +191,7 @@ In contrast, imagine a different ecommerce company sells products online. Every 
 
 The guideline is clear. **If the data doesn’t have a clear purpose for use, don’t collect it and store it.** This is also why many privacy regulations mention limiting data collection.
 
-#### Data Location
+### Data Location
 
 Data location refers to the location of data backups or data copies. Imagine a small organization’s primary business location is in Norfolk, Virginia. The organization stores all the data on site. However, they regularly perform backups of the data.
 
@@ -199,7 +199,7 @@ A best practice is to keep a backup copy on site and another backup copy off sit
 
 Some organizations maintain data in large data centers. It’s common to replicate this data to one or more other data centers to maintain the availability of the critical data. These data centers are typically located in separate geographical locations. When using cloud storage for backups, some organizations may need to verify the location of the cloud storage to ensure it is in a separate geographical location.
 
-#### Storing Sensitive Data
+### Storing Sensitive Data
 
 Sensitive data should be stored in such a way that it is protected against any type of loss. Encryption methods prevent unauthorized entities from accessing the data even if they obtain databases or hardware assets.
 
@@ -211,7 +211,7 @@ Here’s a point that end users often forget: the value of any sensitive data is
 
 Note：Encryption of sensitive data provides an additional layer of protection and should be considered for any data at rest. If data is encrypted, it becomes much more difficult for an attacker to access it, even if it is stolen.
 
-#### Data Destruction
+### Data Destruction
 
 When an organization no longer needs sensitive data, personnel should destroy it. Proper destruction ensures that it cannot fall into the wrong hands and result in unauthorized disclosure. Highly classified data requires different steps to destroy it than data classified at a lower level. An organization’s security policy or **data policy should define the acceptable methods of destroying data based on the data’s classification.** For example, an organization may require the complete destruction of media holding highly classified data, but allow personnel to use software tools to overwrite data files classified at a lower level.
 
@@ -360,7 +360,7 @@ When using cloud storage, destroying the cryptographic keys may be the only form
 - 云服务提供商通常使用**加密抹除（Cryptographic Erasure）作为删除手段**。
 - 一旦销毁主密钥，服务商也无法恢复数据，符合**GDPR、HIPAA等合规性要求**。
 
-#### Ensuring Appropriate Data and Asset Retention
+### Ensuring Appropriate Data and Asset Retention
 
 Retention（数据保留）requirements apply to data or records, media holding sensitive data, systems that process sensitive data, and personnel who have access to sensitive data. Record retention and media retention is the most important element of asset retention.
 
@@ -400,7 +400,7 @@ As an example, many organizations require the retention of all audit logs for a 
 
 组织可能会保留老旧硬件（如磁带机）用于读取历史数据。但应评估这些资产的安全性和兼容性。
 
-##### Retention Policies Can Reduce Liabilities
+#### Retention Policies Can Reduce Liabilities
 
 **Saving data longer than necessary also presents unnecessary legal issues.** As an example, aircraft manufacturer Boeing was once the target of a class action lawsuit. Attorneys for the claimants learned that Boeing had a warehouse filled with 14,000 email backup tapes and demanded the relevant tapes. Not all the tapes were relevant to the lawsuit, but Boeing had to first restore the 14,000 tapes and examine the content before they could turn them over. Boeing ended up settling the lawsuit for $92.5 million, and analysts speculated that there would have been a different outcome if those 14,000 tapes hadn’t existed.
 
@@ -419,7 +419,7 @@ A company cannot legally delete potential evidence after a lawsuit is filed. How
 
 ## Data Protection Methods
 
-#### Digital Rights Management（数字版权管理）
+### Digital Rights Management（数字版权管理）
 
 **Digital rights management (DRM)** methods attempt to provide copyright protection for copyrighted works. The purpose is to prevent the unauthorized use, modification, and distribution of copyrighted works such as intellectual property. 
 
@@ -514,7 +514,7 @@ DRM 是知识产权保护的技术防线之一，但在实施中需要权衡**�
 | 控制使用次数/时效 | 自动过期控制            |
 | 提供可追溯性      | 审计跟踪 + 用户标记     |
 
-#### Cloud Access Security Broker
+### Cloud Access Security Broker
 
 **CASB**（云访问安全代理）是一种部署在**用户与云服务之间**的软件安全控制点。它可以部署在：
 
@@ -644,7 +644,7 @@ CASB solutions can also be effective at detecting shadow IT. Shadow IT is the us
 
 CASB 是现代云安全架构的重要组成部分，适用于越来越多使用 SaaS、PaaS、IaaS 服务的企业环境。
 
-#### Pseudonymization（假名化）
+### Pseudonymization（假名化）
 
 **Pseudonymization（假名化）** 是一种**数据保护技术**，它将直接识别数据主体的个人信息（如姓名、地址、身份证号）用**假名（pseudonyms）**替代，从而使数据无法直接识别个人。
 
@@ -683,7 +683,7 @@ The GDPR refers to pseudonymization as replacing data with artificial identifier
 | GDPR分类 | 属于个人数据处理          | 不再属于个人数据         |
 | 典型用途 | 医疗研究、隐私保护等      | 统计、报告等匿名数据使用 |
 
-#### Tokenization
+### Tokenization
 
 Tokenization is the use of a token, typically a random string of characters, to replace other data. It is often used with credit card transactions.
 
@@ -718,7 +718,7 @@ Ecommerce sites that have recurring charges also use tokenization. Instead of th
 
 Tokenization is similar to pseudonymization. Pseudonymization uses pseudonyms to represent other data. Tokenization uses tokens to represent other data. Neither the pseudonym nor the token has any meaning or value outside the process that creates them and links them to the other data. Pseudonymization is most useful when releasing a dataset to a third party (such as researchers aggregating data) without releasing any privacy data to the third party. Tokenization allows a third party (such as a credit card processor) to know the token and the original data. However, no one else knows both the token and the original data.
 
-#### Anonymization（匿名化）
+### Anonymization（匿名化）
 
 **Anonymization** 是彻底删除或修改所有能识别个人身份的数据，**不可逆**，即数据不能被还原回原始状态。
 
@@ -754,7 +754,7 @@ Many people within an organization manage, handle, and use data, and they have d
 
 One of the most important concepts here is ensuring that personnel know who owns information and assets. The owners have a primary responsibility of protecting the data and assets.
 
-#### Data Owners
+### Data Owners
 
 Data owners identify the classification of data and ensure that it is labeled properly. They also ensure that it has adequate security controls based on the classification and the organization’s security policy requirements. Owners may be liable for negligence if they fail to perform due diligence in establishing and enforcing security policies to protect and sustain sensitive data.
 
@@ -765,7 +765,7 @@ NIST SP 800-18 outlines the following responsibilities for the information owner
 - Decides who has access to the information system and with what types of privileges or access rights
 - Assists in the identification and assessment of the common security controls where the information resides
 
-#### Asset Owners
+### Asset Owners
 
 The asset owner (or system owner) is the person who owns the asset or system that processes sensitive data. NIST SP 800-18 outlines the following responsibilities for the system owner:
 
@@ -780,7 +780,7 @@ The system owner is responsible for ensuring that data processed on the system r
 
 System and data owners are senior personnel within an organization. As a result, management teams typically include system and data owners. This is especially useful when a system has one owner for the system and another owner for the data.
 
-#### Business/Mission Owners
+### Business/Mission Owners
 
 The business/mission owner role is viewed differently in different organizations. NIST SP 800-18 refers to the business/mission owner as a program manager or an information system owner. As such, the responsibilities of the business/mission owner can overlap with the responsibilities of the system owner or be the same role.
 
@@ -792,7 +792,7 @@ Another way of looking at this is by comparing the conflict between cost centers
 
 Organizations often implement IT governance methods such as Control Objectives for Information and Related Technology (COBIT). These methods help business owners and mission owners balance security control requirements with business or mission needs. The overall goal is to provide a common language that all stakeholders can use to meet security and business needs.
 
-#### Data Processors and Data Controllers
+### Data Processors and Data Controllers
 
 Generically, a data processor is any system used to process data. However, in the context of the GDPR, data processor has a more specific meaning. The GDPR defines a data processor as “a natural or legal person, public authority, agency, or other body, which processes personal data solely on behalf of the data controller.”
 
@@ -804,19 +804,19 @@ The GDPR restricts data transfers to countries outside the EU. Companies that vi
 
 As a result, many organizations have created dedicated roles, such as a data privacy officer, to oversee the control of data and ensure the organization follows all relevant laws and regulations. The GDPR has mandated the role of a data protection officer for any organization that must comply with the GDPR. The person in this role is responsible for ensuring the organization applies the laws to protect individuals’ private data.
 
-#### Data Custodians
+### Data Custodians
 
 Data owners often delegate day-to-day tasks to a data custodian. A custodian helps protect the integrity and security of data by ensuring that it is properly stored and protected. For example, custodians would ensure that the data is backed up by following guidelines in a backup policy. If administrators have configured auditing on the data, custodians would also maintain these logs.
 
 In practice, personnel within an IT department or system security administrators would typically be the custodians. They might be the same administrators responsible for assigning permissions to data.
 
-#### Administrators
+### Administrators
 
 You’ll often hear the term administrator(s). However, the term means different things in different contexts. If Sally logs onto the Administrator account in a Windows system, she is an administrator. Similarly, anyone added to an Administrators group in Windows is also an administrator.
 
 However, many organizations view anyone with elevated privileges as administrators, even if they don’t have full administrative privileges. For example, help desk employees are granted some elevated privileges to perform their job but aren’t granted full administrative privileges. In this context, they are sometimes referred to as administrators. In the context of data roles, a data administrator may be a data custodian or someone in another data role.
 
-#### Users and Subjects
+### Users and Subjects
 
 A user is any person who accesses data via a computing system to accomplish work tasks. Users should have access only to the data they need to perform their work tasks. You can also think of users as employees or end users.
 
@@ -1002,7 +1002,7 @@ It’s worth noting that many of the items in these lists are basic security pra
 - **行业最佳实践次之**：参考通用标准提升安全性；
 - **组织策略优先级**：匹配业务目标，增强安全实践效果。
 
-#### Comparing Tailoring and Scoping **安全控制基线的个性化过程**
+### Comparing Tailoring and Scoping **安全控制基线的个性化过程**
 
 After selecting a control baseline, organizations fine-tune it with tailoring and scoping processes. A big part of the tailoring process is aligning the controls with an organization’s specific security requirements. As a comparison, think of a clothes tailor who alters or repairs clothes. If a person buys a suit at a high-end retailer, a tailor modifies the suit to fit the person perfectly. Similarly, tailoring a baseline ensures it is a good fit for the organization.
 
@@ -1044,7 +1044,7 @@ It is a part of the tailoring process and refers to reviewing a list of baseline
 | **Compensating Controls**       | 替代不可行控制                 | 功能必须等效或更优           |
 | **标准选择 Standard Selection** | 根据业务类型与法规确定控制要求 | PCI、HIPAA、GDPR等有强制性   |
 
-#### Standards Selection（标准选择）
+### Standards Selection（标准选择）
 
 **标准选择**在建立和裁剪安全控制基线时，组织必须**对照外部法规、行业标准**，选出适用于自身业务和数据类型的安全标准，从而确保：
 

@@ -419,8 +419,709 @@ A company cannot legally delete potential evidence after a lawsuit is filed. How
 
 ## Data Protection Methods
 
-#### Digital Rights Management
+#### Digital Rights Management（数字版权管理）
 
-Digital rights management (DRM) methods attempt to provide copyright protection for copyrighted works. The purpose is to prevent the unauthorized use, modification, and distribution of copyrighted works such as intellectual property. Here are some methods associated with DRM solutions:
+**Digital rights management (DRM)** methods attempt to provide copyright protection for copyrighted works. The purpose is to prevent the unauthorized use, modification, and distribution of copyrighted works such as intellectual property. 
 
+**Digital Rights Management（数字版权管理）** 是一组技术和策略，用来控制对数字内容（如音乐、电影、电子书、软件等）的**访问、使用、复制和分发**。目的是 **防止未经授权的使用和盗版**，从而保护著作权人和版权所有者的权益。
 
+Here are some methods associated with DRM solutions:
+
+1. **DRM License** A license grants access to a product and defines the terms of use. A DRM license is typically a small file that includes the terms of use, along with a decryption key that unlocks access to the product.
+2. **Persistent Online Authentication** (also known as always-on DRM) requires a system to be connected with the internet to use a product. The system periodically connects with an authentication server, and if the connection or authentication fails, DRM blocks the use of the product.
+3. **Continuous Audit Trail** A continuous audit trail tracks all use of a copyrighted product. When combined with persistence, it can detect abuse, such as concurrent use of a product simultaneously but in two geographically different locations.
+4. **Automatic Expiration** Many products are sold on a subscription basis. For example, you can often rent new streaming movies, but these are only available for a limited time, such as 30 days. When the subscription period ends, an automatic expiration function blocks any further access.
+
+##### DRM 的常见方法与机制
+
+1. **DRM License（授权文件）**
+
+- DRM 使用一种小型的数字许可证文件来限制内容的使用方式。
+- 包含：
+  - 使用条款（如“只能播放 5 次”）
+  - 解密密钥（用来解锁内容）
+- 没有密钥或授权许可，用户无法访问内容。
+
+2. **Persistent Online Authentication（持续在线验证）**
+
+- 又称“Always-On DRM”，即“总是在线的 DRM”。
+- 内容使用时需要持续联网并通过验证服务器确认合法性。
+- 一旦无法验证（如断网、验证失败），内容将无法访问。
+- 常用于**云游戏**、**SaaS 软件**、**数字视频服务（如 Netflix）**。
+
+3. **Continuous Audit Trail（连续审计跟踪）**
+
+- 记录内容使用的完整日志，包括时间、地点、频率等。
+- 可用于发现异常使用，如：
+  - 同一账号在美国和欧洲同时播放电影
+- 用于版权保护、违规行为分析及取证。
+
+4. **Automatic Expiration（自动过期机制）**
+
+- 常见于**租赁模式**的数字商品（如新上映电影）。
+- 内容在 30 天内可观看，或点播后只能保留 48 小时。
+- 过期后 DRM 自动锁定，阻止访问。
+
+**DRM methods are used to protect copyrighted data, but they aren’t used to protect trademarks, patents, or trade secrets.**
+
+Some DRM methods attempt to prevent the copying, printing, and forwarding of protected materials. 
+
+Digital watermarks are sometimes placed within audio or video files using steganography. They don’t prevent copying but can be used to detect the unauthorized copying of a file. They can also be used for copyright enforcement and prosecution. 
+
+Similarly, metadata is sometimes placed into files to identify the buyer.
+
+##### 📷 DRM 其他补充手段
+
+**✅ 数字水印（Digital Watermarking）**
+
+- 利用**隐写术**嵌入音频/视频中。
+- 不阻止复制，但可以追踪内容源，识别泄漏来源。
+- 用于版权执法和法律诉讼。
+
+**✅ 元数据标记（Metadata Tagging）**
+
+- 文件中嵌入用户信息（如购买人姓名、账户）。
+- 即使文件被复制或篡改，仍可追踪原始购买者。
+
+Many organizations and individuals are opposed to DRM. They claim it restricts the fair use of materials they purchase. For example, after paying for some songs, they want to copy them onto both an MP3 player and a smartphone. Additionally, people against DRM claim it isn’t effective against people that want to bypass it but instead complicates the usage for legitimate users.
+
+虽然 DRM 旨在保护版权，但它也引起了大量批评：
+
+**✴️ 合理使用受限**
+
+- 用户购买内容后难以自由使用：
+  - 拷贝到多个设备
+  - 离线观看、离线听歌
+  - 制作备份
+
+**✴️ 正常用户体验受损**
+
+- DRM 对黑客常常无效，但对普通用户限制却很大。
+- 被认为“打击不了盗版者，却限制了合法用户”。
+
+**✴️ 软件依赖性强**
+
+- 必须依赖 DRM 平台运行，一旦平台关闭或服务中断，用户无法再访问自己购买的内容。
+
+##### 总结
+
+DRM 是知识产权保护的技术防线之一，但在实施中需要权衡**版权保护与用户体验**之间的关系。对信息安全专业人士而言，理解 DRM 不仅有助于支持合法内容使用，也有助于处理与内容管理相关的合规问题。
+
+| 目标              | 实现机制                |
+| ----------------- | ----------------------- |
+| 限制访问权限      | 授权文件 + 解密密钥     |
+| 防止盗版传播      | 持续在线验证 + 水印技术 |
+| 控制使用次数/时效 | 自动过期控制            |
+| 提供可追溯性      | 审计跟踪 + 用户标记     |
+
+#### Cloud Access Security Broker
+
+**CASB**（云访问安全代理）是一种部署在**用户与云服务之间**的软件安全控制点。它可以部署在：
+
+- ✅ 本地（On-premises）
+- ✅ 云中（Cloud-native）
+
+所有访问云服务的请求 **必须先通过 CASB**，CASB 在中间起到安全网关的作用。
+
+##### 🛡️ CASB 的主要功能
+
+1. **强制执行安全策略**
+
+- 例如：要求上传到云的数据必须是加密的。
+- 管理员可定义加密、审计、访问控制等策略，由 CASB 实时执行。
+
+2. **认证与授权控制**
+
+- 验证用户身份（Authentication）
+- 控制谁能访问哪些云资源（Authorization）
+
+3. **日志记录与审计**
+
+- CASB 会记录所有访问行为
+- 可用于审计分析、取证调查
+
+4. **异常检测与告警**
+
+- 检测非正常行为（如异常登录位置、大流量下载）
+- 触发预设告警机制
+
+5. **复制企业内部安全机制**
+
+- **如数据丢失防护**（DLP）、访问控制、加密策略、行为分析等
+
+A cloud access security broker (CASB) is software placed logically between users and cloudbased resources. It can be on-premises or within the cloud. Anyone who accesses the cloud goes through the CASB software. It monitors all activity and enforces administrator-defined security policies.
+
+As a simple example, imagine a company has decided to use a cloud provider for data storage but management wants all data stored in the cloud to be encrypted. The CASB can monitor all data going to the cloud and ensure that it arrives and is stored in an encrypted format.
+
+A CASB would typically include authentication and authorization controls and ensure only authorized users can access the cloud resources. The CASB can also log all access, monitor activity, and send alerts on suspicious activity. In general, any security controls that an organization has created internally can be replicated to a CASB. This includes any DLP functions implemented by an organization.
+
+CASB solutions can also be effective at detecting shadow IT. Shadow IT is the use of IT resources (such as cloud services) without the approval of, or even the knowledge of, the IT department. If the IT department doesn’t know about the usage, it can’t manage it. One way a CASB solution can detect shadow IT is by collecting and analyzing logs from network firewalls and web proxies.
+
+##### CASB 与 Shadow IT
+
+**Shadow IT** 指员工在未经 IT 部门批准的情况下擅自使用云服务、应用或系统。
+
+**CASB 如何检测 Shadow IT？**
+
+- 收集分析网络防火墙与代理服务器的访问日志
+- 判断哪些云服务是“未经批准”的服务
+- 检测非官方应用流量（如员工私自使用 Dropbox、WeTransfer 等）
+
+这样能帮助 IT 安全团队发现：
+
+- 隐藏的风险服务
+- 企业数据是否被上传至不安全的平台
+
+##### ✅ 主流 CASB 实现方式汇总
+
+| 实现方式                                         | 描述与适用场景                                               |
+| ------------------------------------------------ | ------------------------------------------------------------ |
+| 1️⃣ API-based CASB                                 | 通过调用 SaaS 应用（如 O365、G Suite、Box、Salesforce）的 API 实现数据控制与监控 |
+| 2️⃣ Proxy-based CASB                               | 使用反向代理或前向代理截取用户与云之间的流量，实现实时控制与内容审查 |
+| 3️⃣ Agent-based CASB                               | 在终端设备部署代理程序，监控和限制云服务的访问，特别适合 BYOD 或无法控制网络路径的场景 |
+| 4️⃣ OPA + Sidecar 模式                             | 在云原生或容器化环境中使用 Sidecar 与 OPA 实现细粒度访问控制与策略执行 |
+| 5️⃣ 云厂商原生集成（如 Azure Defender, AWS Macie） | 借助公有云服务商提供的原生 CASB/安全控制功能，快速实现策略编排、威胁检测和数据保护 |
+
+##### 具体实现方式解析
+
+1. ✅ **API-based CASB（基于API）**
+
+- **优点**：部署快、无需改动网络结构，适合管理已知的SaaS应用
+- **厂商代表**：Microsoft Defender for Cloud Apps、Bitglass、Netskope、McAfee MVISION
+- **功能示例**：
+  - 审计 SaaS 应用行为（登录、上传、共享记录）
+  - 控制敏感数据分享（如 DLP 规则阻止上传身份证、财务数据）
+  - 强制多因素认证、阻止高风险国家访问
+
+2. 🛡️ **Proxy-based CASB（代理模式）**
+
+- **前向代理**：部署于用户网络出入口，对所有访问请求检查并重定向到 CASB
+- **反向代理**：适用于只监控特定云服务（如 Salesforce）流量，在登录和访问时被拦截、审查
+- **适用场景**：想实时控制流量/文件/行为，需要做内容检查（如病毒扫描、OCR、正则匹配）
+- **挑战**：对 TLS 流量需做中间人解密；部署较复杂，对性能有一定影响
+
+3. 💻 **Agent-based CASB（客户端代理）**
+
+- 在员工电脑/移动设备上安装代理软件，强制使用 CASB 策略（即使在外部网络）
+- **适合场景**：BYOD（自带设备）环境，尤其是公司无法控制用户网络流量的情况
+- **风险/挑战**：设备管理成本高；部分员工或业务团队抗拒安装代理
+
+4. 🔍 **OPA + Sidecar（云原生、容器场景）**
+
+- 适用于微服务、大规模K8s平台、CI/CD环境下细粒度控制
+- 和 DevSecOps、Zero Trust 深度融合
+- 适合开发者主导的安全流程（GitOps、策略即代码）
+
+5. ☁️ **云厂商原生安全工具**
+
+- 如 Azure 的 Defender for Cloud、AWS Macie、Google CASB
+- 优点：原生集成、易部署、自动关联账户和资源、合规报告丰富
+- 局限：多云环境或第三方 SaaS 时功能覆盖不足
+
+##### 🔄 选型建议
+
+| 使用场景                              | 推荐实现方式                |
+| ------------------------------------- | --------------------------- |
+| 使用主流 SaaS，轻量合规、操作审计需求 | ✅ API-based CASB            |
+| 高度敏感数据、需要实时阻断或内容审查  | ✅ Proxy-based（前向或反向） |
+| 多设备接入、零信任访问控制需求        | ✅ Agent-based CASB          |
+| DevOps 环境、微服务、大规模K8s        | ✅ OPA + Sidecar             |
+| Azure/AWS/Google 内部系统为主         | ✅ 云厂商原生 CASB 工具      |
+
+- **OPA + Sidecar** 是技术先进、可编程、安全粒度极高的一种现代化 CASB 实现方式，尤其适合云原生团队。
+- 但 **API-based 和 Proxy-based** 依然是大多数组织落地 CASB 的“快速起步方案”，特别适合对主流 SaaS（如 Office 365、Google Workspace）进行统一治理。
+- 最佳实践是 **结合多种方式**，构建一个覆盖全面、策略统一、可自动化的云访问安全体系。
+
+##### CASB总结
+
+| 功能类别       | CASB 的作用                        |
+| -------------- | ---------------------------------- |
+| 安全策略执行   | 控制上传数据加密、下载权限等       |
+| 访问控制       | 身份验证和权限管理                 |
+| 行为监控       | 日志记录、行为分析、异常告警       |
+| Shadow IT 检测 | 发现和阻止未授权云服务使用         |
+| 合规与审计     | 支持满足法规要求与企业内部合规需求 |
+
+CASB 是现代云安全架构的重要组成部分，适用于越来越多使用 SaaS、PaaS、IaaS 服务的企业环境。
+
+#### Pseudonymization（假名化）
+
+**Pseudonymization（假名化）** 是一种**数据保护技术**，它将直接识别数据主体的个人信息（如姓名、地址、身份证号）用**假名（pseudonyms）**替代，从而使数据无法直接识别个人。
+
+Pseudonymization refers to the process of using pseudonyms to represent other data. When pseudonymization is performed effectively, it can result in less stringent requirements that would otherwise apply under the European Union (EU) General Data Protection Regulation (GDPR).
+
+Similarly, pseudonymization can prevent data from directly identifying an entity, such as a person. As an example, consider a medical record held by a doctor’s office. Instead of including personal information such as the patient’s name, address, and phone number, it could just refer to the patient as Patient 23456 in the medical record. The doctor’s office still needs this personal information, and it could be held in another database linking it to the patient pseudonym (Patient 23456).
+
+Note that in the example, the pseudonym (Patient 23456) refers to several pieces of information on the person. It’s also possible for a pseudonym to refer to a single piece of information. For example, you can use one pseudonym for a first name and another pseudonym for a last name. The key is to have another resource (such as another database) that allows you to identify the original data using the pseudonym.
+
+The doctor’s office can release pseudonymized data to medical researchers without compromising patients’ privacy information. However, the doctor’s office can still reverse the process to discover the original data if necessary.
+
+The GDPR refers to pseudonymization as replacing data with artificial identifiers. These artificial identifiers are pseudonyms.
+
+##### GDPR 中的 Pseudonymization 要点
+
+欧盟通用数据保护条例（GDPR）中提到：
+
+- 假名化可以作为**降低数据处理风险**的一种技术措施；
+- 如果数据处理过程包括假名化，则某些GDPR义务可适当减轻；
+- 假名化数据依然被视为**个人数据**，因为其可以被还原。
+
+##### Pseudonymization 的优势
+
+| 优势                       | 解释                       |
+| -------------------------- | -------------------------- |
+| 🔐 提高隐私保护             | 避免直接暴露个人身份信息   |
+| 📉 降低合规风险             | 符合GDPR、HIPAA等法规要求  |
+| 🤝 有利于数据共享与研究使用 | 在不暴露身份前提下共享数据 |
+| 🔁 可逆（可重新识别）       | 可在授权情况下恢复原始数据 |
+
+##### Pseudonymization vs Anonymization
+
+| 特点     | Pseudonymization (假名化) | Anonymization (匿名化)   |
+| -------- | ------------------------- | ------------------------ |
+| 可逆性   | 是（可还原）              | 否（不可还原）           |
+| GDPR分类 | 属于个人数据处理          | 不再属于个人数据         |
+| 典型用途 | 医疗研究、隐私保护等      | 统计、报告等匿名数据使用 |
+
+#### Tokenization
+
+Tokenization is the use of a token, typically a random string of characters, to replace other data. It is often used with credit card transactions.
+
+**Tokenization** 是一种将敏感数据（如信用卡号）替换为**随机生成的“Token”字符串**的过程。Token 在系统中作为代表原始数据的“代理”，但本身**不具备任何意义或可推断性**。
+
+As an example, imagine Becky Smith has associated a credit card with her smartphone. Tokenization with a credit card typically works like this:
+
+1. **Registration** When she first associated the credit card with her smartphone, an app on the phone securely sent the credit card number to a credit card processor. The credit card processor sent the credit card to a tokenization vault controlled by the credit card processor. The vault creates a token (a string of characters) and records the token along with the encrypted credit card number, and associates it with the user’s phone.
+2. **Usage** Later, Becky goes to a Starbucks and buys some coffee with her smartphone. Her smartphone passes the token to the point-of-sale (POS) system. The POS system sends the token to the credit card processor to authorize the charge.
+3. **Validation** The credit card processor sends the token to the tokenization vault. The vault answers with the unencrypted credit card data, and the credit card processor then processes the charge.
+4. **Completing the Sale** The credit card processor sends a reply to the POS system indicating the charge is approved and credits the seller for the purchase.
+
+##### 🏦 应用示例：信用卡支付流程
+
+1. **注册阶段**：用户的信用卡号传给支付处理商，进入“Token Vault”（代币金库），生成 Token 并与加密后的信用卡号关联。
+2. **消费阶段**：用户使用 Token 进行支付，POS 机不接触原始信用卡号。
+3. **验证阶段**：支付处理商在 Vault 中验证 Token，取回解密后的信用卡号并完成交易。
+
+📌 **核心特性：**
+
+- POS系统从未接触信用卡号 → 降低攻击面
+- Token 无法单独完成交易 → 限定绑定场景
+
+In the past, credit card data has been intercepted and stolen at the POS system. However, when tokenization is used, the credit card number is never used or known to the POS system. The user transfers it once to the credit card processor, and the credit card processor stores an encrypted copy of the credit card data along with a token matched to this credit card. Later the user presents the token, and the credit card processor validates the token through the tokenization vault.
+
+Ecommerce sites that have recurring charges also use tokenization. Instead of the ecommerce site collecting and storing credit card data, the site obtains a token from the credit card processor. The credit card processor creates the token, stores an encrypted copy of the credit card data, and processes charge the same way as it does for a POS system. However, the ecommerce site doesn’t hold any sensitive data. Even if an attacker obtained a token and tried to make a charge with it, it would fail because the charges are only accepted from the ecommerce site.
+
+**🎯 用途扩展**
+
+- **电子商务（e-commerce）定期支付**：Token 用于重复计费，但只有该电商平台有效。
+- **数据隔离**：Token 只有生成它的系统知道其真实意义。
+
+Tokenization is similar to pseudonymization. Pseudonymization uses pseudonyms to represent other data. Tokenization uses tokens to represent other data. Neither the pseudonym nor the token has any meaning or value outside the process that creates them and links them to the other data. Pseudonymization is most useful when releasing a dataset to a third party (such as researchers aggregating data) without releasing any privacy data to the third party. Tokenization allows a third party (such as a credit card processor) to know the token and the original data. However, no one else knows both the token and the original data.
+
+#### Anonymization（匿名化）
+
+**Anonymization** 是彻底删除或修改所有能识别个人身份的数据，**不可逆**，即数据不能被还原回原始状态。
+
+If you don’t need personal data, another option is to use anonymization. Anonymization is the process of removing all relevant data so that it is theoretically impossible to identify the original subject or person. If done effectively, the GDPR is no longer relevant for the anonymized data. However, it can be difficult to truly anonymize the data. Data inference techniques may be able to identify individuals, even if personal data is removed. This is sometimes referred to as reidentification of anonymized data.
+
+##### GDPR 中的应用
+
+- **合规优势**：数据被匿名化后，**不再受GDPR监管**；
+- **高风险点**：如果匿名化不足，可能被**重识别（reidentification）**。
+
+**Randomized masking** can be an effective method of anonymizing data. Masking swaps data in individual data columns so that records no longer represent the actual data. However, the data still maintains aggregate values that can be used for other purposes, such as scientific purposes.
+
+##### 技术方法示例
+
+- **随机掩码（Randomized Masking）**：打乱数据但保留统计特性；
+- **泛化（Generalization）**：如将“35岁”改为“30-40岁”；
+- **扰动（Perturbation）**：加入噪声以隐藏真实值。
+
+Unlike pseudonymization and tokenization, anonymization cannot be reversed. After the data is randomized using an anonymization process, it cannot be returned to the original state.
+
+| 特性                   | **Pseudonymization** | **Tokenization**        | **Anonymization**    |
+| ---------------------- | -------------------- | ----------------------- | -------------------- |
+| 可逆性                 | ✅ 是                 | ✅ 是                    | ❌ 否                 |
+| 关键工具/元素          | 假名 + 映射表        | Token + Vault           | 无（彻底删除或扰动） |
+| 使用者是否能恢复原数据 | 数据持有者可以       | Token系统可以           | 无法恢复             |
+| GDPR适用性             | 是（仍为个人数据）   | 是（仍为个人数据）      | 否（若无法再识别）   |
+| 应用场景               | 数据共享、研究等     | 支付处理、认证系统等    | 研究、统计、AI建模等 |
+| 安全性（泄露后后果）   | 需要映射表才可识别   | 需要Token Vault支持识别 | 无法识别，最安全     |
+
+### Understanding Data Roles
+
+Many people within an organization manage, handle, and use data, and they have different requirements based on their roles. Different documentation refers to these roles a little differently. Some of the terms you may see match the terminology used in some NIST documents, and other terms match some of the terminology used in the EU GDPR. When appropriate, we’ve listed the source so that you can dig into these terms a little deeper if desired.
+
+One of the most important concepts here is ensuring that personnel know who owns information and assets. The owners have a primary responsibility of protecting the data and assets.
+
+#### Data Owners
+
+Data owners identify the classification of data and ensure that it is labeled properly. They also ensure that it has adequate security controls based on the classification and the organization’s security policy requirements. Owners may be liable for negligence if they fail to perform due diligence in establishing and enforcing security policies to protect and sustain sensitive data.
+
+NIST SP 800-18 outlines the following responsibilities for the information owner, which can be interpreted the same as the data owner:
+
+- Establishes the rules for appropriate use and protection of the subject data/information (rules of behavior)
+- Provides input to information system owners regarding the security requirements and security controls for the information system(s) where the information resides
+- Decides who has access to the information system and with what types of privileges or access rights
+- Assists in the identification and assessment of the common security controls where the information resides
+
+#### Asset Owners
+
+The asset owner (or system owner) is the person who owns the asset or system that processes sensitive data. NIST SP 800-18 outlines the following responsibilities for the system owner:
+
+Develops a system security plan in coordination with information owners, the system administrator, and functional end users
+
+- Maintains the system security plan and ensures that the system is deployed and operated according to the agreed-upon security requirements
+- Ensures that system users and support personnel receive appropriate security training, such as instruction on rules of behavior (or an AUP)
+- Updates the system security plan whenever a significant change occurs
+- Assists in the identification, implementation, and assessment of the common security controls
+
+The system owner is responsible for ensuring that data processed on the system remains secure. This includes identifying the highest level of data that the system processes. The system owner then ensures that the system is labeled accurately and that appropriate security controls are in place to protect the data. System owners interact with data owners to ensure that the data is protected while at rest on the system, in transit between systems, and in use by applications operating on the system.
+
+System and data owners are senior personnel within an organization. As a result, management teams typically include system and data owners. This is especially useful when a system has one owner for the system and another owner for the data.
+
+#### Business/Mission Owners
+
+The business/mission owner role is viewed differently in different organizations. NIST SP 800-18 refers to the business/mission owner as a program manager or an information system owner. As such, the responsibilities of the business/mission owner can overlap with the responsibilities of the system owner or be the same role.
+
+Business owners might own processes that use systems managed by other entities. As an example, the sales department could be the business owner, but the IT department and the software development department could be the system owners for systems used in sales processes. Imagine that the sales department focuses on online sales using an ecommerce website, and the website accesses a back-end database server. As in the previous example, the IT department manages the web server as its system owner, and the software development department maintains the database server as its system owner. Even though the sales department doesn’t own these systems, it does own the business processes that generate sales using these systems.
+
+In businesses, business owners are responsible for ensuring that systems provide value to the organization. This sounds obvious. However, compare this with IT departments. If there are any successful attacks or data breaches, the fault is likely to fall on them. IT departments often recommend security controls or systems that don’t add immediate value to the organization but reduce overall risks. The business owner is responsible for evaluating these recommendations and may decide that the potential loss related to the risks they eliminate is less than the loss of revenue they’ll cause.
+
+Another way of looking at this is by comparing the conflict between cost centers and profit centers. The IT department doesn’t generate revenue. Instead, it is a cost center generating costs. In contrast, the business side generates revenue as a profit center. Costs generated by the IT department may reduce risks, but they eat up profits generated by the business side. The business side may view the IT department as spending money, reducing profits, and making it more difficult for the business to generate profits. Similarly, the IT department may think that the business side isn’t interested in reducing risks, at least until a costly security incident occurs.
+
+Organizations often implement IT governance methods such as Control Objectives for Information and Related Technology (COBIT). These methods help business owners and mission owners balance security control requirements with business or mission needs. The overall goal is to provide a common language that all stakeholders can use to meet security and business needs.
+
+#### Data Processors and Data Controllers
+
+Generically, a data processor is any system used to process data. However, in the context of the GDPR, data processor has a more specific meaning. The GDPR defines a data processor as “a natural or legal person, public authority, agency, or other body, which processes personal data solely on behalf of the data controller.”
+
+In this context, the data controller is the person or entity that controls the processing of the data. The data controller decides what data to process, why this data should be processed, and how it is processed.
+
+As an example, a company that collects personal information on employees for payroll is a data controller. If they pass this information to a third-party company to process payroll, the payroll company is the data processor. In this example, the payroll company (the data processor) must not use the data for anything other than processing payroll at the direction of the data controller.
+
+The GDPR restricts data transfers to countries outside the EU. Companies that violate privacy rules in the GDPR may face fines of up to 4 percent of their global revenue. Unfortunately, it is filled with legalese, presenting many challenges for organizations.
+
+As a result, many organizations have created dedicated roles, such as a data privacy officer, to oversee the control of data and ensure the organization follows all relevant laws and regulations. The GDPR has mandated the role of a data protection officer for any organization that must comply with the GDPR. The person in this role is responsible for ensuring the organization applies the laws to protect individuals’ private data.
+
+#### Data Custodians
+
+Data owners often delegate day-to-day tasks to a data custodian. A custodian helps protect the integrity and security of data by ensuring that it is properly stored and protected. For example, custodians would ensure that the data is backed up by following guidelines in a backup policy. If administrators have configured auditing on the data, custodians would also maintain these logs.
+
+In practice, personnel within an IT department or system security administrators would typically be the custodians. They might be the same administrators responsible for assigning permissions to data.
+
+#### Administrators
+
+You’ll often hear the term administrator(s). However, the term means different things in different contexts. If Sally logs onto the Administrator account in a Windows system, she is an administrator. Similarly, anyone added to an Administrators group in Windows is also an administrator.
+
+However, many organizations view anyone with elevated privileges as administrators, even if they don’t have full administrative privileges. For example, help desk employees are granted some elevated privileges to perform their job but aren’t granted full administrative privileges. In this context, they are sometimes referred to as administrators. In the context of data roles, a data administrator may be a data custodian or someone in another data role.
+
+#### Users and Subjects
+
+A user is any person who accesses data via a computing system to accomplish work tasks. Users should have access only to the data they need to perform their work tasks. You can also think of users as employees or end users.
+
+Users fall into a broader category of subjects, which are discussed further in Chapter 8, “Principles of Security Models, Design, and Capabilities,” and Chapter 13. A subject is any entity that accesses an object such as a file or folder. Subjects can be users, programs, processes, services, computers, or anything else that can access a resource.
+
+The GDPR defines a data subject (not just a subject) as a person who can be identified through an identifier, such as a name, identification number, or other means. As an example, if a file includes PII on Sally Smith, Sally Smith is the data subject.
+
+##### 核心数据角色一览（对比表）
+
+| 角色                                          | 主要职责                                   | 来源标准/法规            | 可否直接控制数据？   |
+| --------------------------------------------- | ------------------------------------------ | ------------------------ | -------------------- |
+| **Data Owner**（数据所有者）                  | 决定数据分类、访问控制、合规要求           | NIST SP 800-18、GDPR隐含 | ✅ 是                 |
+| **Asset Owner**（资产/系统所有者）            | 负责系统安全配置、系统生命周期管理         | NIST SP 800-18           | ✅ 是（系统层面）     |
+| **Business/Mission Owner**（业务/使命所有者） | 保证系统或流程为业务增值，权衡安全与利润   | NIST SP 800-18、COBIT    | ✅ 是（流程层面）     |
+| **Data Processor**（数据处理者）              | 按照Data Controller指示处理数据            | GDPR                     | ❌ 否                 |
+| **Data Controller**（数据控制者）             | 决定为何、如何处理数据                     | GDPR                     | ✅ 是                 |
+| **Data Custodian**（数据保管者）              | 实施Data Owner策略，如备份、审计、权限分配 | NIST隐含                 | ❌ 否（执行者）       |
+| **Administrator**（管理员）                   | 具备系统权限，可能执行多种角色职责         | 通用术语                 | 部分可控（视权限）   |
+| **User/Subject**（用户/主体）                 | 使用数据完成业务任务                       | 全域                     | ❌ 否                 |
+| **Data Subject**（数据主体）                  | 被识别的个人                               | GDPR                     | ❌ 否（数据涉及对象） |
+
+##### 各角色职责详解
+
+✅ **Data Owner**
+
+- 指定数据的**分类（敏感性级别）**；
+- 决定谁可以访问、可访问何种级别；
+- 确保数据有适当的安全措施；
+- 对失职可能**承担法律/管理责任**。
+
+> 例如：人力资源总监是员工数据的Data Owner。
+
+------
+
+✅ **Asset Owner / System Owner**
+
+- 对系统本身负责（如Web服务器）；
+- 配合Data Owner制定系统安全策略；
+- **维护系统安全计划**；
+- 管理人员安全培训与系统安全变更。
+
+> 例如：IT部门的服务器管理员是Asset Owner。
+
+------
+
+✅ **Business/Mission Owner**
+
+- 负责**业务价值最大化**；
+- 权衡安全投入与利润回报；
+- 可能影响或主导风险决策；
+- 可通过COBIT等治理模型与IT合作。
+
+> 例如：销售总监负责在线商城的业务流程，是商城系统的Business Owner。
+
+------
+
+✅ **Data Controller（GDPR术语）**
+
+- 决定处理什么数据、如何处理；
+- **对数据处理负最终法律责任**；
+- 可委托Data Processor执行处理任务；
+- 需要任命Data Protection Officer（DPO）。
+
+> 例如：公司自己处理员工薪酬数据，它是Data Controller。
+
+------
+
+✅ **Data Processor（GDPR术语）**
+
+- 按照Controller要求处理数据；
+- 不得擅自改变用途或二次使用数据；
+- 需签订Data Processing Agreement（DPA）。
+
+> 例如：第三方薪资平台是Data Processor。
+
+------
+
+✅ **Data Custodian**
+
+- IT团队中执行者角色；
+- 实施备份、恢复、日志审计；
+- 管理权限，但不决定策略；
+- 对数据操作负**技术责任**。
+
+------
+
+✅ **Administrators**
+
+- 广义指**拥有特权访问权**的技术人员；
+- 可执行权限变更、系统配置、用户支持等；
+- CISSP关注其应遵循**最小权限原则**和AUP（可接受使用政策）。
+
+------
+
+✅ **Users / Subjects / Data Subjects**
+
+- **Users** 是合法员工使用数据完成任务；
+- **Subjects** 是更广义访问者，可为进程、服务等；
+- **Data Subjects** 是数据所**关联的自然人**（GDPR术语）。
+
+总结
+
+**Owner 决策，Custodian 执行**
+
+**Controller 控流程，Processor 做操作**
+
+**Business Owner 重价值，System Owner 重系统**
+
+**User 用数据，Subject 是访问者，Data Subject 是对象人**
+
+### Using Security Baselines
+
+“**Baseline = 最低要求 + 持续应用 + 分级保护**”
+
+Once an organization has identified and classified its assets, it will typically want to secure them. That’s where security baselines come in. Baselines provide a starting point and ensure a minimum security standard. One common baseline that organizations use is imaging.
+
+**Security Baseline（安全基线）** 是一套**最小安全标准配置**，用于保护信息系统的机密性、完整性和可用性（CIA）。它作为一个**起点**，确保所有系统在部署和运行时都符合最基本的安全要求。
+
+Baseline ≠ Best Practice，但它是一个“最低可接受的安全标准”。
+
+Administrators configure a single system with desired settings, capture it as an image, and then deploy the image to other systems. This ensures that systems are deployed in a similar secure state, which helps to protect the privacy of data.
+
+After deploying systems in a secure state, auditing processes periodically check the systems to ensure they remain in a secure state. As an example, Microsoft Group Policy can periodically check systems and reapply settings to match the baseline.
+
+**NIST SP 800-53 Rev. 5,** 定义了各种 **安全控制（security controls）**，可用于创建安全基线。 “Security and Privacy Controls for Information Systems and Organizations,” mentions security control baselines and identifies them as a set of minimum security controls defined for an information system. It stresses that a single set of security controls does not apply to all situations. Still, any organization can select a set of baseline security controls and tailor the baseline to its needs.
+
+**NIST SP 800-53B,** 专门列出了 **四种类型的基线**，用于根据系统的风险级别来选择合适的控制集合：“Control Baselines for Information Systems and Organizations,” includes a comprehensive list of security controls and has identified many of them to include in various baselines. Specifically, they present four baselines based on the potential impact to an organization’s mission if there is a loss of confidentiality, integrity, or availability of a system. The four baselines are as follows:
+
+1. **Low-Impact Baseline** Controls in this baseline are recommended if a loss of confidentiality, integrity, or availability will have a low impact on the organization’s mission.
+2. **Moderate-Impact Baseline** Controls in this baseline are recommended if a loss of confidentiality, integrity, or availability will have a moderate impact on the organization’s mission.
+3. **High-Impact Baseline** Controls in this baseline are recommended if a loss of confidentiality, integrity, or availability will have a high impact on the organization’s mission.
+4. **Privacy Control Baseline** This baseline provides an initial baseline for any systems that process PII. Organizations may combine this baseline with one of the other baselines.
+
+| 基线名称                     | 适用场景                              | 举例                   |
+| ---------------------------- | ------------------------------------- | ---------------------- |
+| **Low-Impact Baseline**      | 损失对组织影响较低                    | 打印服务器             |
+| **Moderate-Impact Baseline** | 损失有中等影响                        | HR系统                 |
+| **High-Impact Baseline**     | 损失对组织影响严重                    | 医疗记录系统、金融系统 |
+| **Privacy Control Baseline** | 处理**个人身份信息（PII）**的数据系统 | 员工档案数据库         |
+
+NIST 提出“按需裁剪（tailoring）”的理念 —— 所有控制可基于具体环境进行调整。
+
+**部署阶段** → 镜像部署 + 标准配置；
+
+**运行阶段** → Group Policy、自动检查等持续保障；
+
+**审计阶段** → 确保基线未被破坏，防止配置漂移；
+
+**应急阶段** → 快速恢复到受控状态。
+
+These refer to the worst-case potential impact if a system is compromised and a data breach occurs. As an example, imagine a system is compromised. You would try to predict the impact of the compromise on the confidentiality, integrity, or availability of the system and any data it holds:
+
+■✓ If the compromise would cause privacy data to be compromised, you would consider adding the security controls identified as privacy control baseline items to your baseline.
+
+■✓ If the impact is low, you would consider adding the security controls identified as low-impact controls to your baseline.
+
+■✓ If the impact of this compromise is moderate, you would consider adding the security controls identified as moderate-impact, in addition to the low-impact controls.
+
+■✓ If the impact is high, you would consider adding all the controls listed as high-impact in addition to the low-impact and moderate-impact controls.
+
+##### 如何为系统选择合适的基线？
+
+1. **评估潜在威胁影响（CIA）**：
+   - 如果系统泄露、篡改或不可用，对业务影响是低/中/高？
+2. **确定是否处理PII或敏感数据**：
+   - 是 → 加上**Privacy Control Baseline**
+3. **选择匹配影响等级的基线控制**：
+   - 高影响 → 包括高、中、低影响控制
+   - 中影响 → 包括中、低影响控制
+   - 低影响 → 仅低影响控制
+
+##### CISSP 的核心原则配合基线使用
+
+- **最小权限原则（Least Privilege）**：强制用户和系统仅获得完成任务所需的最小权限；
+- **默认拒绝原则（Default Deny）**：未明确允许的行为一律拒绝；
+- **持续监控（Continuous Monitoring）**：对基线偏差的持续审计和修复。
+
+It’s worth noting that many of the items in these lists are basic security practices. Additionally, implementing basic security principles such as the least privilege principle shouldn’t surprise anyone studying for the CISSP exam. Of course, just because these are basic security practices, it doesn’t mean organizations implement them. Unfortunately, many organizations have yet to discover or enforce the basics.
+
+应用原则：
+
+- **合规优先**：法律规定必须遵守；
+- **行业最佳实践次之**：参考通用标准提升安全性；
+- **组织策略优先级**：匹配业务目标，增强安全实践效果。
+
+#### Comparing Tailoring and Scoping **安全控制基线的个性化过程**
+
+After selecting a control baseline, organizations fine-tune it with tailoring and scoping processes. A big part of the tailoring process is aligning the controls with an organization’s specific security requirements. As a comparison, think of a clothes tailor who alters or repairs clothes. If a person buys a suit at a high-end retailer, a tailor modifies the suit to fit the person perfectly. Similarly, tailoring a baseline ensures it is a good fit for the organization.
+
+##### **Tailoring** 
+
+**定义**：在选定基线后，对控制进行微调，使其适配组织的业务需求、环境条件和合规目标。类比：就像你买了一件标准号西装，但还要请裁缝调整肩宽、袖长，让它“合身”。
+
+It refers to modifying the list of security controls within a baseline to align with the organization’s mission. NIST SP 800-53B formally defines it as “part of an organization-wide risk management process that includes framing, assessing, responding to, and monitoring information security and privacy risks” and indicates it includes the following activities:
+
+1. Identifying and designating **common controls** 识别共通控制： 如防火墙规则、身份验证机制适用于多个系统。
+2. Applying **scoping considerations 应用范围考量**： 决定某个控制是否**适用于目标系统**。
+3. Selecting **compensating controls 选择补偿控制**：如果某个推荐控制不可行，则用**等效或更优控制**替代。
+4. **Assigning control values 分配控制值：**如：账户锁定次数由 5 改为 3，以增强安全性。
+
+A selected baseline may not include commonly implemented controls. However, just because a security control isn’t included in the baseline doesn’t mean it should be removed. As an example, imagine that a data center includes video cameras covering the external entry, the internal exit, and every row of servers, but the baseline only recommends a video camera cover the external entry. During the tailoring process, personnel will evaluate these extra cameras and determine if they are needed. They may decide to remove some to save costs or keep them.
+
+An organization might decide that a set of baseline controls applies perfectly to computers in their central location, but some controls aren’t appropriate or feasible in a remote office location. In this situation, the organization can select compensating security controls to tailor the baseline to the remote site. As another example, imagine the account lockout policy is set to lock out users if they enter an incorrect password five times. In this example, the control value is 5, but the tailoring process may change it to 3.
+
+| 控制           | 标准设置       | Tailoring 修改后                    |
+| -------------- | -------------- | ----------------------------------- |
+| 视频监控控制   | 只覆盖外部入口 | 扩展为所有机房通道                  |
+| 密码尝试次数   | 5 次锁定       | 调整为 3 次锁定                     |
+| 多用户会话限制 | 默认启用       | 目标系统不支持并发登录 → 删除该控制 |
+
+##### **Scoping** 
+
+**定义**：在 Tailoring 的过程中，根据**系统特性**，评估每一个基线控制的适用性，并决定是否排除。
+
+✍️ 组织需对**排除某控制的每一项决定做书面记录**（非常重要！CISSP 考点）
+
+**Scoping 属于 Tailoring 的一部分**，但专注在“控制是否适用”的问题。
+
+It is a part of the tailoring process and refers to reviewing a list of baseline security controls and selecting only those controls that apply to the IT systems you’re trying to protect. Or, in the simplest terms, scoping processes eliminate controls that are recommended in a baseline. For example, if a system doesn’t allow any two people to log on to it simultaneously, there’s no need to apply a concurrent session control. During this part of the tailoring process, the organization looks at every control in the baseline and vigorously defends (in writing) any decision to omit a control from the baseline.
+
+| 概念                            | 要点                           | 注意事项                     |
+| ------------------------------- | ------------------------------ | ---------------------------- |
+| **Tailoring**                   | 调整安全控制，使其适配组织需求 | 控制值、控制替换、强化控制   |
+| **Scoping**                     | 判断哪些控制适用于目标系统     | 可剔除控制，但需**文档说明** |
+| **Compensating Controls**       | 替代不可行控制                 | 功能必须等效或更优           |
+| **标准选择 Standard Selection** | 根据业务类型与法规确定控制要求 | PCI、HIPAA、GDPR等有强制性   |
+
+#### Standards Selection（标准选择）
+
+**标准选择**在建立和裁剪安全控制基线时，组织必须**对照外部法规、行业标准**，选出适用于自身业务和数据类型的安全标准，从而确保：
+
+1. **法律合规（Legal Compliance）**
+2. **行业认可（Industry Best Practice）**
+3. **风险最小化（Risk Reduction）**
+
+When selecting security controls within a baseline, or otherwise, organizations need to ensure that the controls comply with external security standards. External elements typically define compulsory requirements for an organization. As an example, the Payment Card Industry Data Security Standard (PCI DSS) defines requirements that businesses must follow to process major credit cards. Similarly, organizations that collect or process data belonging to EU citizens must abide by the requirements in the GDPR.
+
+Obviously, not all organizations have to comply with these standards. Organizations that don’t process credit card transactions do not need to comply with PCI DSS. Similarly, organizations that do not collect or process EU citizens’ data do not need to comply with GDPR requirements. Organizations need to identify the standards that apply and ensure that the security controls they select fully comply with these standards.
+
+Even if your organization isn’t legally required to comply with a specific standard, using a well-designed community standard can be helpful. As an example, U.S. government organizations are required to comply with many of the standards published by NIST SP 800 documents. These same documents are used by many organizations in the private sector to help them develop and implement their own security standards.
+
+| 标准/法规            | 应用场景                 | 关键内容                         | 是否强制                       |
+| -------------------- | ------------------------ | -------------------------------- | ------------------------------ |
+| **PCI DSS**          | 处理信用卡支付           | 加密、访问控制、漏洞管理         | ✅ 强制                         |
+| **GDPR**             | 收集/处理欧盟公民数据    | 透明性、数据主体权利、DPO职责    | ✅ 强制                         |
+| **HIPAA**            | 医疗保健领域             | 保护PHI、技术/行政安全措施       | ✅ 强制                         |
+| **SOX**              | 上市公司财务数据         | 数据完整性、可审计性             | ✅ 强制（对美上市公司）         |
+| **NIST SP 800 系列** | 美国政府系统，或私企借鉴 | 控制基线、安全控制框架、风险管理 | ⚠️ 强制（对政府）；推荐（私营） |
+| **ISO/IEC 27001**    | 通用信息安全管理体系     | ISMS架构、持续改进模型           | ⚠️ 可选，但广泛使用             |
+| **COBIT**            | IT治理与控制             | IT与业务对齐，流程控制           | ⚠️ 推荐使用                     |
+
+##### 标准选择的三步流程
+
+① **法规识别（Identify Applicable Regulations）**
+
+- 是否收集信用卡信息？→ **PCI DSS**
+- 是否收集欧盟数据？→ **GDPR**
+- 是否存储医疗记录？→ **HIPAA**
+
+② **业务模型评估（Assess Business Operations）**
+
+- 是否涉及政府合同？→ **FISMA / NIST**
+- 是否需要获得信息安全认证？→ **ISO 27001**
+- 是否存在IT与业务流程割裂？→ **COBIT治理模型**
+
+③ **匹配安全控制（Map Controls to Standards）**
+
+- 控制项必须满足法规要求；
+- 控制裁剪不能低于标准规定的最低控制集；
+- 所有控件变更必须文档化，并经合规团队或DPO评估。
+
+小结助记
+
+> **标准选择三要素：合规 + 适配 + 映射控制**
+
+- **必须合规**的：法律强制如 GDPR / PCI / HIPAA；
+- **建议遵循**的：如 ISO 27001 / COBIT / NIST；
+- **选择标准后要映射控制** → 用 Tailoring/Scoping 方法调整控制集；
+- **记录每项调整理由**，以备合规审查。
+
+### Summary
+
+Asset security focuses on **collecting**, **handling**, and **protecting** information throughout its **lifecycle**. This includes sensitive information stored or processed on computing systems or transferred over a network and the assets used in these processes. **Sensitive information** is any information that an organization keeps private and can include multiple levels of classifications. Proper destruction methods ensure that data can’t be retrieved after destruction.
+
+**Data protection methods** include digital rights management **(DRM)** and using cloud access security brokers **(CASBs)** when using cloud resources. DRM methods attempt to protect copyrighted materials. A CASB is software placed logically between users and cloudbased resources. It can ensure that cloud resources have the same protections as resources within a network. Entities that must comply with the EU GDPR use additional data protection methods such as pseudonymization, tokenization, and anonymization.
+
+Personnel can fulfill many different roles when handling data. **Data owners** are ultimately responsible for classifying, labeling, and protecting data. **System owners** are responsible for the systems that process the data. The GDPR defines **data controllers, data processors,** and **data custodians.** Data controllers decide what data to process and how to process it. A data controller can hire a third party to process data, and in this context, the third party is the data processor. Data processors have a responsibility to protect the privacy of the data and not use it for any purpose other than directed by the data controller. A custodian is delegated day-to-day responsibilities for properly storing and protecting data.
+
+**Security baselines** provide a set of security controls that an organization can implement as a **secure starting point**. Some publications (such as NIST SP 800-53B) identify security control baselines. However, these baselines don’t apply equally to all organizations. Instead, organizations use **scoping and tailoring** techniques to identify the security controls to implement after selecting baselines. Additionally, organizations ensure that they implement security controls mandated by external standards that apply to their organization.
+
+### Exam Essentials
+
+- **Understand the importance of data and asset classifications.** Data owners are responsible for defining data and asset classifications and ensuring that data and systems are properly marked. Additionally, data owners define requirements to protect data at different classifications, such as encrypting sensitive data at rest and in transit. Data classifications are typically defined within security policies or data policies.
+- **Define PII and PHI.** Personally identifiable information (PII) is any information that can identify an individual. Protected health information (PHI) is any health-related information that can be related to a specific person. Many laws and regulations mandate the protection of PII and PHI.
+- **Know how to manage sensitive information.** Sensitive information is any type of classified information, and proper management helps prevent unauthorized disclosure resulting in a loss of confidentiality. Proper management includes marking, handling, storing, and destroying sensitive information. The two areas where organizations often miss the mark are adequately protecting backup media holding sensitive information and sanitizing media or equipment when it is at the end of its lifecycle.
+- **Describe the three data states.** The three data states are at rest, in transit, and in use. Data at rest is any data stored on media such as hard drives or external media. Data in transit is any data transmitted over a network. Encryption methods protect data at rest and in transit. Data in use refers to data in memory and used by an application. Applications should flush memory buffers to remove data after it is no longer needed.
+- **Define DLP.** Data loss prevention (DLP) systems detect and block data exfiltration attempts by scanning unencrypted files and looking for keywords and data patterns. Network-based systems (including cloud-based systems) scan files before they leave the network. Endpoint-based systems prevent users from copying or printing some files.
+- **Compare data destruction methods.** Erasing a file doesn’t delete it. Clearing media overwrites it with characters or bits. Purging repeats the clearing process multiple times and removes data so that the media can be reused. Degaussing removes data from tapes and magnetic hard disk drives, but it does not affect optical media or SSDs. Destruction methods include incineration, crushing, shredding, and disintegration.
+- **Describe data remanence.** Data remanence is the data that remains on media after it should have been removed. Hard disk drives sometimes retain residual magnetic flux that can be read with advanced tools. Advanced tools can read slack space on a disk, which is unused space in clusters. Erasing data on a disk leaves data remanence.
+- **Understand record retention policies.** Record retention policies ensure that data is kept in a usable state while it is needed and destroyed when it is no longer needed. Many laws and regulations mandate keeping data for a specific amount of time, but in the absence of formal regulations, organizations specify the retention period within a policy. Audit trail data needs to be kept long enough to reconstruct past incidents, but the organization must identify how far back they want to investigate. A current trend in many organizations is to reduce legal liabilities by implementing short retention policies with email.
+- **Know the difference between EOL and EOS.** End-of-life (EOL) is the date announced by a vendor when sales of a product stop. However, the vendor still supports the product after EOL. End-of-support (EOS) identifies the date when a vendor will no longer support a product.
+- **Explain DRM.** Digital rights management (DRM) methods provide copyright protection for copyrighted works. The purpose is to prevent the unauthorized use, modification, and distribution of copyrighted works.
+- **Explain CASB.** A cloud access security broker (CASB) is placed logically between users and cloud resources. It can apply internal security controls to cloud resources. The CASB component can be placed on-premises or in the cloud.
+- **Define pseudonymization.** Pseudonymization is the process of replacing some data elements with pseudonyms or aliases. It removes privacy data so that a dataset can be shared. However, the original data remains available in a separate dataset.
+- **Define tokenization.** Tokenization replaces data elements with a string of characters or a token. Credit card processors replace credit card data with a token, and a third party holds the mapping to the original data and the token.
+- **Define anonymization.** Anonymization replaces privacy data with useful but inaccurate data. The dataset can be shared and used for analysis purposes, but anonymization removes individual identities. Anonymization is permanent.
+- **Know the responsibilities of data roles.** The data owner is the person responsible for classifying, labeling, and protecting data. System owners are responsible for the systems that process the data. Business and mission owners own the processes and ensure that the systems provide value to the organization. Data controllers decide what data to process and how to process it. Data processors are often the third-party entities that process data for an organization at the direction of the data controller. Administrators grant access to data based on guidelines provided by the data owners. A user, or subject, accesses data while performing work tasks. A custodian has day-to-day responsibilities for protecting and storing data.
+- **Know about security control baselines.** Security control baselines provide a listing of controls that an organization can apply as a baseline. Not all baselines apply to all organizations. Organizations apply scoping and tailoring techniques to adapt a baseline to their needs.

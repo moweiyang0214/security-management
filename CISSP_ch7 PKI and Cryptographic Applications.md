@@ -310,7 +310,7 @@ Because HMAC relies on a shared secret key, it does not provide any nonrepudiati
 
 These four rules are the core principles of public key cryptography and digital signatures.
 
-### 3. Digital Signature Standard
+### 2. Digital Signature Standard
 
 **DSS 是专门用于“数字签名”的一套标准，规定了哪些非对称算法可以用于签名用途。**
 

@@ -10,7 +10,7 @@ This chapter also explores several practical applications of asymmetric cryptogr
 
 Three of the more common asymmetric cryptosystems in use today: **Rivest–Shamir–Adleman (RSA), Diffie–Hellman, ElGamal, and elliptic curve cryptography (ECC)**. We’ll also explore the emerging world of quantum cryptography.
 
-#### Public and Private Keys
+### Public and Private Keys
 
 public key cryptosystems assign each user a pair of keys: a public key and a private key. As the names imply, public key cryptosystem users make their public keys freely available to anyone with whom they want to communicate. The mere possession of the public key by third parties does not introduce any weaknesses into the cryptosystem. The private key, on the other hand, is reserved for the sole use of the individual who owns the keys. Users should not normally share their private keys with any other cryptosystem user, outside of key escrow and recovery arrangements.
 
@@ -18,7 +18,7 @@ Once the sender encrypts the message with the recipient’s public key, no user 
 
 Keys used within public key systems must be longer than those used in private key systems to produce cryptosystems of equivalent strengths.
 
-#### 1. RSA
+### 1. RSA
 
 The RSA algorithm depends on the computational difficulty inherent in factoring the product of large prime numbers. Each user of the cryptosystem generates a pair of public and private keys using the algorithm described in the following steps:
 
@@ -58,13 +58,13 @@ The key lengths shown in the following table for three cryptosystems all provide
 | RSA            | 3,072 bits |
 | Elliptic curve | 256 bits   |
 
-#### 2. ElGamal
+### 2. ElGamal
 
 We learned how the Diffie–Hellman algorithm uses large integers and modular arithmetic to facilitate the secure exchange of secret keys over insecure communications channels. In **1985**, Dr. Taher Elgamal published an article describing how the mathematical principles behind the Diffie–Hellman key exchange algorithm could be extended to support an entire public key cryptosystem used for encrypting and decrypting messages.
 
 However, ElGamal also has a major disadvantage—the algorithm doubles the size of any message that it encrypts. This presents a major hardship when encrypting large amounts of data that must be sent over a network.
 
-#### 3. ECC：Elliptic Curve
+### 3. ECC：Elliptic Curve
 
 The same year that Elgamal published his algorithm, two other mathematicians, Neal Koblitz from the University of Washington and Victor Miller from IBM, independently proposed the application of **elliptic curve cryptography (ECC).**
 
@@ -74,7 +74,7 @@ y<sup>2</sup> = x<sup>3</sup> + ax + b
 
 **A 3,072-bit RSA key is cryptographically equivalent to a 256bit elliptic curve cryptosystem key.**
 
-#### Diffie–Hellman Key Exchange
+### 4. Diffie–Hellman Key Exchange
 
 they use the DiffieHellman algorithm, following this process:
 
@@ -102,13 +102,13 @@ It is important to note that Diffie–Hellman is not an encryption protocol in a
 
 The Diffie–Hellman key exchange algorithm relies on the use of large prime numbers. The ECDHE key exchange algorithm is a variant of this approach that uses the elliptic curve problem to perform a similar key agreement process.
 
-#### Quantum Cryptography
+### Quantum Cryptography
 
 The most significant impact of quantum computing on the world of cryptography resides in the potential that quantum computers may be able to solve problems that are not possible to solve on contemporary computers. This concept is known as quantum supremacy and, if achieved, may be able to easily solve the factorization problems upon which many classical asymmetric encryption algorithms rely. If this occurs, it could render popular algorithms such as RSA and Diffie–Hellman insecure.
 
 However, quantum computers may also be used to create newer, more complex cryptographic algorithms. These quantum cryptography systems may be more resistant to quantum attacks and could usher in a new era of cryptography. Researchers have already developed lab implementations of quantum key distribution (QKD), an approach to use quantum computing to create a shared secret key between two users, similar to the goal of the DiffieHellman algorithm. Like quantum cryptography in general, QKD has not yet reached the stage of practical use.
 
-### Hash Functions
+## Hash Functions
 
 | 项目     | 内容                                                         |
 | -------- | ------------------------------------------------------------ |
@@ -159,7 +159,7 @@ The bottom line is that **hash functions create a value that uniquely represents
 
 Common hashing algorithms: Secure Hash Algorithm **(SHA)**, Message Digest 5 **(MD5),** and the RIPE Message Digest **(RIPEMD)**.
 
-#### 1. SHA: Secure Hash Algorithm
+### 1. SHA: Secure Hash Algorithm
 
 | 算法    | 摘要长度 | 输入块大小 | 状态               |
 | ------- | -------- | ---------- | ------------------ |
@@ -190,7 +190,7 @@ As a replacement, NIST announced the SHA-2 standard, which has four major varian
 - ⚠️ SHA 系列与 AES 一样，是 NIST/FIPS 推广的政府标准。
 - SHA-3 并非 SHA-2 的升级版，而是独立算法（使用 Keccak 函数）。
 
-#### 2. MD5: Message Digest Algorithm
+### 2. MD5: Message Digest Algorithm
 
 概要：
 
@@ -211,7 +211,7 @@ MD5 implements additional security features that reduce the speed of message dig
 
 Some tools and systems still rely on MD5, so you may see it in use today, but it is now far better to rely on more secure hashing algorithms, such as SHA-2.
 
-#### 3. RIPEMD: （RIPE Message Digest）
+### 3. RIPEMD: （RIPE Message Digest）
 
 | 算法           | 摘要长度 | 状态                       |
 | -------------- | -------- | -------------------------- |
@@ -264,7 +264,7 @@ You may also see references to RIPEMD-256 and RIPEMD-320. These functions are ac
 | ❌ SHA-1/MD5 不安全 | 必须用 SHA-2 或 SHA-3                  |
 | ✅ 哈希 + 签名      | 提供认证与不可否认性                   |
 
-### Digital Signatures
+## Digital Signatures
 
 Once you have chosen a cryptographically sound hash function and cryptographic algorithm, you can use it to implement a digital signature system. Digital signature infrastructures have two distinct goals:
 
@@ -295,7 +295,7 @@ Note that the digital signature process does not provide confidentiality in and 
 
 However, if Alice also wanted to ensure the confidentiality of her message to Bob, she could add a step to the message creation process. After appending the signed message digest to the plaintext message, Alice could encrypt the entire message with Bob’s public key. When Bob received the message, he would decrypt it with his own private key before following the steps just outlined.
 
-#### HMAC: hashed message authentication code
+### 1. HMAC: hashed message authentication code
 
 The hashed message authentication code (HMAC) algorithm implements a partial digital signature—it guarantees the integrity of a message during transmission, but it does not provide for nonrepudiation.
 
@@ -310,7 +310,7 @@ Because HMAC relies on a shared secret key, it does not provide any nonrepudiati
 
 These four rules are the core principles of public key cryptography and digital signatures.
 
-#### Digital Signature Standard
+### 3. Digital Signature Standard
 
 **DSS 是专门用于“数字签名”的一套标准，规定了哪些非对称算法可以用于签名用途。**
 
@@ -345,5 +345,5 @@ DSS also specifies the encryption algorithms that can be used to support a digit
 - DSS：✅ 签名标准，必须用 SHA-3 哈希算法生成MD，并限定可用于签名的公钥算法包括：DSA、RSA 和 ECDSA。
 - Diffie–Hellman：❌ DSS 不支持；它用于密钥交换，不做签名；
 
-### Public Key Infrastructure
+## Public Key Infrastructure
 

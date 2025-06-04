@@ -131,7 +131,7 @@ Second, the message digest can be used to implement a digital signature algorith
 
 In most cases, a message digest is 128 bits or larger. However, a single-digit value can be used to perform the function of parity, a low-level or single-digit checksum value used to provide a single individual point of verification. In most cases, the longer the message digest, the more reliable its verification of integrity.
 
-##### RSA's Five Basic Requirements（RSA 对加密哈希函数的五大要求）
+#### RSA's Five Basic Requirements（RSA 对加密哈希函数的五大要求）
 
 | 要求                               | 解释                             |
 | ---------------------------------- | -------------------------------- |
@@ -237,7 +237,7 @@ You may also see references to RIPEMD-256 and RIPEMD-320. These functions are ac
 
 #### Comparison of Hash Algorithm Value Lengths
 
-##### Table 7.1 – Hash Algorithm Memorization Chart
+Table 7.1 – Hash Algorithm Memorization Chart
 
 | **Name**          | **Hash Value Length**                     |
 | ----------------- | ----------------------------------------- |
@@ -254,7 +254,7 @@ You may also see references to RIPEMD-256 and RIPEMD-320. These functions are ac
 | RIPEMD-256        | 256 (but with equivalent security to 128) |
 | RIPEMD-320        | 320 (but with equivalent security to 160) |
 
-##### 总结回顾
+**总结**
 
 | 模块               | 高频点                                 |
 | ------------------ | -------------------------------------- |
@@ -301,7 +301,7 @@ The hashed message authentication code (HMAC) algorithm implements a partial dig
 
 Because HMAC relies on a shared secret key, it does not provide any nonrepudiation functionality. However, it operates in a more efficient manner than the digital signature standard and may be suitable for applications in which symmetric key cryptography is appropriate. In short, it represents a halfway point between unencrypted use of a message digest algorithm and computationally expensive digital signature algorithms based on public key cryptography.
 
-##### Which Key Should I Use?
+**Which Key Should I Use?**
 
 1. If you want to encrypt a confidential message, use the recipient’s public key.
 2. If you want to decrypt a confidential message sent to you, use your private key.

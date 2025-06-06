@@ -320,11 +320,13 @@ NIST specifies the digital signature algorithms acceptable for federal governmen
 
 DSS also specifies the encryption algorithms that can be used to support a digital signature infrastructure. There are three currently approved **standard encryption algorithms**:
 
-■✓ The Digital Signature Algorithm **(DSA)** as specified in FIPS 186-4. This algorithm is a variant of an algorithm developed by Dr. Taher Elgamal, the creator of the ElGamal asymmetric cryptosystem discussed earlier in this chapter.
+1. The Digital Signature Algorithm **(DSA)** as specified in FIPS 186-4. This algorithm is a variant of an algorithm developed by Dr. Taher Elgamal, the creator of the ElGamal asymmetric cryptosystem discussed earlier in this chapter.
 
-■✓ The Rivest–Shamir–Adleman **(RSA)** algorithm, as specified in ANSI X9.31.
+2. The Rivest–Shamir–Adleman **(RSA)** algorithm, as specified in ANSI X9.31.
 
-■✓ The Elliptic Curve DSA **(ECDSA)**, as specified in ANSI X9.62.
+3. The Elliptic Curve DSA **(ECDSA)**, as specified in ANSI X9.62.
+
+总结DSS的三大标准加密算法**standard encryption algorithms**
 
 | 算法      | 全称                        | 描述                                         |
 | --------- | --------------------------- | -------------------------------------------- |
@@ -364,7 +366,7 @@ The major strength of public key encryption is its ability to facilitate communi
 - **Private key** → 对 Digest 签名 → 生成 **Digital Signature**
 - **Digital Certificate** = 签名 + 公钥 + 身份信息
 
-### Digital Certificates
+### Digital Certificates 证书
 
 **Digital certificates provide communicating parties with the assurance that the people they are communicating with truly are who they claim to be.** 
 
@@ -396,7 +398,7 @@ The subject of a certificate may include a wildcard in the certificate name, ind
 
 ### Digital Certificate Authorities
 
-#### **Certificate authorities (CAs)** 
+#### **Certificate Authorities (CAs)** 
 
 - 作用：签发、吊销证书；建立信任根
 
@@ -500,7 +502,7 @@ The technical concepts behind the public key infrastructure are relatively simpl
 
 🌟 关键步骤：
 
-1. 提交 CSR（Certificate Signing Request），内含用户的 **公钥** 和 **身份信息**
+1. 提交 **CSR（Certificate Signing Request）**，内含用户的 **公钥** 和 **身份信息**
 2. CA 验证身份（可为人工、信用信息、组织渠道等）
 3. CA 使用 **自己的私钥** 对信息签名，生成用户的 **X.509 证书**
 
@@ -527,7 +529,7 @@ Certificate authorities issue different types of certificates depending upon the
 
 🎯 核心概念：接收到证书后，通信方需要验证证书是否可信。
 
-✅ 验证要素清单：
+验证要素清单：
 
 1. **CA 数字签名有效**（使用 CA 的公钥验证）
 2. **CA 是否被信任**（在本地系统/浏览器信任列表中）
@@ -601,7 +603,7 @@ OCSP Stapling 是高频考试内容，**关键优势在于减轻 CA 的 OCSP 服
 
 | 阶段         | 内容                           | CISSP 考点提示                         |
 | ------------ | ------------------------------ | -------------------------------------- |
-| Enrollment   | 身份验证、提交 CSR、签名证书   | CSR 内含公钥，CA 签名保证绑定          |
+| Enrollment   | 身份验证、提交 CSR、签名证书   | CSR 内含申请方公钥，CA 签名保证绑定    |
 | Verification | 签名验证、有效性检查、吊销检测 | 需确认字段准确、有效期及信任链         |
 | Revocation   | CRL、OCSP、Stapling            | OCSP Stapling 为推荐机制，减少性能消耗 |
 
@@ -674,7 +676,7 @@ Certificate Formats Comparison Table（应试速记表）
 | **PFX/P12** | Binary        | .pfx, .p12       | 证书 + 私钥 + CA链 | Windows/Browser | ✅        |
 | **P7B**     | Text          | .p7b             | 证书链（不含私钥） | Windows/Java    | ❌        |
 
-CISSP 典型考点总结：
+**CISSP 典型考点总结：**
 
 - DER 和 PEM 都可用于单个证书，但 PEM 可读性更好。
 - PFX/P12 是唯一包含私钥的格式，**必须加密**以保证安全。
@@ -682,3 +684,117 @@ CISSP 典型考点总结：
 - PEM、P7B 为文本格式；DER、PFX 为二进制格式。
 
 ## Asymmetric Key Management
+
+When working within the public key infrastructure, you must comply with several best practice requirements to maintain the security of your communications.
+
+1. First, choose your encryption system wisely. As you learned earlier, “security through obscurity” is not an appropriate approach. Choose an encryption system with an algorithm in the public domain that has been thoroughly vetted by industry experts. Be wary of systems that use a “black-box” approach and maintain that the secrecy of their algorithm is critical to the integrity of the cryptosystem.
+2. You must also select your keys in an appropriate manner. Use a key length that balances your security requirements with performance considerations. Also, ensure that your key is truly random. Any patterns within the key increase the likelihood that an attacker will be able to break your encryption and degrade the security of your cryptosystem.
+3. When using public key encryption, keep your private key secret! Do not, under any circumstances, allow anyone else to gain access to your private key. Remember, allowing someone access even once permanently compromises all communications that take place (past, present, or future) using that key and allows the third party to successfully impersonate you.
+4. Retire keys when they’ve served a useful life. Many organizations have mandatory key rotation requirements to protect against undetected key compromise. If you don’t have a formal policy that you must follow, select an appropriate interval based on the frequency with which you use your key. You might want to change your key pair every few months, if practical.
+5. Back up your key! If you lose the file containing your private key because of data corruption, disaster, or other circumstances, you’ll certainly want to have a backup available. You may want to either create your own backup or use a key escrow service that maintains the backup for you. In either case, ensure that the backup is handled in a secure manner. After all, it’s just as important as your primary key file!
+6. Hardware security modules (HSMs) also provide an effective way to manage encryption keys. These hardware devices store and manage encryption keys in a secure manner that prevents humans from ever needing to work directly with the keys. Many of them are also capable of improving the efficiency of cryptographic operations, in a process known as hardware acceleration. HSMs range in scope and complexity from very simple devices, such as the YubiKey, that store encrypted keys on a USB drive for personal use, to more complex enterprise products that reside in a data center. HSMs include tamper-resistance mechanisms to prevent someone who gains physical access to the device from accessing the cryptographic material it maintains. Cloud providers, such as Amazon and Microsoft, also offer cloud-based HSMs that provide secure key management for infrastructure-as-a-service (IaaS) services.
+
+## Hybrid Cryptography
+
+You’ve now learned about the **two major categories of cryptographic systems**: 
+
+1. symmetric algorithms
+2. asymmetric algorithms
+
+You’ve also learned about the major advantages and disadvantages of each. Chief among these are the facts that symmetric algorithms are fast but introduce key distribution challenges and, though asymmetric algorithms solve the key distribution problem, they are also computationally intensive and slow. If you’re choosing between these approaches, you’re forced to make a decision between convenience and speed.
+
+**Hybrid cryptography** combines symmetric and asymmetric cryptography to **achieve the key distribution benefits of asymmetric cryptosystems with the speed of symmetric algorithms.** 
+
+These approaches work by setting up an initial connection between two communicating entities using asymmetric cryptography. That connection is used for only one purpose: the exchange of a randomly generated shared secret key, known as an ephemeral key. 
+
+The two parties then exchange whatever data they wish using the shared secret key with a symmetric algorithm. When the communication session ends, they discard the ephemeral key and then repeat the same process if they wish to communicate again later.
+
+The beauty behind this approach is that it uses asymmetric cryptography for key distribution, a task that requires the encryption of only a small amount of data. Then it switches to the faster symmetric algorithm for the vast majority of data exchanged.
+
+**Transport Layer Security (TLS)** is the most well-known example of hybrid cryptography.
+
+## Applied Cryptography
+
+Examine the use of cryptography to secure data at rest, such as that stored on portable devices, as well as data in transit, using techniques that include secure email, encrypted web communications, and networking.
+
+### Portable Devices
+
+The now ubiquitous nature of laptop computers, smartphones, and tablets brings new risks to the world of computing. Those devices often contain highly sensitive information that, if lost or stolen, could cause serious harm to an organization and its customers, employees, and affiliates. For this reason, many organizations turn to encryption to protect the data on these devices in the event they are misplaced.
+
+Current versions of popular operating systems now include disk encryption capabilities that make it easy to apply and manage encryption on portable devices. For example, Microsoft Windows includes the BitLocker and Encrypting File System (EFS) technologies, macOS includes FileVault encryption, and the VeraCrypt open source package allows the encryption of disks on Linux, Windows, and Mac systems.
+
+#### Trusted Platform Module (TPM)
+
+Modern computers often include a specialized cryptographic component known as a Trusted Platform Module (TPM). The TPM is a chip that resides on the motherboard of the device. The TPM serves a number of purposes, including the storage and management of keys used for full-disk encryption (FDE) solutions. The TPM provides the operating system with access to the keys only if the user successfully authenticates. This prevents someone from removing the drive from one device and inserting it into another device to access the drive’s data.
+
+A wide variety of commercial tools are available that provide added features and management capability. The major differentiators between these tools are how they protect keys stored in memory, whether they provide full-disk or volume-only encryption, and whether they integrate with hardware-based Trusted Platform Modules (TPMs) to provide added security. Any effort to select encryption software should include an analysis of how well the alternatives compete on these characteristics.
+
+Don’t forget about smartphones when developing your portable device encryption policy. Most major smartphone and tablet platforms include enterprise-level functionality that supports encryption of data stored on the phone.
+
+### Email
+
+We have mentioned several times that security should be cost-effective. When it comes to email, simplicity is the most cost-effective option, but sometimes cryptography functions provide specific security services that you can’t avoid using. Since ensuring security is also cost-effective, here are some simple rules about encrypting email:
+
+- If you need confidentiality when sending an email message, encrypt the message.
+- If your message must maintain integrity, you must hash the message.
+- If your message needs authentication, integrity, and/or nonrepudiation, you should digitally sign the message.
+- If your message requires confidentiality, integrity, origin authentication, and nonrepudiation, you should encrypt and digitally sign the message.
+
+It is always the responsibility of the sender to put proper mechanisms in place to ensure that the security (that is, confidentiality, integrity, authenticity, and nonrepudiation) of a message or transmission is maintained.
+
+One of the most in-demand applications of cryptography is encrypting and signing email messages. Until recently, encrypted email required the use of complex, awkward software that in turn required manual intervention and complicated key exchange procedures. An increased emphasis on security in recent years resulted in the implementation of strong encryption technology in mainstream email packages. Next, we’ll look at some of the secure email standards in widespread use today.
+
+### Pretty Good Privacy (PGP)
+
+Phil Zimmerman’s Pretty Good Privacy (PGP) secure email system appeared on the computer security scene in 1991. It combines the CA hierarchy described earlier in this chapter with the “web of trust” concept—that is, you must become trusted by one or more PGP users to begin using the system. You then accept their judgment regarding the validity of additional users and, by extension, trust a multilevel “web” of users descending from your initial trust judgments.
+
+PGP initially encountered a number of hurdles to widespread use. The most difficult obstruction was the U.S. government export regulations, which treated encryption technology as munitions and prohibited the distribution of strong encryption technology outside the United States. Fortunately, this restriction has since been repealed, and PGP may be freely distributed to most countries.
+
+PGP is available in two versions: the commercial product that is now sold by Symantec and an open source variant called OpenPGP. These products allow for the use of modern encryption algorithms, hash functions, and signature standards within the PGP framework.
+
+PGP messages are often sent in text-encoded format to facilitate compatibility with other email systems.
+
+It is not possible to tell that this message is digitally signed until after it is decrypted.
+
+Many commercial providers also offer PGP-based email services as web-based cloud email offerings, mobile device applications, or webmail plug-ins. These services appeal to administrators and end users because they remove the complexity of configuring and maintaining encryption certificates and provide users with a managed secure email service. Some products in this category include ProtonMail, StartMail, Mailvelope, SafeGmail, and Hushmail.
+
+### S/MIME
+
+The Secure/Multipurpose Internet Mail Extensions (S/MIME) protocol has emerged as a de facto standard for encrypted email. S/MIME uses the RSA encryption algorithm and has received the backing of major industry players, including RSA Security. S/MIME has already been incorporated in a large number of commercial products, including these:
+
+- Microsoft Outlook and Office 365
+- Apple Mail
+- Google G Suite Enterprise edition
+
+S/MIME relies on the use of X.509 certificates for exchanging cryptographic keys. The public keys contained in these certificates are used for digital signatures and for the exchange of symmetric keys used for longer communications sessions. Users who receive a message signed with S/MIME will be able to verify that message by using the sender’s digital certificate. Users who wish to use S/MIME for confidentiality or wish to create their own digitally signed messages must obtain their own certificates.
+
+Despite strong industry support for the S/MIME standard, technical limitations have prevented its widespread adoption. Although major desktop mail applications support S/MIME email, mainstream web-based email systems do not support it out of the box (the use of browser extensions is required).
+
+### Web Applications
+
+Encryption is widely used to protect web transactions. This is mainly because of the strong movement toward ecommerce and the desire of both ecommerce vendors and consumers to securely exchange financial information (such as credit card information) over the web. We’ll look at the two technologies that are responsible for the small lock icon within web browsers—Secure Sockets Layer (SSL) and Transport Layer Security (TLS).
+
+#### Secure Sockets Layer (SSL)
+
+SSL was originally developed by Netscape to provide client/server encryption for web traffic sent using the Hypertext Transfer Protocol Secure (HTTPS). Over the years, security researchers discovered a number of critical flaws in the SSL protocol that render it insecure for use today. However, SSL serves as the technical foundation for its successor, Transport Layer Security (TLS), which remains widely used today.
+
+Even though TLS has been in existence for more than a decade, many people still mistakenly call it SSL. When you hear people use the term SSL, that’s a red flag that you should further investigate to ensure that they’re really using the modern, secure TLS and not the outdated SSL.
+
+#### Transport Layer Security (TLS)
+
+TLS relies on the exchange of server digital certificates to negotiate encryption/decryption parameters between the browser and the web server. TLS’s goal is to create secure communications channels that remain open for an entire web browsing session. It depends on a combination of symmetric and asymmetric cryptography. The following steps are involved:
+
+1. When a user accesses a website, the browser retrieves the web server’s certificate and extracts the server’s public key from it.
+2. The browser creates a random symmetric key (known as the ephemeral key), uses the server’s public key to encrypt it, and sends the encrypted symmetric key to the server.
+3. The server decrypts the symmetric key using its own private key, and the two systems exchange all future messages using the symmetric encryption key.
+
+This approach allows TLS to leverage the advanced functionality of asymmetric cryptography while encrypting and decrypting the vast majority of the data exchanged using the faster symmetric algorithm.
+
+When TLS was first proposed as a replacement for SSL, not all browsers supported the more modern approach. To ease the transition, early versions of TLS supported downgrading communications to SSL v3.0 when both parties did not support TLS. However, in 2011, TLS v1.2 dropped this backward compatibility.
+
+In 2014, an attack known as the Padding Oracle On Downgraded Legacy Encryption (POODLE) demonstrated a significant flaw in the SSL 3.0 fallback mechanism of TLS. In an effort to remediate this vulnerability, many organizations completely dropped SSL support and now rely solely on TLS security.
+
+
+
+
+

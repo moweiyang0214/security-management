@@ -717,13 +717,39 @@ The beauty behind this approach is that it uses asymmetric cryptography for key 
 
 Examine the use of cryptography to secure data at rest, such as that stored on portable devices, as well as data in transit, using techniques that include secure email, encrypted web communications, and networking.
 
-### Portable Devices
+### 1. Portable Devices
 
 The now ubiquitous nature of laptop computers, smartphones, and tablets brings new risks to the world of computing. Those devices often contain highly sensitive information that, if lost or stolen, could cause serious harm to an organization and its customers, employees, and affiliates. For this reason, many organizations turn to encryption to protect the data on these devices in the event they are misplaced.
 
+Full Disk Encryption (FDE) 工具和操作系统支持
+
+| 平台               | 内建加密工具                             |
+| ------------------ | ---------------------------------------- |
+| **Windows**        | BitLocker、EFS（Encrypting File System） |
+| **macOS**          | FileVault                                |
+| **Linux / 跨平台** | VeraCrypt（开源）                        |
+
 Current versions of popular operating systems now include disk encryption capabilities that make it easy to apply and manage encryption on portable devices. For example, Microsoft Windows includes the BitLocker and Encrypting File System (EFS) technologies, macOS includes FileVault encryption, and the VeraCrypt open source package allows the encryption of disks on Linux, Windows, and Mac systems.
 
-#### Trusted Platform Module (TPM)
+**CISSP重点**：
+
+- **BitLocker 与 TPM 配合使用**效果更佳（见下一节）。
+- **EFS** 是文件级加密，不是整盘加密（FDE）。
+- **FileVault** 是 Apple 原生的整盘加密方案。
+
+#### Trusted Platform Module (TPM) – 可信平台模块
+
+TPM 是集成在主板上的**专用硬件加密模块**，主要用于：
+
+- **存储并保护密钥**（例如用于 FDE 的解密密钥）
+- **系统启动完整性检查**
+- **增强身份验证机制**（如仅用户验证成功后才释放密钥）
+- **防止物理迁移攻击**（如将加密硬盘安装到其他设备中尝试破解）
+
+✅ **考点提醒**：
+
+- BitLocker 能够借助 TPM 自动管理加密密钥，提高安全性和用户体验。
+- TPM 增强物理安全性，但一旦 TPM 芯片损坏，若无恢复密钥可能无法解密。
 
 Modern computers often include a specialized cryptographic component known as a Trusted Platform Module (TPM). The TPM is a chip that resides on the motherboard of the device. The TPM serves a number of purposes, including the storage and management of keys used for full-disk encryption (FDE) solutions. The TPM provides the operating system with access to the keys only if the user successfully authenticates. This prevents someone from removing the drive from one device and inserting it into another device to access the drive’s data.
 
@@ -731,7 +757,48 @@ A wide variety of commercial tools are available that provide added features and
 
 Don’t forget about smartphones when developing your portable device encryption policy. Most major smartphone and tablet platforms include enterprise-level functionality that supports encryption of data stored on the phone.
 
-### Email
+##### 加密工具选型要素（软件 vs 硬件）
+
+在选择企业级加密解决方案时，建议考虑以下因素：
+
+- **是否支持 TPM 集成**
+- **支持的加密范围**：整盘加密 vs 卷加密 vs 文件加密
+- **密钥保护方式**：密钥存储是否安全（例如是否易被提取）
+- **是否具备集中管理功能**：便于 IT 审计和策略实施
+
+##### 移动设备（智能手机和平板）
+
+不要忽视手机与平板的加密能力：
+
+- **iOS 和 Android** 都支持内建的数据加密（如 iOS 默认在设备锁启用时加密整个存储）
+- 企业可通过 **MDM（移动设备管理）策略** 强制开启设备加密
+- 手机丢失时，可通过远程擦除保障数据安全（如 iCloud 的“Find My iPhone”）
+
+✅ **考试高频点**：
+
+- 企业移动策略应覆盖所有便携式设备，包括 **手机**、**USB**、**移动硬盘**。
+
+##### CISSP考试总结
+
+| 项目         | 要点                                         |
+| ------------ | -------------------------------------------- |
+| BitLocker    | Windows FDE，支持与 TPM 集成，提高密钥安全性 |
+| FileVault    | macOS 原生整盘加密                           |
+| VeraCrypt    | 免费开源跨平台 FDE 工具                      |
+| TPM 芯片     | 存储加密密钥；提高防拆解物理安全性           |
+| 移动设备加密 | 应通过 MDM 强制执行，支持远程擦除和锁定      |
+
+### 2. Email
+
+电子邮件是最常见的通信工具之一，必须针对其提供保密性、完整性、身份验证和不可否认性。下表总结了加密邮件时的常见需求与应对机制：
+
+| **需求**                     | **安全机制**           |
+| ---------------------------- | ---------------------- |
+| 保密性（Confidentiality）    | 加密（对称加密）       |
+| 完整性（Integrity）          | 哈希（如 SHA-256）     |
+| 身份验证（Authentication）   | 数字签名（非对称加密） |
+| 不可否认性（Nonrepudiation） | 数字签名               |
+| 所有四项                     | 加密 + 数字签名        |
 
 We have mentioned several times that security should be cost-effective. When it comes to email, simplicity is the most cost-effective option, but sometimes cryptography functions provide specific security services that you can’t avoid using. Since ensuring security is also cost-effective, here are some simple rules about encrypting email:
 
@@ -742,9 +809,38 @@ We have mentioned several times that security should be cost-effective. When it 
 
 It is always the responsibility of the sender to put proper mechanisms in place to ensure that the security (that is, confidentiality, integrity, authenticity, and nonrepudiation) of a message or transmission is maintained.
 
+##### 加密邮件的核心原则
+
+- ✅ **加密邮件**：确保只有指定接收者可以读取邮件内容（对称密钥加密，密钥用接收方公钥加密）
+- ✅ **数字签名**：验证发件人身份、提供完整性和不可否认性（对消息摘要用私钥加密）
+- ✅ **双重保障**：如需同时保障机密性与签名，应当**先签名再加密**
+
 One of the most in-demand applications of cryptography is encrypting and signing email messages. Until recently, encrypted email required the use of complex, awkward software that in turn required manual intervention and complicated key exchange procedures. An increased emphasis on security in recent years resulted in the implementation of strong encryption technology in mainstream email packages. Next, we’ll look at some of the secure email standards in widespread use today.
 
-### Pretty Good Privacy (PGP)
+#### 1. Pretty Good Privacy (PGP) 安全电子邮件协议
+
+开发者：Phil Zimmerman（1991 年）
+
+信任模型：**Web of Trust**
+
+- 信任从某个已知用户传递到其信任的其他人
+- 用户自行管理密钥信任关系
+
+算法支持：支持多种加密算法、哈希函数、签名机制（如 RSA, AES, SHA 等）
+
+常见实现：
+
+- **OpenPGP**（开源）
+- 商业版本（Symantec）
+
+发送格式：通常使用**ASCII编码格式**发送（适配其他邮件系统）
+
+优缺点：
+
+| 优点                                        | 缺点                             |
+| ------------------------------------------- | -------------------------------- |
+| 用户可控性强、灵活性高                      | 密钥管理复杂，非技术用户不易操作 |
+| 可通过插件或第三方服务简化（如 ProtonMail） | 不适合大规模组织部署             |
 
 Phil Zimmerman’s Pretty Good Privacy (PGP) secure email system appeared on the computer security scene in 1991. It combines the CA hierarchy described earlier in this chapter with the “web of trust” concept—that is, you must become trusted by one or more PGP users to begin using the system. You then accept their judgment regarding the validity of additional users and, by extension, trust a multilevel “web” of users descending from your initial trust judgments.
 
@@ -758,7 +854,30 @@ It is not possible to tell that this message is digitally signed until after it 
 
 Many commercial providers also offer PGP-based email services as web-based cloud email offerings, mobile device applications, or webmail plug-ins. These services appeal to administrators and end users because they remove the complexity of configuring and maintaining encryption certificates and provide users with a managed secure email service. Some products in this category include ProtonMail, StartMail, Mailvelope, SafeGmail, and Hushmail.
 
-### S/MIME
+#### 2. S/MIME（Secure/Multipurpose Internet Mail Extensions） 安全电子邮件协议
+
+- 标准支持：**RSA Security 主推**
+- 加密机制：使用 **RSA 非对称加密 + X.509 证书**
+- 支持功能：
+  - 加密（保密性）
+  - 数字签名（完整性、身份验证）
+- 集成平台：
+  - Microsoft Outlook / Office 365
+  - Apple Mail
+  - Google Workspace Enterprise
+
+**密钥管理：**
+
+- 通过 X.509 证书实现对称密钥交换（用于内容加密）
+- 证书通常由受信任的 CA 签发
+- 用户可通过证书验证邮件签名或进行邮件加密
+
+**优缺点：**
+
+| 优点                         | 缺点                                |
+| ---------------------------- | ----------------------------------- |
+| 更适合企业环境，整合 CA 架构 | 依赖证书基础设施（PKI）部署         |
+| 融入常见桌面客户端较好       | 主流 Web 邮箱缺乏原生支持（需插件） |
 
 The Secure/Multipurpose Internet Mail Extensions (S/MIME) protocol has emerged as a de facto standard for encrypted email. S/MIME uses the RSA encryption algorithm and has received the backing of major industry players, including RSA Security. S/MIME has already been incorporated in a large number of commercial products, including these:
 
@@ -770,17 +889,57 @@ S/MIME relies on the use of X.509 certificates for exchanging cryptographic keys
 
 Despite strong industry support for the S/MIME standard, technical limitations have prevented its widespread adoption. Although major desktop mail applications support S/MIME email, mainstream web-based email systems do not support it out of the box (the use of browser extensions is required).
 
-### Web Applications
+##### CISSP 应试提示
+
+- PGP 使用 “Web of Trust”，用户自主管理信任；S/MIME 使用 CA 证书体系，适合组织部署。
+- 使用 **数字签名** 提供完整性、身份验证与不可否认性（用发送者私钥签名消息摘要）。
+- 邮件**加密 + 签名**时，必须**先签名再加密**：防止签名被篡改或伪造。
+- Web-based 邮箱对 S/MIME 支持有限，是现实部署难点。
+
+### 3. Web Applications
 
 Encryption is widely used to protect web transactions. This is mainly because of the strong movement toward ecommerce and the desire of both ecommerce vendors and consumers to securely exchange financial information (such as credit card information) over the web. We’ll look at the two technologies that are responsible for the small lock icon within web browsers—Secure Sockets Layer (SSL) and Transport Layer Security (TLS).
 
-#### Secure Sockets Layer (SSL)
+#### 1. SSL（Secure Sockets Layer）- 已废弃
+
+- **创建者**：Netscape
+- **用途**：为 HTTP 通信提供安全加密，成为 HTTPS 的基础
+- **问题**：存在**严重安全漏洞**（如 BEAST、POODLE），不支持现代加密算法（如 AES-GCM），如今已**被淘汰**
+- **历史地位**：为 TLS 提供了设计基础，不再安全，TLS 已取代之
+
+🛑 **考试重点提示**：
+
+- SSL 是 **已废弃协议**，CISSP 会明确考你 TLS 替代了不安全的 SSL。
+- 如果你听到“SSL”，**警惕是否实际上是 TLS**。
 
 SSL was originally developed by Netscape to provide client/server encryption for web traffic sent using the Hypertext Transfer Protocol Secure (HTTPS). Over the years, security researchers discovered a number of critical flaws in the SSL protocol that render it insecure for use today. However, SSL serves as the technical foundation for its successor, Transport Layer Security (TLS), which remains widely used today.
 
 Even though TLS has been in existence for more than a decade, many people still mistakenly call it SSL. When you hear people use the term SSL, that’s a red flag that you should further investigate to ensure that they’re really using the modern, secure TLS and not the outdated SSL.
 
-#### Transport Layer Security (TLS)
+#### 2. TLS（Transport Layer Security）– 主流安全协议
+
+TLS 是现代网页安全通信协议的主力，它结合**非对称加密**和**对称加密**，兼顾安全与性能。
+
+##### 📶 TLS 通信流程：
+
+1. **浏览器请求服务器** → 获取服务器的 **数字证书**
+2. **提取公钥** → 浏览器生成**对称会话密钥（ephemeral key）**
+3. **用公钥加密对称密钥** → 发送给服务器
+4. **服务器用私钥解密** → 建立共享对称密钥
+5. **接下来全部通信** → 使用对称加密完成（速度快）
+
+📌 这叫做：**Hybrid Cryptosystem（混合加密系统）**
+
+- 非对称加密（RSA/ECC）用来安全交换密钥
+- 对称加密（AES）用来高速传输大量数据
+
+##### 🔁 协议演进：
+
+| 版本        | 状态         | 特点                                                |
+| ----------- | ------------ | --------------------------------------------------- |
+| TLS 1.0/1.1 | 弃用         | 存在安全问题，不建议使用                            |
+| TLS 1.2     | 广泛支持     | 强制弃用 SSL 3.0 fallback，推荐用于现代应用         |
+| TLS 1.3     | 当前推荐标准 | 更快、更安全，取消了多个弱加密算法和 handshake 流程 |
 
 TLS relies on the exchange of server digital certificates to negotiate encryption/decryption parameters between the browser and the web server. TLS’s goal is to create secure communications channels that remain open for an entire web browsing session. It depends on a combination of symmetric and asymmetric cryptography. The following steps are involved:
 
@@ -794,7 +953,80 @@ When TLS was first proposed as a replacement for SSL, not all browsers supported
 
 In 2014, an attack known as the Padding Oracle On Downgraded Legacy Encryption (POODLE) demonstrated a significant flaw in the SSL 3.0 fallback mechanism of TLS. In an effort to remediate this vulnerability, many organizations completely dropped SSL support and now rely solely on TLS security.
 
+##### Cipher Suites（密码套件）
 
+TLS 并非一个具体算法，而是 **一个协议框架**，通过 Cipher Suite 指定使用哪些加密组件。
 
+一个 Cipher Suite 包含四个部分：
 
+| 部分类型        | 举例                | 用途                       |
+| --------------- | ------------------- | -------------------------- |
+| Key Exchange    | RSA, DH, ECDHE      | 安全协商共享密钥           |
+| Authentication  | RSA, DSA, ECDSA     | 身份验证（通常验证服务器） |
+| Bulk Encryption | AES, 3DES（已弃用） | 对称加密大量传输数据       |
+| Hash Algorithm  | SHA-2, SHA-3        | 消息摘要，验证完整性       |
 
+#### 示例解析：
+
+```
+TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+```
+
+- ECDHE：使用椭圆曲线 Diffie–Hellman 做密钥交换
+- RSA：用于服务器身份认证
+- AES_128_GCM：使用 AES 128 位密钥 + GCM 模式做对称加密
+- SHA256：用于消息摘要（防篡改）
+
+#### 安全配置要求 & 常见漏洞提醒（CISSP 考点）
+
+推荐设置：
+
+- 最低支持：TLS 1.2（最佳为 1.3）
+- 禁用：SSL、TLS 1.0、TLS 1.1
+- 强制使用 SHA-2 或 SHA-3（禁止 MD5、SHA-1）
+- 使用 GCM 模式代替 CBC（防止 Padding Oracle 攻击）
+
+❌ 禁用弱算法：
+
+| 弃用项      | 原因                       |
+| ----------- | -------------------------- |
+| SSL/SSL 3.0 | 已被严重漏洞利用（POODLE） |
+| RC4         | 存在密钥泄露攻击           |
+| MD5/SHA-1   | 容易发生 hash 碰撞         |
+| 3DES        | 密钥长度短，易被暴力破解   |
+
+**实际应用场景（HTTPS 实战）**
+
+🔐 TLS 与 HTTPS 结合：
+
+- 网站申请 TLS 证书（即 HTTPS 证书）
+- 用户访问网站，浏览器进行 TLS 握手
+- 若网站证书有效，浏览器显示 🔒 小锁图标
+- 整个通信过程被加密，防止中间人窃听和篡改
+
+📌 例子：
+
+https://bank.example.com
+
+浏览器通过 TLS 连接加密通信：
+
+- 验证证书是否由受信 CA 签发
+- 使用服务器公钥协商对称密钥
+- 使用对称加密传输登录凭证、交易数据等
+
+##### ✅ CISSP 考试记忆要点（Checklist）
+
+- **TLS 使用对称加密传输数据，但对称密钥通过非对称方式协商交换**
+- **SSL 已过时，不再安全**
+- **TLS 通常用于 HTTPS，依赖服务器的 X.509 数字证书**
+- **TLS handshake 的核心目标是协商一个共享对称密钥**
+- **POODLE 漏洞考点**：暴露了 SSL fallback 的风险 → 强化 TLS-only 策略
+
+| 项目              | 要掌握的知识点                                             |
+| ----------------- | ---------------------------------------------------------- |
+| TLS vs SSL        | SSL 已淘汰，必须使用 TLS 1.2 或更高版本                    |
+| TLS 工作流程      | 握手阶段使用非对称加密建立会话密钥，之后对称加密传输数据   |
+| Cipher Suite 结构 | 4 个组件必须掌握：Key Exchange, Authentication, Bulk, Hash |
+| 安全算法推荐      | AES-GCM + SHA-2/SHA-3 + ECDHE 是现代最佳实践               |
+| 协议弱点识别      | 知道 RC4、3DES、MD5、SHA-1 等被禁用原因                    |
+| 常见漏洞          | POODLE、Downgrade 攻击、Padding Oracle                     |

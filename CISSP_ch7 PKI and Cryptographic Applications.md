@@ -1539,9 +1539,187 @@ Privacy concerns also introduce some specialized use cases for encryption. In pa
 
 ## Cryptographic Attacks
 
-TODO
+As with any security mechanism, malicious individuals have found a number of attacks to defeat cryptosystems. It’s important that you understand the threats posed by various cryptographic attacks to minimize the risks posed to your systems.
 
+| 类型             | 代表攻击方式                                      | 主要目标                     | 示例 / 工具               |
+| ---------------- | ------------------------------------------------- | ---------------------------- | ------------------------- |
+| **算法弱点**     | Analytic, Statistical                             | 破解算法设计本身             | 使用数学模型分析结构      |
+| **实现缺陷**     | Implementation                                    | 软件实现失误                 | 编码错误、缓冲区溢出      |
+| **物理特征泄露** | Side-Channel, Timing, Fault Injection             | 利用加密操作中产生的物理信息 | 电磁波、功耗、时间分析    |
+| **暴力尝试**     | Brute-force, Rainbow Tables, Known/Chosen Attacks | 尝试所有组合或构造攻击样本   | hashcat、John the Ripper  |
+| **协议缺陷**     | Man-in-the-Middle, Replay, Birthday               | 利用协议设计弱点             | TLS downgrade、token 重放 |
+| **双重加密弱点** | Meet-in-the-Middle                                | 针对双层加密                 | 攻击 2DES                 |
+| **口令猜测相关** | Dictionary, Salting 相关                          | 破解用户密码                 | 使用预构造字典表          |
 
+#### **Analytic Attack** 
+
+- **目标**：从算法数学结构入手，降低破解复杂度
+
+- **防御**：选择公开评估、被社区验证的加密算法（如 AES）
+
+This is an algebraic manipulation that attempts to reduce the complexity of the algorithm. Analytic attacks focus on the logic of the algorithm itself.
+
+#### **Implementation Attack** 
+
+- **目标**：利用软件或硬件实现上的编码漏洞或逻辑错误
+- **典型问题**：未正确实现 padding、密钥存储不安全
+- **防御**：代码审计、安全编码标准、FIPS 140-2 认证模块
+
+This is a type of attack that exploits weaknesses in the implementation of a cryptography system. It focuses on exploiting the software code, not just errors and flaws but the methodology employed to program the encryption system.
+
+#### **Statistical Attack** 
+
+- **目标**：利用非随机行为，如伪随机数可预测性或浮点误差
+- **防御**：使用 CSPRNG（Cryptographically Secure Pseudo-Random Number Generator）
+
+A statistical attack exploits statistical weaknesses in a cryptosystem, such as floating-point errors and inability to produce truly random numbers. Statistical attacks attempt to find a vulnerability in the hardware or operating system hosting the cryptography application.
+
+#### **Brute-Force Attack** 
+
+- **目标**：穷举所有可能的密钥或密码组合
+
+- **增强方式**：
+
+  - **Rainbow Tables**：预计算常用密码的 hash 值
+  - **高性能硬件**：GPU、FPGA 或 ASIC 加速攻击
+
+  **防御**：
+
+  - 增加密钥长度（位数每增加 1，破解时间翻倍）
+  - 使用 salt 和 **key stretching**（如 bcrypt、PBKDF2）
+
+Brute-force attacks are quite straightforward. Such an attack attempts every possible valid combination for a key or password. They involve using massive amounts of processing power to methodically guess the key used to secure cryptographic communications.
+
+#### **Fault Injection Attack** 
+
+- **目标**：通过物理破坏（电压、温度）制造设备异常行为
+- **防御**：使用抗故障硬件、电压/温度检测机制
+
+In these attacks, the attacker attempts to compromise the integrity of a cryptographic device by causing some type of external fault. For example, they might use high-voltage electricity, high or low temperature, or other factors to cause a malfunction that undermines the security of the device.
+
+#### **Side-Channel Attack** 
+
+- **目标**：监听设备行为，如功耗、电磁波、运行时间
+
+- **包括**：
+
+  - **Timing Attack**（测时攻击）：通过操作时间分析密钥
+
+  **防御**：
+
+  - 执行时间统一的算法（constant time implementation）
+  - 电磁隔离、屏蔽罩
+
+Computer systems generate characteristic footprints of activity, such as changes in processor utilization, power consumption, or electromagnetic radiation. Side-channel attacks seek to use this information to monitor system activity and retrieve information that is actively being encrypted.
+
+#### **Timing Attack** 
+
+Timing attacks are an example of a side-channel attack where the attacker measures precisely how long cryptographic operations take to complete, gaining information about the cryptographic process that may be used to undermine its security.
+
+#### **Frequency Analysis / Ciphertext-Only Attack** 
+
+- **目标**：仅凭密文，通过字母频率反推原文或算法类型
+- **适用情境**：古典加密如凯撒密码、维吉尼亚密码
+- **防御**：使用强对称加密（AES）与多样性输入掩盖频率特征
+
+In many cases, the only information you have at your disposal is the encrypted ciphertext message, a scenario known as the ciphertext-only attack. In this case, one technique that proves helpful against simple ciphers is frequency analysis—counting the number of times each letter appears in the ciphertext. Using your knowledge that the letters E, T, A, O, I, N are the most common in the English language, you can then test several hypotheses:
+
+1. If these letters are also the most common in the ciphertext, the cipher was likely a transposition cipher, which rearranged the characters of the plaintext without altering them.
+2. If other letters are the most common in the ciphertext, the cipher is probably some form of substitution cipher that replaced the plaintext characters.
+
+This is a simple overview of frequency analysis, and many sophisticated variations on this technique can be used against polyalphabetic ciphers and other sophisticated cryptosystems.
+
+For a nonflawed protocol, the average amount of time required to discover the key through a brute-force attack is directly proportional to the length of the key. A bruteforce attack will always be successful given enough time. Every additional bit of key length doubles the time to perform a brute-force attack because the number of potential keys doubles.
+
+There are two modifications that attackers can make to enhance the effectiveness of a brute-force attack:
+
+- Rainbow tables provide precomputed values for cryptographic hashes. These are commonly used for cracking passwords stored on a system in hashed form.
+- Specialized, scalable computing hardware designed specifically for the conduct of brute-force attacks may greatly increase the efficiency of this approach.
+
+**Known / Chosen Plaintext / Chosen Ciphertext**
+
+- **Known Plaintext**：知道部分明文-密文对
+
+- **Chosen Plaintext**：控制明文输入，观察密文输出
+
+- **Chosen Ciphertext**：控制密文输入，观察解密输出
+- **典型攻击**：差分密码分析、侧信道 + chosen-ciphertext 联动
+- **防御**：避免泄露解密接口、启用随机初始化向量（IV）
+
+#### **Known Plaintext** 
+
+In the known plaintext attack, the attacker has a copy of the encrypted message along with the plaintext message used to generate the ciphertext (the copy). This knowledge greatly assists the attacker in breaking weaker codes. For example, imagine the ease with which you could break the Caesar cipher described in Chapter 6 if you had both a plaintext copy and a ciphertext copy of the same message.
+
+#### Chosen Plaintext 
+
+In this attack, the attacker obtains the ciphertexts corresponding to a set of plaintexts of their own choosing. This allows the attacker to attempt to derive the key used and thus decrypt other messages encrypted with that key. This can be difficult, but it is not impossible. Advanced methods such as differential cryptanalysis are types of chosen plaintext attacks.
+
+#### Chosen Ciphertext 
+
+In a chosen ciphertext attack, the attacker has the ability to decrypt chosen portions of the ciphertext message and use the decrypted portion of the message to discover the key.
+
+#### Meet in the Middle 
+
+- **目标**：针对双重加密（如 2DES）找出两个密钥组合
+- **过程**：从两头同时尝试匹配中间结果
+- **防御**：使用三重加密（3DES 或 AES）
+
+Attackers might use a meet-in-the-middle attack to defeat encryption algorithms that use two rounds of encryption. This attack is the reason that Double DES (2DES) was quickly discarded as a viable enhancement to the DES encryption (it was replaced by Triple DES, or 3DES).
+
+In the meet-in-the-middle attack, the attacker uses a known plaintext message. The plaintext is then encrypted using every possible key (k1), and the equivalent ciphertext is decrypted using all possible keys (k2). When a match is found, the corresponding pair (k1, k2) represents both portions of the double encryption. This type of attack generally takes only double the time necessary to break a single round of encryption (or 2 n rather than the anticipated 2 n * 2n ), offering minimal added protection.
+
+#### Man in the Middle 
+
+- **目标**：中间人劫持双向加密通信，解密并转发
+- **防御**：
+  - 服务器使用**数字证书（PKI）验证**
+  - 协议使用 **mutual TLS、HSTS、certificate pinning**
+
+In the man-in-the-middle attack, a malicious individual sits between two communicating parties and intercepts all communications (including the setup of the cryptographic session). The attacker responds to the originator’s initialization requests and sets up a secure session with the originator. The attacker then establishes a second secure session with the intended recipient using a different key and posing as the originator. The attacker can then “sit in the middle” of the communication and read all traffic as it passes between the two parties. Some cybersecurity professionals are beginning to refer to these attacks as “on-path attacks” to avoid a gender-specific reference.
+
+#### Birthday Attack
+
+- **目标**：通过碰撞概率找到两个内容生成相同哈希值（对抗数字签名）
+- **防御**：使用大哈希位数（如 SHA-256、SHA-3）
+
+The birthday attack, also known as a collision attack or reverse hash matching (see the discussion of brute-force and dictionary attacks in Chapter 14, “Controlling and Monitoring Access”), seeks to find flaws in the one-to-one nature of hashing functions. In this attack, the malicious individual seeks to substitute in a digitally signed communication a different message that produces the same message digest, thereby maintaining the validity of the original digital signature.
+
+#### Replay Attack
+
+- **目标**：截获原始加密消息后重新发送
+
+- **防御**：
+
+  - 使用 **timestamp、nonce、session ID**
+
+  - 启用 **challenge-response 协议**
+
+The replay attack is used against cryptographic algorithms that don’t incorporate temporal protections. In this attack, the malicious individual intercepts an encrypted message between two parties (often a request for authentication) and then later “replays” the captured message to open a new session. This attack can be defeated by incorporating a timestamp and expiration period into each message, using a challenge-response mechanism, and encrypting authentication sessions with ephemeral session keys.
+
+### Salting & Key Stretching（抗字典攻击）
+
+| 技术               | 描述                                    | 目的                       |
+| ------------------ | --------------------------------------- | -------------------------- |
+| **Salt**           | 随机数据与密码拼接后再哈希              | 抵抗 rainbow tables        |
+| **Key Stretching** | 多次迭代哈希加密函数，如 bcrypt、scrypt | 增加计算成本，减缓爆破速度 |
+
+Salt might be hazardous to your health, but it can save your password! To help combat the use of brute-force attacks, including those aided by dictionaries and rainbow tables, cryptographers make use of a technology known as cryptographic salt.
+
+The cryptographic salt is a random value that is added to the end of the password before the operating system hashes the password. The salt is then stored in the password file along with the hash. When the operating system wishes to compare a user’s proffered password to the password file, it first retrieves the salt and appends it to the password. It feeds the concatenated value to the hash function and compares the resulting hash with the one stored in the password file.
+
+Specialized password hashing functions, such as PBKDF2, bcrypt, and scrypt, allow for the creation of hashes using salts and also incorporate a technique known as key stretching that makes it more computationally difficult to perform a single password guess.
+
+The use of **salting**, especially when combined with **key stretching**, dramatically increases the difficulty of brute-force attacks. Anyone attempting to build a rainbow table must build a separate table for each possible value of the cryptographic salt.
+
+##### CISSP 考点强化
+
+- 熟知所有攻击的原理及其防御策略，特别是常考组合：
+  - **Brute-force vs Rainbow Table vs Dictionary Attack**
+  - **Known Plaintext vs Chosen Plaintext vs Chosen Ciphertext**
+  - **Side-channel vs Timing vs Fault Injection**
+  - **Meet-in-the-middle 专攻双重加密（2DES）**
+- 牢记：**密钥位数越长，抵抗暴力破解越强。**
+- **防御设计重点**：引入 **时间元素、随机性、密钥复杂性** 以及 **攻击表面最小化**。
 
 ## Summary
 
@@ -1552,6 +1730,131 @@ This chapter explored public key encryption, which provides a scalable cryptogra
 We also looked at some of the common applications of cryptographic technology in solving everyday problems. You learned how cryptography can be used to secure email (using PGP and S/MIME), web communications (using TLS), and both peer-to-peer and gatewayto-gateway networking (using IPsec).
 
 Finally, we covered some of the more common attacks used by malicious individuals attempting to interfere with or intercept encrypted communications between two parties. Such attacks include birthday, cryptanalytic, replay, brute-force, known plaintext, chosen plaintext, chosen ciphertext, meet-in-the-middle, man-in-the-middle, and birthday attacks. It’s important for you to understand these attacks in order to provide adequate security against them.
+
+### 1. Asymmetric (Public Key) Cryptography
+
+#### ✅ Key Concepts
+
+- **Uses a key pair**: one public, one private.
+- **Scalable**: Suitable for large groups or untrusted environments.
+- **Main benefits**:
+  - **Confidentiality**: Encrypt with receiver’s public key; decrypt with private key.
+  - **Authentication & Nonrepudiation**: Sign with sender’s private key; verify with public key.
+  - **Integrity**: Achieved via message digests (hashes).
+
+##### 🔑 Use Cases:
+
+- Secure communication with unknown parties.
+- Digital signatures and PKI integration.
+
+------
+
+### 🏗 2. Public Key Infrastructure (PKI)
+
+#### 🏛 Key Components
+
+- **Certificate Authorities (CAs)**: Trusted third parties that issue digital certificates.
+- **Digital Certificates (X.509)**: Bind a public key to an identity; signed by CA.
+- **Registration Authorities (RAs)**: Verify identities for CAs.
+- **Certificate Lifecycle**:
+  - **Enrollment → Verification → Revocation**
+  - Revocation methods: CRL, OCSP, Certificate Stapling
+
+#### 🔐 Digital Signature Process
+
+1. Hash message to produce digest.
+2. Encrypt digest with sender’s private key = digital signature.
+3. Receiver decrypts with sender’s public key and recomputes digest to verify.
+
+------
+
+### 📡 3. Encryption Models
+
+#### 🔗 Link Encryption
+
+- Encrypts **entire communication path** (headers included).
+- Needs to decrypt/re-encrypt at each hop.
+- Example: VPN tunnel endpoints.
+
+#### 🧑‍🤝‍🧑 End-to-End Encryption
+
+- Encrypts **only the payload** from source to destination.
+- Faster routing; e.g., TLS, SSH.
+
+------
+
+### ✉️ 4. Secure Applications of Cryptography
+
+#### 📬 Email
+
+- **PGP**: Web-of-trust model; flexible, user-managed.
+- **S/MIME**: PKI-based; integrates with enterprise email platforms.
+
+#### 🌐 Web Communication
+
+- **TLS**:
+  - Uses public key crypto for key exchange, then symmetric for data.
+  - TLS 1.3 removes support for insecure features (e.g., RSA key exchange, SSL fallback).
+  - Employs cipher suites specifying key exchange, auth, symmetric encryption, and hashing.
+
+#### 🌍 Networking
+
+- **IPsec**:
+  - **AH**: Integrity, authentication.
+  - **ESP**: Confidentiality, partial authentication.
+  - **Modes**: Tunnel (link-level), Transport (end-to-end)
+
+------
+
+### 🚀 5. Cryptography in Emerging Applications
+
+#### 📒 Blockchain
+
+- Immutable, distributed ledger.
+- Used in cryptocurrency, supply chain tracking, notarization.
+
+#### 🧬 Lightweight Cryptography
+
+- Designed for resource-constrained devices (e.g., smartcards, satellites).
+
+#### 🔬 Homomorphic Encryption
+
+- Enables computation on encrypted data without decryption.
+- Ideal for privacy-preserving data analysis.
+
+------
+
+### 💥 6. Cryptographic Attacks & Defenses
+
+| Attack Type                                 | Description                                    | Defense                                   |
+| ------------------------------------------- | ---------------------------------------------- | ----------------------------------------- |
+| **Analytic / Statistical**                  | Exploit flaws in algorithm logic               | Use vetted algorithms (e.g., AES, RSA)    |
+| **Implementation**                          | Exploit coding flaws                           | Secure coding, peer reviews               |
+| **Side-channel / Timing / Fault Injection** | Observe physical signals (e.g., time, power)   | Shielding, constant-time execution        |
+| **Brute-force / Rainbow Table**             | Try every possible key or hash                 | Long keys, salting, key stretching        |
+| **Known/Chosen Plaintext or Ciphertext**    | Use known values to reverse-engineer keys      | Randomization, strong IVs                 |
+| **Meet-in-the-Middle**                      | Break 2-layer encryption like 2DES             | Use 3DES or AES instead                   |
+| **Man-in-the-Middle (MITM)**                | Hijack session setup and impersonate endpoints | TLS, certificate pinning                  |
+| **Birthday Attack**                         | Exploit hash collisions                        | Use strong hash algorithms (SHA-2, SHA-3) |
+| **Replay**                                  | Resend captured valid message                  | Use timestamps, nonces                    |
+
+------
+
+#### 🧂 Password Security Enhancements
+
+- **Salt**: Random value added to passwords before hashing.
+- **Key Stretching**: Iterative hashing (PBKDF2, bcrypt, scrypt).
+- **Result**: Defends against dictionary/rainbow attacks.
+
+------
+
+### 🧠 CISSP Focus Tips
+
+- Understand **when to use asymmetric, symmetric, or hybrid encryption**.
+- Know **TLS vs IPsec**, **PGP vs S/MIME**, and **AH vs ESP**.
+- Memorize **certificate lifecycle** and **trust hierarchy in PKI**.
+- Master **attack types**, how they differ, and how to mitigate them.
+- Be prepared to map **real-world scenarios to cryptographic solutions** (e.g., signing software, securing emails, encrypted sessions).
 
 ## Exam Essentials
 

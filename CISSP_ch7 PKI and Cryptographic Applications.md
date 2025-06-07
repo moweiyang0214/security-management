@@ -1140,6 +1140,8 @@ https://bank.example.com
 
 **Tor**（The Onion Router）是一种通过分布式网络 **实现匿名通信** 的协议和网络系统。
 
+Tor, formerly known as The Onion Router, provides a mechanism for anonymously routing traffic across the internet using encryption and a set of relay nodes. 
+
 主要机制：
 
 - **多层加密**（Onion Routing）：就像洋葱一样，数据包在每一跳都被解密一层，逐层剥离，直到最终目的地。
@@ -1154,9 +1156,11 @@ https://bank.example.com
 - 它要发送给谁（下一个目的地）
 - **看不到完整的路径或内容**
 
-Tor, formerly known as The Onion Router, provides a mechanism for anonymously routing traffic across the internet using encryption and a set of relay nodes. 
-
 ##### Perfect Forward Secrecy（完全前向保密）
+
+It relies on a technology known as perfect forward secrecy, where layers of encryption prevent nodes in the relay chain from reading anything other than the specific information they need to accept and forward the traffic. 
+
+By using perfect forward secrecy in combination with a set of three or more relay nodes, Tor allows for both anonymous browsing of the standard internet, as well as the hosting of completely anonymous sites on the dark web.
 
 **完美前向保密**确保即使某个密钥将来泄露，也无法解密过去的通信内容。
 
@@ -1165,10 +1169,6 @@ Tor 中的应用：
 - 会话密钥是临时生成的（基于 Diffie-Hellman 等算法）
 - 每条路径的加密密钥都是一次性的、不可复用
 - 保护历史通信不被后续密钥泄露影响
-
-It relies on a technology known as perfect forward secrecy, where layers of encryption prevent nodes in the relay chain from reading anything other than the specific information they need to accept and forward the traffic. 
-
-By using perfect forward secrecy in combination with a set of three or more relay nodes, Tor allows for both anonymous browsing of the standard internet, as well as the hosting of completely anonymous sites on the dark web.
 
 ##### Dark Web 是什么？
 
@@ -1330,29 +1330,132 @@ It is a good example of an end-to-end encryption technique. This suite of progra
 | 第1–2层（物理 / 数据链路）    | VPN、链路层加密、Frame Relay     | Link Encryption       |
 | 第5–7层（会话 / 表示 / 应用） | TLS、PGP、S/MIME、SSH、IPSec E2E | End-to-End Encryption |
 
-#### IPsec
+#### IPsec**（Internet Protocol Security）**
+
+**IPsec** 是由 IETF 定义的一套完整的协议架构，**用于在 IP 层实现安全通信**。它可以：
+
+- 提供机密性（Confidentiality）
+- 完整性（Integrity）
+- 认证（Authentication）
+- 防重放攻击（Anti-Replay）
+
+**使用场景：** VPN、加密隧道、主机到主机加密、远程接入等。
 
 Various security architectures are in use today, each one designed to address security issues in different environments. One such architecture that supports secure communications is the Internet Protocol security (IPsec) standard. IPsec is a standard architecture set forth by the Internet Engineering Task Force (IETF) for setting up a secure channel to exchange information between two entities.
 
+IPsec 的核心组成
+
 The IP security (IPsec) protocol provides a complete infrastructure for secured network communications. IPsec has gained widespread acceptance and is now offered in a number of commercial operating systems out of the box. IPsec relies on security associations, and there are two main components:
 
-1. The **Authentication Header (AH) provides** assurances of message integrity and nonrepudiation. AH also provides authentication and access control and prevents replay attacks.
+IPsec 的安全性建立在两个核心协议组件上：
 
-2. The **Encapsulating Security Payload (ESP)** provides confidentiality and integrity of packet contents. It provides encryption and limited authentication and prevents replay attacks.
+1. **Authentication Header（AH）**
+
+   1. It assurances of message integrity and nonrepudiation. AH also provides authentication and access control and prevents replay attacks.
+
+      | 特性           | 描述                                                      |
+      | -------------- | --------------------------------------------------------- |
+      | ✅ **提供**     | 完整性、认证、访问控制、防重放                            |
+      | ❌ **不提供**   | 机密性（不加密数据）                                      |
+      | 📦 **保护范围** | IP 头 + 数据内容（除 IP 中某些字段）                      |
+      | 📌 用法         | AH 适用于需要强认证、不加密内容的场景（如完整性保护日志） |
+
+2. **Encapsulating Security Payload（ESP）**
+
+   1. It provides confidentiality and integrity of packet contents. It provides encryption and limited authentication and prevents replay attacks.
+
+      | 特性           | 描述                                                     |
+      | -------------- | -------------------------------------------------------- |
+      | ✅ **提供**     | 加密（Confidentiality）、完整性、有限认证、防重放        |
+      | ❌ **不强制**   | 完整 IP 头认证                                           |
+      | 📦 **保护范围** | 仅加密 IP payload，IP 头通常不加密（除非用 tunnel mode） |
+      | 📌 用法         | ESP 是实际通信中最常用的组件（VPN、加密通道）            |
+
+      💡 **ESP 常独立使用**，而 **AH 很少单独使用**。当 AH 和 ESP 配合使用时，可以分别提供认证和机密性。
 
 ESP also provides some limited authentication, but not to the degree of the AH. Though ESP is sometimes used without AH, it’s rare to see AH used without ESP.
 
 IPsec provides for two discrete modes of operation. When IPsec is used in transport mode for end-to-end encryption, only the packet payload is encrypted. This mode is designed for peer-to-peer communication. When it’s used in tunnel mode, the entire packet, including the header, is encrypted. This mode is designed for link encryption.
 
+##### 两种工作模式：Tunnel 与 Transport
+
+| 模式类型     | Transport Mode            | Tunnel Mode               |
+| ------------ | ------------------------- | ------------------------- |
+| 🔄 加密内容   | 仅数据部分（Payload）     | 包括整个 IP 包（头+数据） |
+| 🧑‍🤝‍🧑 应用场景 | 主机对主机（end-to-end）  | 网关对网关、远程接入 VPN  |
+| 📌 安全层级   | 较低（传输中仍可识别 IP） | 更高（隐藏通信地址信息）  |
+
+✅ **Tunnel Mode** 常用于 VPN 场景，可以隐藏通信的源和目标。
+
+##### Security Association (SA) 安全关联
+
+IPsec 的所有连接都基于 **Security Association (SA)** 建立。
+
+| 特性                | 描述                                                         |
+| ------------------- | ------------------------------------------------------------ |
+| 🧭 SA 定义           | 表示单向加密/认证会话的逻辑连接                              |
+| 📍 单向              | 一个 SA 只能加密或解密一个方向                               |
+| 🔁 双向通信          | 需要两个 SA（发送 + 接收）                                   |
+| 🔄 AH + ESP 双栈通信 | 需要 **4 个 SA**（AH 发送/接收 + ESP 发送/接收）             |
+| 📘 内容              | 包含使用的协议、加密算法、密钥、SPI（Security Parameters Index）等信息 |
+
 At runtime, you set up an IPsec session by creating a security association (SA). The SA represents the communication session and records any configuration and status information about the connection. The SA represents a simplex connection. If you want a two-way channel, you need two SAs, one for each direction. Also, if you want to support a bidirectional channel using both AH and ESP, you will need to set up four SAs.
 
 Some of IPsec’s greatest strengths come from being able to filter or manage communications on a per-SA basis so that clients or gateways between which security associations exist can be rigorously managed in terms of what kinds of protocols or services can use an IPsec connection. Also, without a valid security association defined, pairs of users or gateways cannot establish IPsec links.
 
-### 6. Emerging Applications
+##### IPsec 的优势与安全特性
+
+| 能力             | 实现机制                         |
+| ---------------- | -------------------------------- |
+| 身份认证         | AH / ESP（含身份验证字段）       |
+| 数据完整性验证   | 哈希（如 HMAC-SHA）              |
+| 加密数据机密性   | 对称加密算法（如 AES）           |
+| 防重放攻击       | 包序号 + 滑动窗口技术            |
+| 灵活管理通信策略 | 每 SA 可定义允许的协议/服务      |
+| 基于策略访问控制 | IPsec 策略控制哪些 IP/端口可通信 |
+
+CISSP 备考建议
+
+| 考点                           | 要求                                  |
+| ------------------------------ | ------------------------------------- |
+| AH vs. ESP                     | 区别：ESP 提供机密性，AH 不提供       |
+| Tunnel Mode vs. Transport Mode | 区别：是否加密 IP 头                  |
+| SA 的概念和数量需求            | 理解单向性，AH+ESP 双向通信需 4 个 SA |
+| AH/ESP 使用的加密与哈希算法    | AES, HMAC-SHA 等                      |
+| IPsec 使用场景和安全优势       | VPN、远程接入、主机间安全通信         |
+
+### 6. Emerging Applications - 新兴加密技术的应用场景
+
+随着信息安全需求日益多元化，传统加密技术正在被拓展到许多**新兴场景**中。这些场景强调：
+
+- **去中心化**（如区块链）
+- **资源受限设备上的加密**（如轻量级加密）
+- **隐私保护同时仍可计算**（同态加密）
 
 Cryptography plays a central role in many emerging areas of cybersecurity and technology. Let’s take a look at a few of these concepts: the blockchain, lightweight cryptography, and homomorphic encryption.
 
-#### Blockchain
+#### 1. Blockchain（区块链）
+
+✅ 核心特性
+
+- **分布式（Distributed）**：所有节点维护相同的账本副本，无需中心化管理。
+- **不可篡改（Immutable）**：通过哈希链与共识机制，确保数据无法被修改。
+- **公开透明（Transparent）**：所有交易可被所有节点验证。
+
+🔒 加密技术在其中的作用
+
+- **Hash 函数**：用于链上区块的内容摘要和链接前后区块。
+- **数字签名**：确保交易的合法性和不可否认性。
+- **非对称加密**：保护用户身份和交易私钥。
+
+📌 应用举例
+
+| 应用领域     | 描述                                  |
+| ------------ | ------------------------------------- |
+| 加密货币     | 如 Bitcoin, Ethereum 等，无需银行中心 |
+| 不动产登记   | 防止产权纠纷，数据无法被更改或销毁    |
+| 供应链溯源   | 可验证商品来源和运输路径              |
+| 数字身份管理 | 利用区块链记录和验证用户身份          |
 
 The blockchain is, in its simplest description, a distributed and immutable public ledger. This means that it can store records in a way that distributes those records among many different systems located around the world and do so in manner that prevents anyone from tampering with those records. The blockchain creates a data store that nobody can tamper with or destroy.
 
@@ -1360,7 +1463,32 @@ The first major application of the blockchain is cryptocurrency. The blockchain 
 
 Although cryptocurrency is the blockchain application that has received the most attention, there are many other uses for a distributed immutable ledger—so much so that new applications of blockchain technology seem to be appearing every day. For example, property ownership records could benefit tremendously from a blockchain application. This approach would place those records in a transparent, public repository that is protected against intentional or accidental damage. Blockchain technology might also be used to track supply chains, providing consumers with confidence that their produce came from reputable sources and allowing regulators to easily track down the origin of recalled produce.
 
-#### Lightweight Cryptography
+#### 2. Lightweight Cryptography（轻量级加密）
+
+✅ 核心诉求
+
+- **低功耗**
+- **低延迟**
+- **资源受限设备兼容性**
+
+📌 应用环境
+
+| 场景               | 特点                               |
+| ------------------ | ---------------------------------- |
+| 物联网设备（IoT）  | 微控制器、嵌入式芯片，资源极其有限 |
+| 智能卡 / RFID      | 被动供电，需极省电能完成加密       |
+| 卫星、远程传感器等 | 运行周期长、功耗极低的硬件环境     |
+| 高速网络通信       | 对延迟敏感，需快速完成加解密       |
+
+🔧 实现方式：
+
+- 专用加密芯片或模块（如硬件 VPN 加速器）
+- 精简版本的对称算法（如轻量化 AES、PRESENT、Speck）
+
+🧠 CISSP 注意点：
+
+- 轻量加密不是功能弱化，而是性能优化。
+- 多用于边缘设备而非数据中心。
 
 There are many specialized use cases for cryptography that you may encounter during your career where computing power and energy might be limited.
 
@@ -1376,11 +1504,42 @@ Specialized encryption hardware also solves many low-latency requirements. For e
 
 High resiliency requirements exist when it is extremely important that data be preserved and not accidentally destroyed during an encryption operation. In cases where resiliency is extremely important, the easiest way to address the issue is for the sender of data to retain a copy until the recipient confirms the successful receipt and decryption of the data.
 
-#### Homomorphic Encryption
+#### 3. Homomorphic Encryption（同态加密）
+
+定义：在数据加密状态下仍可执行计算，且解密后结果与明文计算结果一致。
+
+应用价值
+
+| 应用场景                | 优势                                     |
+| ----------------------- | ---------------------------------------- |
+| 云计算中的隐私保护      | 用户可将加密数据上传云端，云端可直接计算 |
+| 医疗/金融数据分析       | 企业在不解密用户数据的情况下完成分析     |
+| 多方计算（MPC）         | 各方数据保密，结果可共享                 |
+| 隐私保护 AI/ML 模型训练 | 模型训练过程中不泄露数据内容             |
+
+类型
+
+- **部分同态（PHE）**：支持加法或乘法（但不是两者）。
+- **完全同态（FHE）**：支持任意计算操作，计算能力最强但最慢。
+
+🧠 CISSP 注意点
+
+- 实现复杂、计算资源消耗大，但属于未来加密方向。
+- 不要求理解其数学原理，但需理解其适用场景。
 
 Privacy concerns also introduce some specialized use cases for encryption. In particular, we sometimes have applications where we want to protect the privacy of individuals but still want to perform calculations on their data. Homomorphic encryption technology allows this, encrypting data in a way that preserves the ability to perform computation on that data. When you encrypt data with a homomorphic algorithm and then perform computation on that data, you get a result that, when decrypted, matches the result you would have received if you had performed the computation on the plaintext data in the first place.
 
+#### 总结对比表
+
+| 技术               | 目标                         | 应用场景                             | 是否强调加密运算效率 |
+| ------------------ | ---------------------------- | ------------------------------------ | -------------------- |
+| Blockchain         | 数据不可篡改，去中心信任机制 | 加密货币、供应链、不动产、身份管理   | ❌（关注分布式账本）  |
+| Lightweight Crypto | 节能、低功耗、低延迟         | IoT、智能卡、卫星、实时网络通信      | ✅（强调效率）        |
+| Homomorphic Crypto | 隐私保护同时支持加密态计算   | 云数据分析、医疗金融隐私计算、AI训练 | ❌（计算量大）        |
+
 ## Cryptographic Attacks
+
+TODO
 
 
 

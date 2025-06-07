@@ -1330,7 +1330,7 @@ It is a good example of an end-to-end encryption technique. This suite of progra
 | 第1–2层（物理 / 数据链路）    | VPN、链路层加密、Frame Relay     | Link Encryption       |
 | 第5–7层（会话 / 表示 / 应用） | TLS、PGP、S/MIME、SSH、IPSec E2E | End-to-End Encryption |
 
-#### IPsec**（Internet Protocol Security）**
+#### IPsec（Internet Protocol Security）
 
 **IPsec** 是由 IETF 定义的一套完整的协议架构，**用于在 IP 层实现安全通信**。它可以：
 

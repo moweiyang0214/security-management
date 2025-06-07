@@ -930,8 +930,8 @@ TLS 是现代网页安全通信协议的主力，它结合**非对称加密**和
 
 📌 这叫做：**Hybrid Cryptosystem（混合加密系统）**
 
-- 非对称加密（RSA/ECC）用来安全交换密钥
-- 对称加密（AES）用来高速传输大量数据
+- 非对称加密（**RSA**/ECC）用来安全交换密钥
+- 对称加密（**AES**）用来高速传输大量数据
 
 ##### 协议演进
 
@@ -957,14 +957,31 @@ In 2014, an attack known as the Padding Oracle On Downgraded Legacy Encryption (
 
 TLS 并非一个具体算法，而是 **一个协议框架**，通过 Cipher Suite 指定使用哪些加密组件。
 
+Each system supporting TLS provides a listing of the cipher suites that it supports. These are combinations of encryption algorithms that it is willing to use together, and these lists are used by two systems to identify a secure option that both systems support. The cipher suite consists of four components:
+
+1. The key exchange algorithm that will be used to exchange the ephemeral key. For example, a server might support RSA, Diffie–Hellman (abbreviated DH) and Elliptic Curve Diffie Hellman (abbreviated ECDH).
+
+2. The authentication algorithm that will be used to prove the identity of the server and/or client. For example, a server might support RSA, DSA, and ECDSA.
+
+3. The bulk encryption algorithm that will be used for symmetric encryption. For example, a server might support multiple versions of AES and 3DES.
+
+4. The hash algorithm that will be used to create message digests. For example, a server might support different versions of the SHA algorithm.
+
+**Cipher suites are usually expressed in long strings that combine each of these four elements.** For example, the cipher suite: ```TLS_DH_RSA_WITH_AES_256_CBC_SHA384``` means that 
+
+1. the server supports TLS using **Diffie–Hellman key exchange (DH).** 
+2. It will perform authentication using the **RSA** protocol 
+3. It will perform bulk encryption using **AES CBC mode with a 256-bit key**. 
+4. **Hashing** will take place using the **SHA-384** **algorithm**.
+
 一个 Cipher Suite 包含四个部分：
 
-| 部分类型        | 举例                | 用途                       |
-| --------------- | ------------------- | -------------------------- |
-| Key Exchange    | RSA, DH, ECDHE      | 安全协商共享密钥           |
-| Authentication  | RSA, DSA, ECDSA     | 身份验证（通常验证服务器） |
-| Bulk Encryption | AES, 3DES（已弃用） | 对称加密大量传输数据       |
-| Hash Algorithm  | SHA-2, SHA-3        | 消息摘要，验证完整性       |
+| 部分类型        | 举例                | 用途                                            |
+| --------------- | ------------------- | ----------------------------------------------- |
+| Key Exchange    | RSA, DH, ECDHE      | 共享交换对称加密密钥                            |
+| Authentication  | RSA, DSA, ECDSA     | 身份验证（通常验证服务器）通过数字证书+数字签名 |
+| Bulk Encryption | AES, 3DES（已弃用） | 对称加密大量传输数据                            |
+| Hash Algorithm  | SHA-2, SHA-3        | 消息摘要，验证完整性                            |
 
 示例解析：
 
@@ -977,7 +994,95 @@ TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 - AES_128_GCM：使用 AES 128 位密钥 + GCM 模式做对称加密
 - SHA256：用于消息摘要（防篡改）
 
-#### 安全配置要求 & 常见漏洞提醒（CISSP 考点）
+##### TLS 1.3 握手完整流程图解
+
+```
+Client                                          Server
+  |                                                |
+  |---------- 1. ClientHello (with key_share) ---->|
+  |                                                |
+  |<------ 2. ServerHello (with key_share) --------|
+  |                                                |
+  |<------- 3. Certificate + Signature ------------|
+  |                                                |
+  |<------- 4. Finished (with MAC) ----------------|
+  |                                                |
+  |------ 5. Finished (with MAC) ----------------->|
+  |                                                |
+  |================ Secure Encrypted Channel ======|
+
+```
+
+1. ClientHello（包含密钥协商参数）
+
+   - 客户端生成一个 **Ephemeral Key（临时公钥）**
+
+   - 使用 **椭圆曲线 Diffie–Hellman（ECDHE）** 算法
+
+   - 发送自己的 **密钥共享参数（key_share）** 给服务器
+
+   - 并告知支持的 **cipher suites、TLS 版本、支持的签名算法等**
+
+​	📌 **这里尚未进行身份认证**，只是告诉服务器准备好协商密钥了。
+
+2. ServerHello（密钥协商确认）
+
+   - 服务器同样生成一个 ephemeral key
+
+   - 回复自己的 **key_share**，用于完成 Diffie–Hellman 协商
+
+   - 客户端和服务器此时可以用对方的 share 值与自己的私钥，完成计算出 **共享的 Pre-Master Secret**
+
+​	💡 **这一步完成后，通信双方就有了相同的对称密钥**，但还没信任身份。
+
+3. Certificate + Signature（身份认证）
+
+   - 服务器发送它的 **X.509 证书**
+   - 包含：
+     - 服务器的 **RSA / ECDSA 公钥**
+     - 被 **根 CA 用其私钥数字签名**
+   - 同时附带 **签名(Signature)**
+     - 签的是本次握手中的关键信息（包括之前协商的 ephemeral 参数）
+     - 签名用的是 **服务器私钥**
+
+   🧠 客户端执行三步认证流程：
+
+   1. 用 **根 CA 公钥** 验证服务器证书是否合法
+   2. 验证证书中的服务器身份信息是否与访问地址匹配
+   3. 用服务器证书中的公钥，验证服务器发送的签名是否匹配内容
+
+   ✅ 验证成功后，客户端确认服务器确实是“它声称的那个身份”。
+
+4. Server Finished
+
+   - 服务器用协商好的对称密钥（ephemeral key）发送一条加密的消息（包含 handshake transcript 的 HMAC 摘要）
+   - 客户端解密并验证它与自己记录的 transcript 是否一致，确认协商内容未被篡改
+
+5. Client Finished
+
+   - 客户端也发送一条使用相同 key 加密的 MAC
+   - 服务器验证后，完成双向确认
+
+   ✅ 从这一刻起，**加密信道正式建立完成**
+
+技术要点对照总结
+
+| 功能             | 使用算法                         | 在哪一阶段                     |
+| ---------------- | -------------------------------- | ------------------------------ |
+| 密钥协商         | Ephemeral ECDHE                  | ClientHello & ServerHello      |
+| 身份认证         | 证书 + RSA/ECDSA 签名验证        | Server Certificate & Signature |
+| 建立对称密钥     | 基于双方 share 计算出 Pre-Master | After ServerHello              |
+| 数据完整性验证   | MAC（HMAC + transcript hash）    | Finished                       |
+| 双向加密通道建立 | 对称加密（如 AES-GCM）           | After Finished                 |
+
+##### 为什么 TLS 1.3 更安全？
+
+- 强制使用 Ephemeral DH（前向保密，避免历史数据泄露）
+- 不支持不安全的 RSA 密钥交换（TLS 1.2 中支持）
+- 只用一次 round-trip 握手即可建立安全通信通道（更快）
+- 所有握手内容都加密，防止 metadata 泄露
+
+##### 安全配置要求 & 常见漏洞提醒（CISSP 考点）
 
 推荐设置：
 
@@ -1030,3 +1135,264 @@ https://bank.example.com
 | 安全算法推荐      | AES-GCM + SHA-2/SHA-3 + ECDHE 是现代最佳实践               |
 | 协议弱点识别      | 知道 RC4、3DES、MD5、SHA-1 等被禁用原因                    |
 | 常见漏洞          | POODLE、Downgrade 攻击、Padding Oracle                     |
+
+#### Tor and the Dark Web - Tor 和暗网（Dark Web）
+
+**Tor**（The Onion Router）是一种通过分布式网络 **实现匿名通信** 的协议和网络系统。
+
+主要机制：
+
+- **多层加密**（Onion Routing）：就像洋葱一样，数据包在每一跳都被解密一层，逐层剥离，直到最终目的地。
+- **三层节点结构**：
+  - **入口节点（Guard/Entry Node）**
+  - **中继节点（Relay Node）**
+  - **出口节点（Exit Node）**
+
+每个节点只能看到：
+
+- 它之前的节点是谁（来源）
+- 它要发送给谁（下一个目的地）
+- **看不到完整的路径或内容**
+
+Tor, formerly known as The Onion Router, provides a mechanism for anonymously routing traffic across the internet using encryption and a set of relay nodes. 
+
+##### Perfect Forward Secrecy（完全前向保密）
+
+**完美前向保密**确保即使某个密钥将来泄露，也无法解密过去的通信内容。
+
+Tor 中的应用：
+
+- 会话密钥是临时生成的（基于 Diffie-Hellman 等算法）
+- 每条路径的加密密钥都是一次性的、不可复用
+- 保护历史通信不被后续密钥泄露影响
+
+It relies on a technology known as perfect forward secrecy, where layers of encryption prevent nodes in the relay chain from reading anything other than the specific information they need to accept and forward the traffic. 
+
+By using perfect forward secrecy in combination with a set of three or more relay nodes, Tor allows for both anonymous browsing of the standard internet, as well as the hosting of completely anonymous sites on the dark web.
+
+##### Dark Web 是什么？
+
+- 指那些通过标准浏览器无法访问的网站
+- 必须使用如 **Tor 浏览器** 这样的特殊客户端访问
+- 域名通常以 `.onion` 结尾
+- 可以托管 **匿名站点（hidden services）**
+
+❗️风险与用途并存：
+
+- **合法用途**：新闻自由、隐私保护、人权工作
+- **非法用途**：毒品、黑市、数据贩卖、恶意服务等
+
+##### CISSP 考试相关考点
+
+**“三跳加密，层层剥离，前向保密，匿名可依。”**
+解释：Tor 路径三跳，每跳一层加密，历史通信不可追溯，保障匿名性。
+
+| 考点主题                | 内容说明                                              |
+| ----------------------- | ----------------------------------------------------- |
+| **匿名性技术**          | Tor 是典型案例之一，考察匿名通信与 Onion Routing 原理 |
+| **加密通信机制**        | 多层加密、对称与非对称结合，利用前向保密技术          |
+| **隐私保护 vs 滥用**    | 考查对暗网合法用途与滥用风险的理解与平衡              |
+| **前向保密机制（PFS）** | 与 TLS 结合考察，确认是否了解临时密钥生成及其意义     |
+
+### 4. Steganography and Watermarking
+
+#### 1. **Steganography** （隐写术）
+
+隐写术是一种通过将信息嵌入其他“看似无害”的文件中来隐藏通信内容的**加密掩蔽技术**，让秘密消息看起来像普通文件，从而逃避侦测。
+
+##### 实现方式
+
+- **图像嵌入**（最常见）：
+  - 利用图像中每个像素的 **Least Significant Bit（LSB）最不重要位**进行信息替换
+  - 对人眼几乎无影响，如将 RGB 值 `Blue: 64` 改成 `65` 看不出差异
+- **音频 / 视频**：改变音频波形的低位数据或帧间延迟等不可察觉部分
+- **文本隐写（Concealment cipher）**：
+  - 通过语法变化、空格、拼写差异、隐藏格式等手法在文本中嵌入信息
+  - 示例：特定行首字母拼出一句话
+
+##### 应用场景
+
+| 场景       | 说明                                                     |
+| ---------- | -------------------------------------------------------- |
+| ✏️ 合法用途 | 嵌入数字水印以识别和保护文档版权；军事通信中传递机密数据 |
+| ❌ 非法用途 | 网络犯罪（如恐怖主义、儿童色情、间谍活动）中的隐藏通信   |
+
+Steganography is the art of using cryptographic techniques to embed secret messages within another message. Steganographic algorithms work by making alterations to the least significant bits of the many bits that make up image files. The changes are so minor that there is no appreciable effect on the viewed image. This technique allows communicating parties to conceal messages in plain sight—for example, they might embed a secret message within an illustration on an otherwise innocent web page.
+
+It is also possible to embed messages inside larger excerpts of text. This approach is known as a concealment cipher.
+
+Steganographers often embed their secret messages within images or WAV files because these files are often so large that the secret message would easily be missed by even the most observant inspector. Steganography techniques are often used for illegal activities, such as espionage and child pornography.
+
+Steganography can also be used for legitimate purposes, however. Adding digital watermarks to documents to protect intellectual property is accomplished by means of steganography. The hidden information is known only to the file’s creator. If someone later creates an unauthorized copy of the content, the watermark can be used to detect the copy and (if uniquely watermarked files are provided to each original recipient) trace the offending copy back to the source.
+
+Steganography commonly works by modifying the least significant bit (LSB) of a pixel value. For example, each pixel might be described by using three decimal numbers ranging from 0 to 255. One represents the degree of red color in the image, the second represents blue, and the third represents green. If a pixel has a blue value of 64, changing that value to 65 would result in an imperceptible change but does allow the encoding of a bit of steganographic data.
+
+#### 2. Watermarking（水印技术）
+
+**数字水印**是一种将拥有者信息或跟踪信息嵌入内容（如图像、音频、视频）的方法，目的在于标记版权、认证内容或追踪泄露源头。
+
+特点
+
+- 与隐写术不同的是**水印信息是已知或可被发现的**（虽然仍隐含在内容中）
+- **防篡改目的**而不是隐藏目的
+- 可用于**版权保护、媒体内容验证、防止伪造**
+
+技术机制
+
+- 常用隐写术（如 LSB）来植入水印
+- 某些方案对每个用户发放独特水印副本，若泄露可**溯源**
+
+#### Steganography vs. Cryptography vs. Watermarking
+
+| 特性 / 技术 | Steganography（隐写术） | Cryptography（加密术）   | Watermarking（水印）   |
+| ----------- | ----------------------- | ------------------------ | ---------------------- |
+| 目的        | **隐藏通信的存在**      | **保护通信内容不被泄露** | **标识/验证内容来源**  |
+| 内容可见性  | 不可察觉（隐于载体中）  | 可察觉（加密后明显变形） | 通常不影响可视内容     |
+| 可追溯性    | 否                      | 否                       | 是（可用唯一水印追踪） |
+| 易被检测性  | 低                      | 高                       | 低                     |
+
+**CISSP 应试提示**
+
+- ✅ 理解 **LSB 技术** 是隐写的常见手段
+- ✅ 明确 **隐写术是隐藏存在**，而不是加密内容
+- ✅ 数字水印更多用于**版权保护和内容追踪**
+- ✅ 考题可能会考查：
+  - 哪种方法最适合隐藏通信本身？
+  - 哪种技术可以识别数据所有者？
+  - 哪种方法会使用 LSB 嵌入技术？
+
+### 5. Networking
+
+#### Circuit Encryption
+
+Security administrators use two types of encryption techniques to protect data traveling over networks.
+
+"链路加密加密一切，慢但全面；端到端加密数据，快但留痕。"
+
+##### 1. ***Link encryption*** （链路加密）
+
+适用于**整条链路的数据保护**，包括路由信息，适合防止链路窃听，但每跳都需解密再加密 → 开销大。
+
+It protects entire communications circuits by creating a secure tunnel between two points using either a hardware solution or a software solution that encrypts all traffic entering one end of the tunnel and decrypts all traffic entering the other end of the tunnel. For example, a company with two offices connected via a data circuit might use link encryption to protect against attackers monitoring at a point in between the two offices.
+
+##### ***2. End-to-end encryption***（端到端加密）
+
+加密**通信两端之间的实际内容**，路径中节点无法解密内容，但元信息（如地址）仍可被观察。
+
+It protects communications between two parties (for example, a client and a server) and is performed independently of link encryption. An example of end-to-end encryption would be the use of TLS to protect communications between a user and a web server. This protects against an intruder who might be monitoring traffic on the secure side of an encrypted link or traffic sent over an unencrypted link.
+
+##### **CISSP 常考点**
+
+链路加密 vs. 端到端加密的加密内容对比
+
+应用层 vs. 物理层
+
+效率与安全性的权衡
+
+##### Link Encryption vs. End-to-End Encryption
+
+| 特征        | Link Encryption（链路加密）                  | End-to-End Encryption（端到端加密）               |
+| ----------- | -------------------------------------------- | ------------------------------------------------- |
+| 📍 加密位置  | 通信链路的每一跳（物理连接点之间）           | 通信的起点到终点（通常是应用层通信的两端）        |
+| 📦 加密内容  | **包括报文头、地址、路由信息、数据**全部内容 | **只加密数据内容**（Header/Address 不加密）       |
+| 🔁 解密频率  | 每跳都需解密 → 读取目的地址 → 再重新加密     | **仅起点加密，终点解密**                          |
+| 🔓 路由效率  | 路由较慢（每跳需解密再加密）                 | 路由较快（头部不加密，路由器可直接处理）          |
+| 🕵️‍♂️ 安全风险 | 防止**链路监听**攻击                         | 防止**内容泄露/篡改**（但路径上 Metadata 仍暴露） |
+| ⬇ OSI 层    | 实现于 OSI 模型的**较低层**（如数据链路层）  | 实现于 OSI 模型的**较高层**（如会话层、应用层）   |
+| 🧪 示例      | VPN、MPLS、Frame Relay、物理电路层加密       | TLS/SSL、PGP、S/MIME、SSH、IPSec End-to-End 模式  |
+
+The critical difference between link and end-to-end encryption is that in link encryption, all the data, including the header, trailer, address, and routing data, is also encrypted. Therefore, each packet has to be decrypted at each hop so that it can be properly routed to the next hop and then reencrypted before it can be sent along its way, which slows the routing. End-to-end encryption does not encrypt the header, trailer, address, and routing data, so it moves faster from point to point but is more susceptible to sniffers and eavesdroppers.
+
+When encryption happens at the higher OSI layers, it is usually end-to-end encryption, and if encryption is done at the lower layers of the OSI model, it is usually link encryption.
+
+##### Secure Shell (SSH) - 端到端加密
+
+**SSH = 端到端加密的代表性技术**
+
+- **作用**：替代 Telnet、FTP、rlogin 等不安全协议，实现**加密的远程通信**
+- **版本区别**：
+  - **SSH1**（已废弃）：支持 DES、3DES、IDEA、Blowfish
+  - **SSH2**（安全标准）：支持 Diffie–Hellman 密钥交换，增强多会话支持
+    - 增强安全性，防止 Man-in-the-Middle、嗅探、IP/DNS 欺骗等攻击
+
+It is a good example of an end-to-end encryption technique. This suite of programs provides encrypted alternatives to common internet applications such as the File Transfer Protocol (FTP), Telnet, and rlogin. There are actually two versions of SSH. SSH1 (which is now considered insecure) supports the Data Encryption Standard (DES), Triple DES (3DES), International Data Encryption Algorithm (IDEA), and Blowfish algorithms. SSH2 drops support for DES and IDEA but adds several security enhancements, including support for the Diffie–Hellman key exchange protocol and the ability to run multiple sessions over a single SSH connection. SSH2 provides added protection against man-in-themiddle (on-path) attacks, eavesdropping, and IP/DNS spoofing.
+
+**CISSP考试注意点**
+
+- SSH 属于 **端到端加密**
+- SSH2 优于 SSH1，使用更强的加密机制并支持多会话
+- SSH 常与远程登录、文件传输（SFTP、SCP）绑定考察
+
+**相关补充：结合 OSI 模型理解**
+
+| OSI 层                        | 加密实现方式                     | 类型                  |
+| ----------------------------- | -------------------------------- | --------------------- |
+| 第1–2层（物理 / 数据链路）    | VPN、链路层加密、Frame Relay     | Link Encryption       |
+| 第5–7层（会话 / 表示 / 应用） | TLS、PGP、S/MIME、SSH、IPSec E2E | End-to-End Encryption |
+
+#### IPsec
+
+Various security architectures are in use today, each one designed to address security issues in different environments. One such architecture that supports secure communications is the Internet Protocol security (IPsec) standard. IPsec is a standard architecture set forth by the Internet Engineering Task Force (IETF) for setting up a secure channel to exchange information between two entities.
+
+The IP security (IPsec) protocol provides a complete infrastructure for secured network communications. IPsec has gained widespread acceptance and is now offered in a number of commercial operating systems out of the box. IPsec relies on security associations, and there are two main components:
+
+1. The **Authentication Header (AH) provides** assurances of message integrity and nonrepudiation. AH also provides authentication and access control and prevents replay attacks.
+
+2. The **Encapsulating Security Payload (ESP)** provides confidentiality and integrity of packet contents. It provides encryption and limited authentication and prevents replay attacks.
+
+ESP also provides some limited authentication, but not to the degree of the AH. Though ESP is sometimes used without AH, it’s rare to see AH used without ESP.
+
+IPsec provides for two discrete modes of operation. When IPsec is used in transport mode for end-to-end encryption, only the packet payload is encrypted. This mode is designed for peer-to-peer communication. When it’s used in tunnel mode, the entire packet, including the header, is encrypted. This mode is designed for link encryption.
+
+At runtime, you set up an IPsec session by creating a security association (SA). The SA represents the communication session and records any configuration and status information about the connection. The SA represents a simplex connection. If you want a two-way channel, you need two SAs, one for each direction. Also, if you want to support a bidirectional channel using both AH and ESP, you will need to set up four SAs.
+
+Some of IPsec’s greatest strengths come from being able to filter or manage communications on a per-SA basis so that clients or gateways between which security associations exist can be rigorously managed in terms of what kinds of protocols or services can use an IPsec connection. Also, without a valid security association defined, pairs of users or gateways cannot establish IPsec links.
+
+### 6. Emerging Applications
+
+Cryptography plays a central role in many emerging areas of cybersecurity and technology. Let’s take a look at a few of these concepts: the blockchain, lightweight cryptography, and homomorphic encryption.
+
+#### Blockchain
+
+The blockchain is, in its simplest description, a distributed and immutable public ledger. This means that it can store records in a way that distributes those records among many different systems located around the world and do so in manner that prevents anyone from tampering with those records. The blockchain creates a data store that nobody can tamper with or destroy.
+
+The first major application of the blockchain is cryptocurrency. The blockchain was originally invented as a foundational technology for Bitcoin, allowing the tracking of Bitcoin transactions without the use of a centralized authority. In this manner, the blockchain allows the existence of a currency that has no central regulator. Authority for Bitcoin transactions is distributed among all participants in the Bitcoin blockchain.
+
+Although cryptocurrency is the blockchain application that has received the most attention, there are many other uses for a distributed immutable ledger—so much so that new applications of blockchain technology seem to be appearing every day. For example, property ownership records could benefit tremendously from a blockchain application. This approach would place those records in a transparent, public repository that is protected against intentional or accidental damage. Blockchain technology might also be used to track supply chains, providing consumers with confidence that their produce came from reputable sources and allowing regulators to easily track down the origin of recalled produce.
+
+#### Lightweight Cryptography
+
+There are many specialized use cases for cryptography that you may encounter during your career where computing power and energy might be limited.
+
+Some devices operate at extremely low power levels and put a premium on conserving energy. For example, imagine sending a satellite into space with a limited power source. Thousands of hours of engineering go into getting as much life as possible out of that power source. Similar cases happen here on Earth, where remote sensors must transmit information using solar power, a small battery, or other equipment.
+
+Smartcards are another example of a low-power environment. They must be able to securely communicate with smartcard readers but only using the energy either stored on the card or transferred to it by a magnetic field.
+
+In these cases, cryptographers often design specialized hardware that is purpose-built to implement lightweight cryptographic algorithms with as little power expenditure as possible. You won’t need to know the details of how these algorithms work, but you should be familiar with the concept that specialized hardware can minimize power consumption.
+
+Another specialized use for cryptography is in cases where you need very low latency. That simply means that the encryption and decryption should not take a long time. Encrypting network links is a common example of low-latency cryptography. The data is moving quickly across a network and the encryption should be done as quickly as possible to avoid becoming a bottleneck.
+
+Specialized encryption hardware also solves many low-latency requirements. For example, a dedicated VPN hardware device may contain cryptographic hardware that implements encryption and decryption operations in highly efficient form to maximize speed.
+
+High resiliency requirements exist when it is extremely important that data be preserved and not accidentally destroyed during an encryption operation. In cases where resiliency is extremely important, the easiest way to address the issue is for the sender of data to retain a copy until the recipient confirms the successful receipt and decryption of the data.
+
+#### Homomorphic Encryption
+
+Privacy concerns also introduce some specialized use cases for encryption. In particular, we sometimes have applications where we want to protect the privacy of individuals but still want to perform calculations on their data. Homomorphic encryption technology allows this, encrypting data in a way that preserves the ability to perform computation on that data. When you encrypt data with a homomorphic algorithm and then perform computation on that data, you get a result that, when decrypted, matches the result you would have received if you had performed the computation on the plaintext data in the first place.
+
+## Cryptographic Attacks
+
+
+
+## Summary
+
+Asymmetric key cryptography, or public key encryption, provides an extremely flexible infrastructure, facilitating simple, secure communication between parties that do not necessarily know each other prior to initiating the communication. It also provides the framework for the digital signing of messages to ensure nonrepudiation and message integrity.
+
+This chapter explored public key encryption, which provides a scalable cryptographic architecture for use by large numbers of users. We also described some popular cryptographic algorithms, and the use of link encryption and end-to-end encryption. We introduced you to the public key infrastructure, which uses certificate authorities (CAs) to generate digital certificates containing the public keys of system users and digital signatures, which rely on a combination of public key cryptography and hashing functions. You also learned how to use the PKI to obtain integrity and nonrepudiation through the use of digital signatures. You learned how to ensure consistent security throughout the cryptographic lifecycle by adopting key management practices and other mechanisms.
+
+We also looked at some of the common applications of cryptographic technology in solving everyday problems. You learned how cryptography can be used to secure email (using PGP and S/MIME), web communications (using TLS), and both peer-to-peer and gatewayto-gateway networking (using IPsec).
+
+Finally, we covered some of the more common attacks used by malicious individuals attempting to interfere with or intercept encrypted communications between two parties. Such attacks include birthday, cryptanalytic, replay, brute-force, known plaintext, chosen plaintext, chosen ciphertext, meet-in-the-middle, man-in-the-middle, and birthday attacks. It’s important for you to understand these attacks in order to provide adequate security against them.
+
+## Exam Essentials
+

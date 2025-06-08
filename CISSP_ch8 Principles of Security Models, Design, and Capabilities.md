@@ -299,27 +299,259 @@ It is easy to get caught up in adding complexity to a system, whether that syste
 
 - 安全系统应当 **越简单，越容易做到“验证-测试-控制”**。
 
-### 6. Zero Trust
+### 6. Zero Trust（零信任架构）
 
-### 7. Privacy by Design
+📌 核心理念：**永不信任，始终验证**
 
-### 8. Trust but Verify
+- **假设已经被入侵**（Assume Breach）
+- 每一次访问都必须被 **认证（Authentication）、授权（Authorization）、加密（Encryption）**
+- 没有“内部信任”或“默认信任” —— 所有用户、设备、服务 **一律不信任**
 
-## Techniques for Ensuring CIA
+实现要素
 
-### 1. Confinement
+| 核心机制                        | 描述                                 |
+| ------------------------------- | ------------------------------------ |
+| **身份和访问管理（IAM）**       | 每次访问都需要验证身份               |
+| **多因素认证（MFA）**           | 防止账户被轻易接管                   |
+| **最小权限原则**                | 只授予执行任务所需最少权限           |
+| **微分段（Microsegmentation）** | 网络切分成多个小段，控制横向移动     |
+| **持续监测与行为分析**          | 实时监控用户活动，检测异常行为       |
+| **动态策略评估**                | 考虑上下文信息（如设备、位置、时间） |
 
-### 2. Bounds
+📖 标准文档
 
-### 3. Isolation
+- **NIST SP 800-207：Zero Trust Architecture**
+- 定义 ZT 的核心组件、实施路径、与现有系统的集成方式。
 
-### 4. Access Controls
+Zero trust is an alternate approach to security where nothing is automatically trusted. Instead, each request for activity or access is assumed to be from an unknown and untrusted location until otherwise verified. The concept is “never trust, always verify.” Since anyone and anything could be malicious, every transaction should be verified before it is allowed to occur. The zero trust model is based around “assume breach,” meaning that you should always assume a security breach has occurred and that whoever or whatever is making a request could be malicious. The goal is to have every access request be authenticated, authorized, and encrypted prior to the access being granted to a resource or asset. The implementation of a zero trust architecture does involve a significant shift from historical security management concepts. This shift typically requires internal microsegmentation and strong adherence to the principle of least privilege. This approach prevents lateral movement so that if there is a breach or even a malicious insider, their ability to move about the environment is severely restricted.
 
-### 5. Trust and Assurance
+Zero trust is implemented using a wide range of security solutions, including internal segmentation firewalls (ISFWs), multifactor authentication (MFA), identity and access management (IAM), and next-generation endpoint security. A zero trust approach to security management can only be successful if a means to continuously validate and monitor user activities is implemented. If a one-time validation mechanism is used, then the opportunity to abuse the system remains since threats, users, and connection characteristics are always subject to change. Thus, zero trust networking can only work if real-time vetting and visibility into user activities is maintained.
+
+#### Air Gap（物理隔离）
+
+- **完全不连接网络**，既无有线也无无线连接；
+- 适用于超高保密性场景（如核设施、军工控制系统）；
+- 属于比 Zero Trust 更极端的隔离模型。
+
+In some situations, complete isolation may be needed instead of controlled and filtered interaction. This type of isolation is achieved using an air gap. An air gap is a network security measure employed to ensure that a secure system is physically isolated from other systems. Air gap implies that neither cabled nor wireless network links are available.
+
+In order to implement a zero trust system, an organization must be capable of and willing to abandon some long-held assumptions about security. First and foremost, it must be understood that there is no such thing as a trusted source. No entity, asset, or subject—internal or external—is to be trusted by default. Instead, always assume attackers are already on the inside, on every system. From this new “no assumed trust” position, it is obvious that traditional default access controls are insufficient. Each and every subject, each and every time, needs to be authenticated, authorized, and encrypted. From there, a continuous real-time monitoring system needs to be established to look for violations and suspicious events. But even with zero trust integrated into the IT architecture, it is only an element of a holistic security strategy that is integrated into the entire organization’s management processes.
+
+Zero trust has been formalized in NIST SP 800-207, “Zero Trust Architecture.”
+
+### 7. Privacy by Design（内建隐私）
+
+📌 核心理念：**将隐私保护融入系统的设计之初，而非事后弥补**
+
+类似于“Security by Design”，强调开发过程从一开始就**主动防护隐私**。
+
+Privacy by Design (PbD) is a guideline to integrate privacy protections into products during the early design phase rather than attempting to tack it on at the end of development. It is effectively the same overall concept as “security by design” or “integrated security,” where security is to be an element of design and architecture of a product starting at initiation and being maintained throughout the software development lifecycle (SDLC).
+
+#### 七大原则
+
+| 原则                | 含义                                   |
+| ------------------- | -------------------------------------- |
+| **1. 预防为主**     | 主动防御隐私泄露，不是等出事再处理     |
+| **2. 默认隐私**     | 默认设置下用户隐私受保护，无需手动开启 |
+| **3. 内嵌设计**     | 隐私保护是架构的一部分，不是附加功能   |
+| **4. 双赢策略**     | 功能性和隐私性可以共存，不是零和博弈   |
+| **5. 生命周期安全** | 数据从采集到销毁全过程保护隐私         |
+| **6. 透明可见**     | 系统必须对用户公开处理机制、用途       |
+| **7. 尊重用户**     | 用户对其个人信息应有控制权与选择权     |
+
+As described in Ann Cavoukian’s paper “Privacy by Design – The 7 Foundational Principles: Implementation and Mapping of Fair Information Practices”, the PbD framework is based on seven foundational principles:
+
+- Proactive not reactive; preventive not remedial
+- Privacy as the default
+- Privacy embedded into design
+- Full functionality – positive-sum, not zero-sum
+- End-to-end security – full lifecycle protection
+- Visibility and transparency
+- Respect for user privacy
+
+The goal of PbD is to have developers integrate privacy protections into their solutions in order to avoid privacy violations in the first place. The overall concept focuses on preventions rather than remedies for violations.
+
+#### GPS - Global Privacy Standard
+
+- 推动全球统一隐私立法和组织内部隐私设计；
+- 与 **GDPR** 的“**Privacy by Design & Default**”理念一致。
+
+PbD is also the driving factor behind an initiative to have privacy protections integrated throughout an organization, not just by developers. That business operations and systems design can also integrate privacy protections into their core functions. This in turn has led to the **Global Privacy Standard (GPS),** which was crafted to create a single set of universal and harmonized privacy principles. GPS is to be adopted by countries to use as a guide in developing privacy legislation, used by organizations to integrate privacy protection into their operations, and used by developers to integrate privacy into the products they produce. There is some integration of a few of the principles of PbD in the EU’s GDPR (see gdpr-info.eu/ issues/privacy-by-design and Chapter 4, “Laws, Regulations, and Compliance”).
+
+### 8. Trust but Verify（信任但需验证）
+
+📌 特点：**默认信任 + 补充验证**
+
+- 曾是许多组织的默认安全策略；
+- 一旦进入“内部网络”就认为安全，造成了 **横向移动（Lateral Movement）** 的巨大隐患；
+- 无法有效抵御：
+  - **内部威胁（Insider Threats）**
+  - **被攻陷终端（Compromised Hosts）**
+  - **凭据滥用（Credential Abuse）**
+
+A more traditional security approach of trusting subjects and devices within the company’s security perimeter (i.e., internal entities) automatically can be called “trust but verify.” This type of security approach leaves an organization vulnerable to insider attacks and grants intruders the ability to easily perform lateral movement among internal systems. Often the trust but verify approach depended on an initial authentication process to gain access to the internal “secured” environment, and then relied on generic access control methods. Due to the rapid growth and changes in the modern threatscape, the trust but verify model of security is no longer sufficient. Most security experts now recommend designing organizational security around the zero trust model.
+
+#### 适用性降低
+
+随着云计算、远程办公、移动设备接入增多，**信任但验证模型**已不适应现代威胁模型。
+
+因此 **CISSP 考试及实际安全架构推荐转向 Zero Trust**：
+
+| 模型                 | 核心特点                     | 安全水平   |
+| -------------------- | ---------------------------- | ---------- |
+| **Trust but Verify** | 仅初始验证，后续操作不再检查 | ⚠️ 中等偏低 |
+| **Zero Trust**       | 所有操作全程验证与监控       | ✅ 高       |
+
+## Techniques for Ensuring CIA（保障机密性、完整性、可用性的方法）
+
+在 CISSP 的核心目标中，**Confidentiality（保密性）**、**Integrity（完整性）** 和 **Availability（可用性）** 是一切安全控制设计的出发点。为了有效保护数据及其处理系统，必须借助软件工程和操作系统中具备的“安全隔离机制”实现对 CIA 的技术保障。
+
+To ensure the confidentiality, integrity, and availability (CIA) of data, you must ensure that all components that have access to data are secure and well behaved. Software designers use different techniques to ensure that programs do only what is required and nothing more. Although the concepts we discuss in the following sections all relate to software programs, they are also commonly used in all areas of security. For example, physical confinement guarantees that all physical access to hardware is controlled.
+
+### 1. Confinement**（限制）**
+
+又称 **沙箱（sandboxing）**，是最直接体现**最小权限原则**的机制。
+
+✅ 核心作用：
+
+- 限制进程或程序只能访问其被允许的内存、文件、资源；
+- 防止未经授权的数据泄露或越权访问。
+
+📌 应用方式：
+
+| 类型         | 示例                                               |
+| ------------ | -------------------------------------------------- |
+| 操作系统级别 | Linux cgroups、Windows AppContainer、macOS Sandbox |
+| 独立软件工具 | Sandboxie, Docker                                  |
+| 虚拟化手段   | VMware, VirtualBox                                 |
+
+CISSP考点：
+
+- **Process confinement** = “Least privilege for processes”
+- 沙箱 ≠ 虚拟机，但目的类似：**资源和行为隔离**
+
+Software designers use process confinement to restrict the actions of a program. Simply put, process confinement allows a process to read from and write to only certain memory locations and resources. This is also known as sandboxing. It is the application of the principle of least privilege to processes. The goal of confinement is to prevent data leakage to unauthorized programs, users, or systems.
+
+The operating system, or some other security component, disallows illegal read/write requests. If a process attempts to initiate an action beyond its granted authority, that action will be denied. In addition, further actions, such as logging the violation attempt, may be taken. Generally, the offending process is terminated. Confinement can be implemented in the operating system itself (such as through process isolation and memory protection), through the use of a confinement application or service (for example, Sandboxie at sandboxie.com), or through a virtualization or hypervisor solution (such as VMware or Oracle’s VirtualBox).
+
+### 2. Bounds（边界）
+
+定义进程可访问资源范围的**边界条件**
+
+核心作用：
+
+- 将不同权限级别的进程分配到受限资源空间；
+- 防止权限提升（如用户模式访问内核空间）；
+
+📌 边界类型：
+
+| 类型         | 说明                                           |
+| ------------ | ---------------------------------------------- |
+| **逻辑边界** | 操作系统控制访问权限（如内存页保护）           |
+| **物理边界** | 更强隔离，如专用硬件区段、专用内存芯片（昂贵） |
+
+联动机制：
+
+- **Bounds 是实现 confinement 的“规则”层面**；
+- **Bounds 是实现 isolation 的“基础条件”**
+
+Each process that runs on a system is assigned an authority level. The authority level tells the operating system what the process can do. In simple systems, there may be only two authority levels: user and kernel. The authority level tells the operating system how to set the bounds for a process. The bounds of a process consist of limits set on the memory addresses and resources it can access. The bounds state the area within which a process is confined or contained. In most systems, these bounds segment logical areas of memory for each process to use. It is the responsibility of the operating system to enforce these logical bounds and to disallow access to other processes. More secure systems may require physically bounded processes. Physical bounds require each bounded process to run in an area of memory that is physically separated from other bounded processes, not just logically bounded in the same memory space. Physically bounded memory can be very expensive, but it’s also more secure than logical bounds. Bounds can be a means to enforce confinement.
+
+### 3. Isolation（隔离）
+
+从技术上**阻止一个进程影响另一个进程的行为或资源访问**
+
+核心作用：
+
+- 限制进程相互访问；
+- 当进程崩溃时，不影响其他进程或操作系统；
+- 阻止内存空间、系统调用、文件描述符的非法共享。
+
+📌 典型实现方式：
+
+- 现代操作系统进程隔离机制（内核 vs 用户态）
+- 虚拟化/容器技术（如 Docker、KVM、Hyper-V）
+- 浏览器 tab 进程沙箱化
+
+🔁 三者关系图解：
+
+````
+[Confinement]
+    |
+    V
+[ Bounds ] ---------> 定义权限边界
+    |
+    V
+[ Isolation ] -------> 保证独立运行、故障不影响其他模块
+````
+
+When a process is confined through enforcing access bounds, that process runs in isolation. Process isolation ensures that any behavior will affect only the memory and resources associated with the isolated process. Isolation is used to protect the operating environment, the kernel of the operating system, and other independent applications. Isolation is an essential component of a stable operating system. Isolation is what prevents an application from accessing the memory or resources of another application, whether for good or ill. Isolation allows for a fail-soft environment so that separate processes can operate normally or fail/crash without interfering or affecting other processes. Isolation is achieved through the enforcement of containment using bounds. 
+
+These three concepts (confinement, bounds, and isolation) make designing secure programs and operating systems more difficult, but they also make it possible to implement more secure systems. Confinement is making sure that an active process can only access specific resources (such as memory). Bounds is the limitation of authorization assigned to a process to limit the resources the process can interact with and the types of interactions allowed. Isolation is the means by which confinement is implemented through the use of bounds. The goals of the concepts is the ensure that the predetermined scope of resource access is not violated and any failure or compromise of a process has minimal to no affect on any other process.
+
+### 4. Access Controls（访问控制）
+
+对 Subject 与 Object 之间的**访问行为进行控制**
+
+✅ 作用目标：
+
+- 仅允许被授权主体访问目标资源；
+- 区分不同的访问操作（读、写、执行、删除等）；
+
+📌 主要模型
+
+| 模型                | 特点                       |
+| ------------------- | -------------------------- |
+| DAC（自主访问控制） | 所有者控制，灵活但风险高   |
+| MAC（强制访问控制） | 安全级别分层，军事常用     |
+| RBAC（基于角色）    | 企业应用广泛               |
+| ABAC（基于属性）    | 高灵活性、现代云环境支持好 |
+
+To ensure the security of a system, you need to allow subjects to access only authorized objects. Access controls limit the access of a subject to an object. Access rules state which objects are valid for each subject. Further, an object might be valid for one type of access and be invalid for another type of access. There are a wide range of options for access controls, such as discretionary, role-based, and mandatory. Please see Chapter 14 for an in-depth discussion of access controls.
+
+### 5. Trust and Assurance（信任与保障）
+
+| 项目          | 定义                               | 关键含义                                 |
+| ------------- | ---------------------------------- | ---------------------------------------- |
+| **Trust**     | 安全机制存在（Security Mechanism） | 系统具备一定的保护能力                   |
+| **Assurance** | 安全机制的可靠性（Confidence）     | 这些保护机制是否**有效、持续、安全运行** |
+
+保障机制：
+
+- 安全功能测试（如 Common Criteria、EAL）
+- 变更管理、补丁管理、配置基线（持续维护 assurance）
+- 可信启动（Trusted Boot）或 TPM 支持
+
+🧠 记忆提示：
+
+- **Trust 是“你有什么”**
+- **Assurance 是“你怎么知道它有效”**
+
+A trusted system is one in which all protection mechanisms work together to process sensitive data for many types of users while maintaining a stable and secure computing environment. In other words, trust is the presence of a security mechanism, function, or capability. Assurance is the degree of confidence in satisfaction of security needs. In other words, assurance is how reliable the security mechanisms are at providing security. Assurance must be continually maintained, updated, and reverified. This is true if the secured system experiences a known change (good or bad—i.e., a vendor patch or a malicious exploit) or if a significant amount of time has passed. In either case, change has occurred at some level. Change is often the antithesis of security; it often diminishes security. This is why change management, patch management, and configuration management are so important to security management.
+
+Assurance varies from one system to another and often must be established on individual systems. However, there are grades or levels of assurance that can be placed across numerous systems of the same type, systems that support the same services, or systems that are deployed in the same geographic location. Thus, trust can be built into a system by implementing specific security features, whereas assurance is an assessment of the reliability and usability of those security features in a real-world situation.
+
+#### 总结表格
+
+| 技术名                | 作用说明                             | 关键术语/机制                 |
+| --------------------- | ------------------------------------ | ----------------------------- |
+| **Confinement**       | 限制进程访问范围                     | 沙箱、虚拟化、最小权限        |
+| **Bounds**            | 定义进程行为和访问边界               | 权限级别、逻辑/物理内存隔离   |
+| **Isolation**         | 确保进程互不干扰、独立运行           | 进程隔离、容器、虚拟化        |
+| **Access Control**    | 控制访问对象的权限和方式             | DAC、MAC、RBAC、ABAC          |
+| **Trust & Assurance** | 系统安全机制存在与可靠性的评估与验证 | TPM、Common Criteria、EAL等级 |
 
 ## Understand the FUndamental Concepts of Security Models
 
+In information security, models provide a way to formalize security policies. Such models can be abstract or intuitive, but all are intended to provide an explicit set of rules that a computer can follow to implement the fundamental security concepts, processes, and procedures of a security policy. A security model provides a way for designers to map abstract statements into a security policy that prescribes the algorithms and data structures necessary to build hardware and software. Thus, a security model gives software designers something against which to measure their design and implementation.
+
+#### Tokens, Capabilities, and Labels
+
+Several different methods are used to describe the necessary security attributes for an object. A security token is a separate object that is associated with a resource and describes its security attributes. This token can communicate security information about an object prior to requesting access to the actual object. In other implementations, various lists are used to store security information about multiple objects. A capabilities list maintains a row of security attributes for each controlled object. Although not as flexible as the token approach, a capabilities list generally offers quicker lookups when a subject requests access to an object. A third common type of attribute storage is called a security label, which is generally a permanent part of the object to which it’s attached. Once a security label is set, it usually cannot be altered. This permanence provides another safeguard against tampering that neither tokens nor capabilities lists provide.
+
 ### 1. Trusted Computing Base
+
+
 
 ### 2. State Machine Model
 
@@ -372,4 +604,3 @@ It is easy to get caught up in adding complexity to a system, whether that syste
 
 
 ## Exam Essentials
-

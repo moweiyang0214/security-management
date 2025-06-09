@@ -1361,6 +1361,18 @@ Often trusted third parties are used to perform security evaluations; the most i
 
 ### 1. Common Criteria（CC）
 
+**Common Criteria（ISO/IEC 15408）** 是一套 **国际公认的 IT 产品安全评估标准**，旨在为政府和企业提供产品安全性的信心依据。
+
+#### 目标目的（熟记！）：
+
+- 增强客户对产品安全的信心
+- 避免重复评估（国际互认）
+- 降低评估成本、提高效率
+- 保证评估标准一致性
+- 促进安全产品的开发与评估
+- 明确评估范围：包括 **功能（Functionality）与保障（Assurance）**
+- 评估对象称为 **TOE（Target of Evaluation）**
+
 The Common Criteria (CC) defines various levels of testing and confirmation of systems’ security capabilities, and the number of the level indicates what kind of testing and confirmation has been performed. Nevertheless, it’s wise to observe that even the highest CC ratings do not equate to a guarantee that such systems are completely secure or that they are entirely devoid of vulnerabilities or susceptibilities to exploit. The Common Criteria was designed as a dynamic subjective product evaluation model and replaced previous static systems: 
 
 - U.S. Department of Defense’s **Trusted Computer System Evaluation Criteria (TCSEC)** 
@@ -1383,6 +1395,16 @@ The objectives of the **CC guidelines** are as follows:
 
 ■✓ To evaluate the functionality (in other words, what the system does) and assurance (in other words, how much can you trust the system) of the **target of evaluation (TOE)**
 
+#### CC 核心机制：PP 与 ST
+
+| 项目                         | 说明                                  |
+| ---------------------------- | ------------------------------------- |
+| **PP（Protection Profile）** | 安全需求 “我希望……” → 由用户/政府制定 |
+| **ST（Security Target）**    | 安全实现 “我能做到……” → 由厂商提出    |
+| **Package（安全功能包）**    | 可复用的安全功能模块组合              |
+
+🧠 记忆方式：PP 是需求方视角，ST 是实现方承诺
+
 The Common Criteria process is based on two key elements: 
 
 1. protection profiles: **Protection profiles (PPs)** specify for a product that is to be evaluated (the TOE) the security requirements and protections, which are considered the security desires, or the “I want,” from a customer. 
@@ -1394,7 +1416,28 @@ In addition to offering security targets, vendors may offer packages of addition
 
 An organization’s PP is compared to various STs from the selected vendor’s TOEs. The closest or best match is what the client purchases. The client initially selects a vendor based on published or marketed evaluation assurance levels (EALs) for currently available systems. Using Common Criteria to choose a vendor allows clients to request exactly what they need for security rather than having to use static fixed security levels. It also allows vendors more flexibility on what they design and create. A well-defined set of Common Criteria supports subjectivity and versatility, and it automatically adapts to changing technology and threat conditions. Furthermore, the EALs provide a method for comparing vendor systems that is more standardized (like the old TCSEC).
 
-##### Common Criteria Evaluation Assurance Levels (EAL)
+##### 七个 Evaluation Assurance Levels（EAL）
+
+用于衡量一个产品达到的保障等级，**越高越严格、越昂贵，但不是越高越好！**
+要 **根据应用场景选合适级别**（考试常考！）
+
+| EAL  | 名称                                         | 适用场景 / 特点概括                                          |
+| ---- | -------------------------------------------- | ------------------------------------------------------------ |
+| EAL1 | Functionally Tested（功能性测试）            | 仅确认基本功能能运行，无重大威胁；入门级，适合公众产品       |
+| EAL2 | Structurally Tested（结构性测试）            | 商业惯例下做的结构性测试，适合低/中风险应用、遗留系统        |
+| EAL3 | Methodically Tested & Checked                | 从设计开始实施安全控制，适合中等风险系统                     |
+| EAL4 | Methodically Designed, Tested, Reviewed      | 常见企业级评估级别；注重工程规范和第三方功能测试             |
+| EAL5 | Semi-formally Designed and Tested            | 高保障等级，使用形式化方法部分验证，适用于高价值系统         |
+| EAL6 | Semi-formally Verified, Designed, and Tested | 严格全流程安全工程、测试、验证，适用于**最高敏感场景**       |
+| EAL7 | Formally Verified, Designed, and Tested      | 极端高安全需求系统（如军事、航天）；**形式化验证全过程、代价极高** |
+
+**记忆建议：**
+
+- **EAL1–EAL3：轻量级/一般性保障**（无形式化）
+- **EAL4：工程最佳实践门槛**
+- **EAL5–EAL7：半形式化 → 全形式化，高保障场景**
+
+Common Criteria Evaluation Assurance Levels (EAL)
 
 | Level | Assurance Level                              | Description                                                  |
 | ----- | -------------------------------------------- | ------------------------------------------------------------ |
@@ -1408,11 +1451,55 @@ An organization’s PP is compared to various STs from the selected vendor’s T
 
 As with other evaluation criteria, the CC guidelines do not include evaluation of security in situ—that is, they do not address controls related to personnel, organizational practices and procedures, or physical security. Likewise, controls over electromagnetic emissions are not addressed, nor are the criteria for rating the strength of cryptographic algorithms explicitly laid out. Nevertheless, the CC guidelines represent some of the best techniques whereby systems may be rated for security.
 
+CC 只评估 TOE 内部的技术安全能力，**不评估物理、人事、运维等外围保障**！
+
+**不包括**：
+
+- 人员/管理/流程控制
+- 物理安全措施
+- 电磁泄漏防护（TEMPEST）
+- 密码强度评级（算法安全）
+
+##### 实用记忆口诀（EAL 区分）
+
+「低三软管测对错，中级设计求稳妥，高阶形式不出错」
+
+| 级别区间  | 口诀                            | 解释                                   |
+| --------- | ------------------------------- | -------------------------------------- |
+| EAL1–EAL3 | 软件测试管个错（功能性/结构性） | 只是确认功能存在，风险可接受           |
+| EAL4      | 方法论指导做得妥                | 工程导向最佳实践                       |
+| EAL5–EAL6 | 高风险必须验证多                | 半形式化验证，高价值、高代价           |
+| EAL7      | 正式验证不容错                  | 全流程形式化验证，适合最高安全需求场景 |
+
 ### 2. Authorization to Operate（ATO）
+
+**ATO（Authorization to Operate）** 是指由权威人员批准的信息系统可以投入实际运营的**官方授权决策**，表明该系统在特定的安全控制下，其风险已被降低到可接受的水平。
+
+它是 NIST 提出的 **Risk Management Framework (RMF)** 的核心环节。
+
+#### 谁签发 ATO？——AO 角色
+
+**AO（Authorizing Official）授权官员**，也叫：
+
+- DAA：Designated Approving Authority
+- AA：Approving Authority
+- SCA：Security Control Assessor（通常是审查者，不是真正的决策人）
+- RO：Recommending Official
+
+👉 AO 负责 **评估系统的风险并决定是否批准运营**。
 
 For many environments, it is necessary to obtain an official approval to use secured equipment for operational objectives. This is often referred to as an Authorization to Operate (ATO). ATO is the current term for this concept as defined by the Risk Management Framework (RMF) (see Chapter 2,“Personnel Security and Risk Management Concepts”)
 
 An ATO is an official authorization to use a specific collection of secured IT/IS systems to perform business tasks and accept the identified risk. The assessment and assignment of an ATO is performed by an Authorizing Official (AO). An AO is an authorized entity who can evaluate an IT/IS system, its operations, and its risks, and potentially issue an ATO. Other terms for AO include designated approving authority (DAA), Approving Authority (AA), Security Control Assessor (SCA), and Recommending Official (RO).
+
+**典型 ATO 时效及重新评估触发条件**
+
+| 属性               | 内容                                    |
+| ------------------ | --------------------------------------- |
+| 默认有效期         | **5 年**（可根据实际情况缩短/延长）     |
+| 需要重新评估的情况 | - ATO过期 - 重大安全漏洞 - 重大系统变更 |
+
+🧠 记忆技巧：只要发生**时间到、漏洞出、系统变**，都可能导致 ATO 失效！
 
 A typical ATO is issued for 5 years (although assigned time frames vary and the AO can adjust the time frame even after issuing an ATO) and must be reobtained whenever one of the following conditions occurs:
 
@@ -1422,6 +1509,17 @@ A typical ATO is issued for 5 years (although assigned time frames vary and the 
 3. The system experiences a significant security change.
 
 The AO has the discretion to determine which breaches or security changes result in a loss of ATO. Either a modest intrusion event or the application of a substantial security patch could cause the negation of an ATO.
+
+#### 四类授权决定（考试常考！）
+
+| 决定类型                             | 描述与适用场景                                               |
+| ------------------------------------ | ------------------------------------------------------------ |
+| ✅ **Authorization to Operate (ATO)** | 表示风险已降低至可接受范围，正式授权运行；**默认目标结果**   |
+| ✅ **Common Control Authorization**   | 控制来自于他人或外部共享的服务（如云平台），此控制已被同一 AO 授权，并风险可接受 |
+| ✅ **Authorization to Use (ATU)**     | 使用**第三方系统**或继承他人授权的服务，通常用于云服务 / 外包系统；**体现 ATO 的互认性（reciprocity）** |
+| ❌ **Denial of Authorization**        | 表示风险不可接受，**禁止上线运营**，必须整改或增强控制后重新评估 |
+
+🧠 记忆建议：三种“授权”（ATO / CC / ATU）都表示“可以用”，唯有 “**Denial**” 直接 **禁止运行**。
 
 An AO can issue **four types of authorization decisions**:
 
@@ -1433,29 +1531,115 @@ An AO can issue **four types of authorization decisions**:
 
 Please see NIST SP 800-37r2 for more on the Risk Management Framework and authorization.
 
+#### RMF 生命周期中 ATO 所在阶段（NIST SP 800-37r2）
+
+| RMF 阶段                | ATO 所在位置            |
+| ----------------------- | ----------------------- |
+| Step 1: Categorize      | 分类信息系统            |
+| Step 2: Select          | 选择适当的安全控制      |
+| Step 3: Implement       | 实施这些安全控制        |
+| Step 4: Assess          | 评估这些安全控制效果    |
+| **✅ Step 5: Authorize** | **由 AO 做出 ATO 决策** |
+| Step 6: Monitor         | 持续监控风险            |
+
+**快速考点小结（表格版）**
+
+| 考点              | 快速记忆点                           |
+| ----------------- | ------------------------------------ |
+| ATO 定义          | AO 批准信息系统运营，风险已可接受    |
+| 签发人 AO         | 安全授权负责人，可被称为 DAA、AA、RO |
+| 有效期            | 默认 5 年；过期/漏洞/变更须重新评估  |
+| 四类授权结果      | ✅ATO、✅CC、✅ATU、❌Denial             |
+| 常用法规来源      | NIST SP 800-37r2《RMF 指南》         |
+| ATO 所在 RMF 步骤 | Step 5：Authorize                    |
+| 授权后仍需        | Step 6：Monitor 持续监控             |
+
 ## Understand Security Capabilities of Information Systems
 
 The security capabilities of information systems include memory protection, virtualization, Trusted Platform Module (TPM), encryption/decryption, interfaces, and fault tolerance. It is important to carefully assess each aspect of the infrastructure to ensure that it sufficiently supports security. Without an understanding of the security capabilities of information systems, it is impossible to evaluate them, nor is it possible to implement them properly.
 
-### 1. Memory Protection
+### 1. Memory Protection（内存保护）
+
+**目标**：防止一个进程访问未分配的内存区域。
+
+- 避免：
+  - 数据泄露（Confidentiality）
+  - 进程间干扰（Integrity）
+  - 崩溃与拒绝服务（Availability）
+
+**实现机制**：
+
+- 操作系统通过**内存边界检查**、**页表映射**等方式强制限制进程访问范围。
 
 Memory protection is a core security component that must be designed and implemented into an operating system. It must be enforced regardless of the programs executing in the system. Otherwise instability, violation of integrity, denial of service, and disclosure are likely results. Memory protection is used to prevent an active process from interacting with an area of memory that was not specifically assigned or allocated to it.
 
 #### Meltdown and Spectre
 
+**知名攻击案例**：
+
+- **Meltdown**：用户进程可读取**内核内存**内容。
+- **Spectre**：窃取其他进程的**内存数据**。
+
+🧠 **考点提醒**：补丁可以缓解，但会影响性能！
+
 **Meltdown** is an exploitation that can allow for the reading of private kernel memory contents by a nonprivileged process. Spectre can enable the wholesale theft of memory contents from other running applications. An astoundingly wide range of processors are vulnerable to one or both of these exploits. Although two different issues, they were discovered nearly concurrently and made public at the same time. Patches are widely available to address these issues in existing hardware, and future processors should have native mechanisms to prevent such exploitations. But such patches often cause a reduction in performance, so application of the patch should be considered carefully.
 
-### 2. Virtualization
+### 2. Virtualization（虚拟化）
+
+**核心概念**：在物理硬件上运行多个虚拟主机或操作系统（如使用 VMware、Hyper-V、KVM）。
+
+**安全价值**：
+
+- 沙箱环境：测试恶意软件
+- OS 隔离：将风险分区
+- 提高资源利用率
+- 辅助灾备（DR）
+
+**关联考点**：可结合隔离、快照恢复、高可用性（HA）策略使用。
 
 Virtualization technology is used to host one or more operating systems within the memory of a single host computer or to run applications that are not compatible with the host OS. Virtualization can be a tool to isolate OSs, test suspicious software, or implement other security protections. See Chapter 9 for more information about virtualization.
 
-### 3. Trusted Platform Module
+### 3. Trusted Platform Module (TPM)
+
+**TPM 是什么？**
+
+- 一种**硬件安全模块（HSM）**
+- 安装在主板上的安全芯片
+- 用于 **密钥管理、存储、加解密**
+
+**主要用途**：
+
+- 驻主板硬件芯片（vs. 外接 HSM）
+- 加密本地存储设备（如支持 BitLocker）
+- 支持平台完整性度量（如启动检测）
+
+**扩展知识**：
+
+- HSM 类型：主板芯片、USB 外设、网络设备模块
+- **具备防篡改机制**
+
+🧠 TPM 和 HSM 是常见选择题中需要区分的两个重点！
 
 The Trusted Platform Module (TPM) is both a specification for a cryptoprocessor chip on a mainboard and the general name for implementation of the specification. A TPM can be used to implement a broad range of cryptography-based security protection mechanisms.
 
 A TPM chip is often used to store and process cryptographic keys for a hardware-supported or OS-implemented local storage device encryption system. A TPM is an example of a hardware security module (HSM). An HSM is a cryptoprocessor used to manage and store digital encryption keys, accelerate crypto operations, support faster digital signatures, and improve authentication. An HSM can be a chip on a motherboard, an external peripheral, a network-attached device, or an extension card (which is inserted into a device, such as a router, firewall, or rack-mounted server blade). HSMs include tamper protection to prevent their misuse even if an attacker gains physical access.
 
-### 4. Interfaces
+### 4. Interfaces（受限接口）
+
+**定义**：根据用户权限控制功能可见性与可操作性。
+
+**实现方式**：
+
+- 权限低的用户无法看到按钮/菜单
+- 或者命令呈灰色禁用状态
+
+**目的**：
+
+- 限制未经授权用户的功能访问
+- 限制误操作的可能性
+- 落实**最小权限原则**
+
+📌 **模型关联**：与 **Clark–Wilson 模型**直接相关（通过“受限接口 + 转换程序”实现访问控制）。
 
 A constrained or restricted interface is implemented within an application to restrict what users can do or see based on their privileges. Users with full privileges have access to all the capabilities of the application. Users with restricted privileges have limited access.
 
@@ -1463,13 +1647,48 @@ Applications constrain the interface using different methods. A common method is
 
 The purpose of a constrained interface is to limit or restrict the actions of both authorized and unauthorized users. The use of such an interface is a practical implementation of the Clark–Wilson model of security.
 
-### 5. Fault Tolerance 
+### 5. Fault Tolerance （容错）
+
+**定义**：系统在发生局部故障时仍可继续运行。
+
+**实现方式**：
+
+- RAID：磁盘冗余
+- 集群：主备自动切换
+- 热备：设备实时镜像同步
+
+**关联安全属性**：
+
+- 可用性（Availability）
+- 消除单点故障（SPOF）
 
 Fault tolerance is the ability of a system to suffer a fault but continue to operate. Fault tolerance is achieved by adding redundant components such as additional disks within a redundant array of inexpensive disks (RAID) array, or additional servers within a failover clustered configuration. Fault tolerance is an essential element of security design. It is also considered part of avoiding single points of failure and the implementation of redundancy. For more details on fault tolerance, redundant servers, RAID, and failover solutions, see Chapter 18, “Disaster Recovery Planning.”
 
-### 6. Encryption/Decryption
+### 6. Encryption/Decryption（加解密）
+
+**功能**：
+
+- 加密（Encryption）：将明文变为密文（机密性）
+- 解密（Decryption）：还原密文（可用性）
+
+**支持安全目标**：
+
+- 机密性（Confidentiality）
+- 完整性（Integrity）【结合哈希使用】
+- 身份验证 + 不可否认性（非对称加密）
 
 Encryption is the process of converting plaintext to ciphertext, whereas decryption reverses that process. Symmetric and asymmetric methods of encryption and decryption can be used to support a wide range of security solutions to protect confidentiality and integrity. Please see the full coverage of cryptography in Chapters 6 and 7.
+
+#### Security Capabilities 快速回忆表
+
+| 能力模块              | 目标                 | 实现技术/机制              | 关联安全模型 / 考点              |
+| --------------------- | -------------------- | -------------------------- | -------------------------------- |
+| Memory Protection     | 防止非法访问内存     | 虚拟地址空间、边界检查     | 防泄露、防崩溃，Meltdown/Spectre |
+| Virtualization        | 隔离风险，提高利用率 | Hypervisor、虚拟机         | 沙箱、备份、灾难恢复             |
+| TPM / HSM             | 密钥保护、硬件加解密 | 芯片存储密钥、硬件加速模块 | 支持磁盘加密、防物理入侵         |
+| Constrained Interface | 限制权限功能         | 隐藏/禁用控件、菜单        | Clark–Wilson 模型                |
+| Fault Tolerance       | 保证服务不中断       | RAID、Cluster、热备        | Availability、防SPOF             |
+| Encryption            | 保密性、完整性       | 对称/非对称加密，数字签名  | 详见第6–7章                      |
 
 ## Summary
 

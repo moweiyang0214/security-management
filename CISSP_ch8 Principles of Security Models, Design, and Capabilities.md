@@ -1104,17 +1104,266 @@ Memorizing the properties of Bell–LaPadula and Biba can be challenging, but th
 - Biba（完整性）→ ❌↓读，❌↑写
 - 两者图形对称：一个关注信息**向下泄露**，一个关注信息**向上传染**
 
-### 9. Clark-Wilson Model
+### 9. Clark-Wilson Model - **基于商业完整性的保护**
 
-### 10. Brewer and Nash Model
+**模型目标**: Clark–Wilson 模型专注于**商业环境中的数据完整性保护**。其核心理念是：**不允许用户直接访问数据，而是必须通过受控程序（Transformation Procedure, TP）进行访问或修改**。
 
-### 11. Goguen-Meseguer Model
+#### 核心机制：访问控制三元组（Access Control Triplet）
 
-### 12. Sutherland Model
+| 组成部分                           | 作用                           |
+| ---------------------------------- | ------------------------------ |
+| **Subject（用户）**                | 发起操作请求的人或进程         |
+| **TP（Transformation Procedure）** | 控制对数据操作的受限程序接口   |
+| **Object（对象）**                 | 被访问的数据项（如数据库记录） |
 
-### 13. Graham-Denning Model
+用户只能通过 TP 接口访问数据，这种“间接访问”是模型的根本。
 
-### 14. Harrison-Ruzzo-Ullman Model
+#### 关键概念
+
+| 项目                                        | 定义                             |
+| ------------------------------------------- | -------------------------------- |
+| **CDI（Constrained Data Item）**            | 被模型保护的敏感数据             |
+| **UDI（Unconstrained Data Item）**          | 未受控制的输入或输出数据         |
+| **TP（Transformation Procedure）**          | 仅有的可用于修改 CDI 的程序      |
+| **IVP（Integrity Verification Procedure）** | 用于扫描验证数据完整性的一种机制 |
+
+#### 两大核心原则
+
+1. **Well-Formed Transactions（结构良好的事务）**
+   只有通过授权 TP 才能修改数据，防止未授权篡改。
+2. **Separation of Duties（职责分离）**
+   操作分离（如一人录入、一人审批），防止内部欺诈或滥用。
+
+------
+
+#### 其他特性
+
+- 使用**受限接口模型**，可限制用户只能看到/操作授权内容；
+- 虽设计用于完整性，但中间层 TP 也可兼顾保密性；
+- 常用于金融、ERP、商业数据系统。
+
+The Clark–Wilson model uses a multifaceted approach to enforcing data integrity. Instead of defining a formal state machine, the Clark–Wilson model defines each data item and allows modifications through only a limited or controlled intermediary program or interface.
+
+The Clark–Wilson model does not require the use of a lattice structure; rather, it uses a three-part relationship of subject/program/object (or subject/transaction/object) known as a triple or an access control triplet. Subjects do not have direct access to objects. Objects can be accessed only through programs. Through the use of two principles—well-formed transactions and separation of duties—the Clark–Wilson model provides an effective means to protect integrity.
+
+Well-formed transactions take the form of programs. A subject is able to access objects only by using a program, interface, or access portal. Each program has specific limitations on what it can and cannot do to an object (such as a database or other resource). This effectively limits the subject’s capabilities. This is known as a constrained, limiting, or restrictive interface. If the programs are properly designed, then the triple relationship provides a means to protect the integrity of the object.
+
+Clark–Wilson defines the following items and procedures:
+
+- A constrained data item (CDI) is any data item whose integrity is protected by the security model.
+- An unconstrained data item (UDI) is any data item that is not controlled by the security model. Any data that is to be input and hasn’t been validated, or any output, would be considered an unconstrained data item.
+- An integrity verification procedure (IVP) is a procedure that scans data items and confirms their integrity.
+- Transformation procedures (TPs) are the only procedures that are allowed to modify a CDI. The limited access to CDIs through TPs forms the backbone of the Clark–Wilson integrity model.
+
+The Clark–Wilson model uses security labels to grant access to objects, but only through transformation procedures and a restricted interface model. A restricted interface model uses classification-based restrictions to offer only subject-specific authorized information and functions. One subject at one classification level will see one set of data and have access to one set of functions, whereas another subject at a different classification level will see a different set of data and have access to a different set of functions. The different functions made available to different levels or classes of users may be implemented by either showing all functions to all users but disabling those that are not authorized for a specific user or by showing only those functions granted to a specific user. Through these mechanisms, the Clark–Wilson model ensures that data is protected from unauthorized changes from any user. In effect, the Clark–Wilson model enforces separation of duties. The Clark–Wilson design makes it a common model for commercial applications.
+
+**Note:** The Clark–Wilson model was designed to protect integrity using the access control triplet. However, though the intermediary interface can be programmed to limit what can be done to an object by a subject, it can just as easily be programmed to limit or restrict what objects are shown to a subject. Thus, this concept can lend itself readily to protect confidentiality. In many situations there is an intermediary program between a subject and an object. If the focus of that intermediary is to protect integrity, then it is an implementation of the Clark–Wilson model. If it is intended to protect confidentiality, then they are benefiting from an alternate use of the intermediary program. Use of the access control triplet to protect confidentiality does not seem to have its own model name.
+
+### 10. Brewer and Nash Model（中国墙模型）
+
+模型目标: Brewer–Nash 模型聚焦于**动态访问控制 + 冲突隔离**，专为解决“**利益冲突问题**”而设计，例如会计师不能同时服务于两家竞争公司。
+
+#### 应用场景
+
+- 财务审计
+- 咨询公司
+- 法律服务
+- 任何可能产生**利益冲突**的环境
+
+#### 工作原理
+
+- 一旦用户访问了一个**冲突类（Conflict Class）\**中的数据（如公司 A 的文档），系统将\**自动屏蔽**该用户访问该冲突类中其他实体（如公司 B）数据的权限。
+- 这种**“信息气泡”或“动态隔离”**机制称为 **Cone of Silence** 或 Ethical Wall。
+- 冲突类与用户权限是**动态变化的**，随着访问行为自动调整。
+
+#### 组成元素
+
+| 项目                           | 定义                                     |
+| ------------------------------ | ---------------------------------------- |
+| **Subject（用户）**            | 操作系统的主体                           |
+| **Object（数据对象）**         | 如公司文档、项目文件等                   |
+| **Conflict Class（冲突类）**   | 一组相互存在利益冲突的对象（如竞争公司） |
+| **Access History（访问历史）** | 用于动态决定当前允许访问的数据集         |
+
+### 示例说明
+
+审计员 A 第一次访问了“公司 X”的财务报表，那么系统将自动阻止他访问“公司 Y”（竞争对手）的任何敏感数据，直到当前任务结束。
+
+The Brewer and Nash model was created to permit access controls to change dynamically based on a user’s previous activity (making it a kind of state machine model as well). This model applies to a single integrated database; it seeks to create security domains that are sensitive to the notion of conflict of interest (for example, someone who works at company C who has access to proprietary data for company A should not also be allowed access to similar data for company B if those two companies compete with each other). This model creates a class of data that defines which security domains are potentially in conflict and prevents any subject with access to one domain that belongs to a specific conflict class from accessing any other domain that belongs to the same conflict class. Metaphorically, this puts a wall around all other information in any conflict class. Thus, this model also uses the principle of data isolation within each conflict class to keep users out of potential conflict-of-interest situations (for example, management of company datasets). Because company relationships change all the time, dynamic updates to members of and definitions for conflict classes are important.
+
+Another way of looking at or thinking of the Brewer and Nash model is of an administrator having full control access to a wide range of data in a system based on their assigned job responsibilities and work tasks. However, at the moment an action is taken against any data item, the administrator’s access to any conflicting data items is temporarily blocked. Only data items that relate to the initial data item can be accessed during the operation. Once the task is completed, the administrator’s access returns to full control.
+
+Brewer and Nash was sometimes known as the Chinese Wall model, but this term is deprecated. Instead, other terms of “ethical wall” and “cone of silence” have been used to describe Brewer and Nash.
+
+| 特征           | **Clark–Wilson 模型**                | **Brewer–Nash 模型**               |
+| -------------- | ------------------------------------ | ---------------------------------- |
+| 核心目标       | **保护完整性**（防止数据被随意更改） | **避免利益冲突**（防止多重访问）   |
+| 模型类型       | **三元组模型（Subject–TP–Object）**  | **动态状态模型（基于访问历史）**   |
+| 是否使用中间层 | ✅ 通过受控接口程序访问数据           | ❌ 直接动态隔离                     |
+| 应用场景       | 商业系统、金融、ERP                  | 法律、财务、咨询等有冲突需求的环境 |
+| 动态权限调整   | ❌ 静态访问控制，需预定义角色和接口   | ✅ 根据用户行为动态调整权限         |
+| 是否关注保密性 | 可扩展保护保密性（非原始设计目的）   | 可实现隐式保密（通过隔离实现）     |
+
+#### 总结记忆建议
+
+- **Clark–Wilson**：强调流程控制 + 数据接口 → 强完整性 + 适合商业系统
+- **Brewer–Nash**：强调动态利益隔离 + 避免冲突 → 适合法律财务
+
+### 11. Goguen-Meseguer Model（非干扰模型的奠基）
+
+模型类型：**完整性模型**（非传统）
+
+#### 模型核心思想
+
+- 基于 **自动化理论** 和 **领域分离（domain separation）**。
+- 每个主体（subject）被事先指定能访问的一组对象（object）。
+- 主体只能对**预定义对象集合**执行**预定义操作**，不允许任意行为。
+- **一个主体域的成员不能影响另一个域的成员**，实现行为隔离。
+
+**目标：**通过预定义访问规则和分组隔离，**防止主体之间的交叉干扰（interference）**，实现高完整性控制。
+
+The Goguen–Meseguer model is an integrity model, although not as well known as Biba and the others. In fact, this model is said to be the foundation of noninterference conceptual theories. Often when someone refers to a noninterference model, they are actually referring to the Goguen–Meseguer model.
+
+The Goguen–Meseguer model is based on predetermining the set or domain (i.e., a list) of objects that a subject can access. This model is based on automation theory and domain separation. This means subjects are allowed only to perform predetermined actions against predetermined objects. When similar users are grouped into their own domain (that is, collective), the members of one subject domain cannot interfere with the members of another subject domain. Thus, subjects are unable to interfere with each other’s activities.
+
+### 12. Sutherland Model（非干扰的形式化表达）
+
+模型类型：**完整性模型**
+
+#### 模型核心
+
+- 基于 **状态机模型（State Machine）** 和 **信息流模型（Information Flow）**；
+- 不强调具体的保护机制，而是关注：
+  - 合法的初始状态；
+  - 被允许的状态转换；
+  - 系统状态不可被非授权主体操控。
+
+应用场景举例：
+
+- 防止 **隐蔽通道（Covert Channel）**；
+- 保护决策过程或计算过程不被信息泄露或篡改。
+
+The Sutherland model is an integrity model. It focuses on preventing interference in support of integrity. It is formally based on the state machine model and the information flow model. However, it does not directly indicate specific mechanisms for protection of integrity. Instead, the model is based on the idea of defining a set of system states, initial states, and state transitions. Through the use of only these predetermined secure states, integrity is maintained and interference is prohibited.
+
+A common example of the Sutherland model is its use to prevent a covert channel from being used to influence the outcome of a process or activity. 
+
+### 13. Graham-Denning Model - **面向对象/主体生命周期的权限模型**
+
+模型类型：**访问控制模型**
+
+模型特色: 通过**八种操作规则（protection rules）**实现主体与对象的安全生命周期管理。
+
+#### 八个操作
+
+1. 创建对象
+2. 创建主体
+3. 删除对象
+4. 删除主体
+5. 授予读取权限
+6. 授予传递（Grant）权限
+7. 授予删除权限
+8. 授予转移（Transfer）权限
+
+这些操作作用于 **访问控制矩阵（Access Control Matrix）** 上——类似于现代操作系统的权限分配逻辑。
+
+The Graham–Denning model is focused on the secure creation and deletion of both subjects and objects. Graham–Denning is a collection of eight primary protection rules or actions that define the boundaries of certain secure actions:
+
+- Securely create an object.
+- Securely create a subject.
+- Securely delete an object.
+- Securely delete a subject.
+- Securely provide the read access right.
+- Securely provide the grant access right.
+- Securely provide the delete access right.
+- Securely provide the transfer access right.
+
+Usually the specific abilities or permissions of a subject over a set of objects is defined in an access matrix (aka access control matrix).
+
+### 14. Harrison-Ruzzo-Ullman Model (HRU) 模型：**可修改访问矩阵的模型**
+
+模型类型：**动态访问控制模型**
+
+#### HRU 的核心扩展
+
+- 是 **Graham–Denning 模型的扩展**；
+- 强调：
+  - 权限的**动态赋予与撤销**；
+  - 对权限操作本身的控制流程；
+  - 系统状态由一个可修改的**访问控制矩阵**表示；
+  - 权限编辑由一组**原语（primitives）命令**实现。
+
+#### 原语操作包括
+
+- 增加/移除 权限；
+- 增加/移除 主体与对象；
+- 所有操作必须满足一致性规则：**事务原子性（要么全部成功，要么全部失败）**。
+
+The Harrison–Ruzzo–Ullman (HRU) model focuses on the assignment of object access rights to subjects as well as the resilience of those assigned rights. It is an extension of the Graham–Denning model. It is centered around the establishment of a finite set of procedures (or access rights) that can be used to edit or alter the access rights of a subject over an object. The state of access rights under HRU can be expressed in a matrix, where the rows are subjects and the columns are objects (which will include the subjects because they can be objects as well). The intersection of each row and column will include the specific procedures that each subject is allowed to perform against each object. Additionally, a finite set of commands or primitives is defined that controls how the matrix can be modified by authorized subjects. These primitives include adding or removing access rights, subjects, and/or objects from the matrix. There are also integrity rules, such as: in order to create or add a subject or object to the matrix, it must not already exist; in order to remove a subject or object from the matrix, it must already exist; and if several commands are performed at once, they must all operate successfully or none of the commands will be applied.
+
+#### Disambiguating the Word “Star” in Models
+
+##### 关于“Star”的多重含义
+
+| 使用位置               | 含义                              | 说明                                                        |
+| ---------------------- | --------------------------------- | ----------------------------------------------------------- |
+| Bell–LaPadula 模型     | *（星号）安全属性                 | **不允许向低级别写入（No Write Down）**，保护**保密性**     |
+| Biba 模型              | *（星号）完整性属性               | **不允许向高完整性对象写入（No Write Up）**，保护**完整性** |
+| CSA STAR Program       | Security Trust Assurance and Risk | **云安全联盟的认证与审计计划**，非模型                      |
+| Galbraith's Star Model | 企业组织结构模型                  | 侧重于战略、结构、人事等组织管理，**与信息安全无关**        |
+
+在考试或实际环境中遇到“star”，请结合上下文判断是：
+
+- 安全模型的属性（Bell–LaPadula / Biba）；
+- 云服务审计框架（CSA STAR）；
+- 组织设计理论（Galbraith）；
+
+The term star presents a few challenges when it comes to security models. For one thing, there is no formal security model named “Star Model.” However, both the Bell–LaPadula and the Biba models have a star property, which is discussed in their respective sections in this chapter.
+
+Although not a model, the Cloud Security Alliance (CSA) also has a STAR program. CSA’s Security Trust Assurance and Risk (STAR) program focuses on improving cloud service provider (CSP) security through auditing, transparency, and integration of standards.
+
+Although not related to security, there is also Galbraith’s Star Model, which helps businesses organize divisions and departments to achieve business missions and goals and adjust over time for long-term viability. This model is based around five main areas of business administration that need to be managed, balanced, and harnessed toward the mission and goals of the organization. The five areas of Galbraith’s Star Model are Strategy, Structure, Processes, Rewards, and People.
+
+Understanding how “star” is used in the context of the Bell–LaPadula and Biba models, CSA’s STAR program, and Galbraith’s Star Model will help you distinguish what is meant when you see the word used in different contexts.
+
+总结对比
+
+| 模型            | 类型         | 关键概念                  | 特点/适用                      |
+| --------------- | ------------ | ------------------------- | ------------------------------ |
+| Goguen–Meseguer | 完整性       | 域隔离、预定义访问        | 非干扰理论基础                 |
+| Sutherland      | 完整性       | 状态限制、防止干扰        | 应用于隐蔽通道防护             |
+| Graham–Denning  | 访问控制     | 8项安全操作               | 安全生命周期管理               |
+| HRU             | 访问控制     | 权限动态编辑+矩阵模型     | 对权限演化建模                 |
+| “Star” 属性     | 安全模型概念 | * 读/写限制（与方向相关） | 保密性（Bell）与完整性（Biba） |
+
+#### **信息安全模型对照总览表**
+
+| 模型名称                        | 模型类型                   | 核心关注点               | 关键属性                                   | 适用场景/优势                       |
+| ------------------------------- | -------------------------- | ------------------------ | ------------------------------------------ | ----------------------------------- |
+| **Bell–LaPadula**               | 机密性（Confidentiality）  | 防止信息泄露             | - No Read Up- No Write Down（* Star）- DAC | 多级保密系统，军用/政府保密数据环境 |
+| **Biba**                        | 完整性（Integrity）        | 防止数据被低完整性污染   | - No Read Down- No Write Up（* Star）      | 商业场景，数据不能被篡改或污染      |
+| **Clark–Wilson**                | 完整性（Integrity）        | 分离职责 + 限制接口      | - 三元组(S/P/O)- TP/CDI/UDI/IVP            | 商业数据库系统，ERP/金融系统        |
+| **Brewer–Nash**（Chinese Wall） | 动态访问控制               | 避免利益冲突             | 动态访问决策（基于历史行为）               | 顾问、法律、投资行业的合规控制      |
+| **Goguen–Meseguer**             | 完整性 / 非干扰            | 域分离 / 自动机          | 固定行为集合 + 无交叉域干扰                | 基础理论，非干扰模型的起点          |
+| **Sutherland**                  | 完整性 / 信息流            | 状态限制 + 禁止推理干扰  | 合法状态转换，控制隐蔽通道                 | 高完整性计算、推理阻断系统          |
+| **Graham–Denning**              | 访问控制（Access Control） | 主体与对象的生命周期管理 | 8个操作规则：创建/删除/授权/转移等         | 安全管理系统，操作系统              |
+| **Harrison–Ruzzo–Ullman (HRU)** | 动态访问控制               | 权限变化及可验证性       | 基于访问控制矩阵 + 原语操作规则            | 细粒度权限控制、权限继承与变化      |
+| **Take–Grant**                  | 权限传递                   | 权限继承与复制           | Take / Grant / Create / Remove 四规则      | 授权系统，现代 ACL 权限结构建模     |
+| **Access Control Matrix**       | 基础访问控制模型           | 主体-对象-操作 映射      | 行为矩阵：行=主体，列=对象                 | 系统权限表建模基础，操作系统        |
+| **State Machine Model**         | 基础理论模型               | 状态 + 状态转换的安全性  | 安全状态定义与验证                         | 其他模型（如 Bell/Biba）的基础      |
+| **Information Flow Model**      | 信息流控制                 | 控制信息流向、类型       | 阻止未授权流动 + 控制转换路径              | 多级系统、混合级别对象流            |
+| **Noninterference**             | 信息流控制                 | 不可见性、无影响行为     | 高级别行为不影响低级别状态                 | 隐蔽通道/推理攻击防护               |
+| **Galbraith Star Model**        | 非安全领域                 | 企业组织设计             | 战略/结构/人员等五元素                     | （非信息安全）组织战略管理          |
+| **CSA STAR Program**            | 云安全框架                 | 审计 / 风险 / 信任验证   | 自评、认证、持续监控                       | 云服务供应商合规与透明认证          |
+
+**术语解释：**
+
+- **No Read Up / No Write Down**：高机密对象不能被低权限主体读取 / 不能将机密信息写到低等级；
+- **CDI / UDI / TP / IVP**：Clark–Wilson 模型的元素（受限数据/非受限数据/转换过程/验证过程）；
+- **三元组（Subject–Program–Object）**：一种确保操作受控的结构方式；
+- **ACL（访问控制列表）**：以对象为中心，记录哪些主体拥有何种权限；
+- **访问矩阵**：以二维矩阵形式记录主体对对象的操作权限；
+- **隐蔽通道**：未授权的信息通道，如通过资源使用时间间接传递信息；
+- **非干扰（Noninterference）**：系统中某级别行为不应影响另一级别可感知的状态；
 
 ## Select Controls Based on Systems Security Requirements 
 

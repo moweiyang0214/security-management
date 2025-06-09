@@ -408,7 +408,7 @@ A more traditional security approach of trusting subjects and devices within the
 
 To ensure the confidentiality, integrity, and availability (CIA) of data, you must ensure that all components that have access to data are secure and well behaved. Software designers use different techniques to ensure that programs do only what is required and nothing more. Although the concepts we discuss in the following sections all relate to software programs, they are also commonly used in all areas of security. For example, physical confinement guarantees that all physical access to hardware is controlled.
 
-### 1. Confinement**（限制）**
+### 1. Confinement（限制）
 
 又称 **沙箱（sandboxing）**，是最直接体现**最小权限原则**的机制。
 
@@ -716,15 +716,7 @@ The part of the TCB that validates access to every resource prior to granting ac
 
 ##### 🎯 核心安全思想：
 
-**如果：**
-
-- 系统从 **一个安全状态** 通过 **合法的输入与处理逻辑** 只能转移到 **另一个安全状态**，
-
-**那么：**
-
-- 整个系统将始终维持在一个**安全状态机**中运行。
-
-> ✅ 这是一种对系统行为进行严格控制和验证的方法，确保**任意时间点**下都不偏离安全策略。
+如果系统从 **一个安全状态** 通过 **合法的输入与处理逻辑** 只能转移到 **另一个安全状态**，那么整个系统将始终维持在一个**安全状态机**中运行。✅ 这是一种对系统行为进行严格控制和验证的方法，确保**任意时间点**下都不偏离安全策略。
 
 ------
 
@@ -876,7 +868,7 @@ Some other models that fall into the information flow category build on the noti
 | **3. Create（创建）** | 允许主体创建新对象并自动成为其拥有者，也可新建权限边。       |
 | **4. Remove（移除）** | 允许主体删除其对某对象的权限。                               |
 
-四个操作定义了**权限传播**的完整生命周期，从生成、赋予、扩散，到撤销。
+四个操作定义了**权限传播**的完整生命周期，从生成 (Create)、赋予 (Grant)、扩散 (Take)，到撤销 (Remove)。
 
 The take-grant model employs a directed graph to dictate how rights can be passed from one subject to another or from a subject to an object. Simply put, a subject (X) with the grant right can grant another subject (Y) or another object (Z) any right that subject (X) possesses. Likewise, a subject (X) with the take right can take a right from another subject (Y). In addition to these two primary rules, the take-grant model has a create rule and a remove rule to generate or delete rights. The key to this model is that using these rules allows you to figure out when rights in the system can change and where leakage (that is, unintentional distribution of permissions) can occur.
 
@@ -927,10 +919,10 @@ From an administration perspective, using only capability lists for access contr
 
 #### 衍生术语
 
-| 概念                            | 定义                                         | 本质结构   |
-| ------------------------------- | -------------------------------------------- | ---------- |
-| **ACL（访问控制列表）**         | 针对某个对象，记录所有允许访问它的主体及操作 | **列视角** |
-| **Capabilities List（能力表）** | 针对某个主体，列出其对所有对象拥有的操作权限 | **行视角** |
+| 概念                            | 定义                                                   | 本质结构   |
+| ------------------------------- | ------------------------------------------------------ | ---------- |
+| **ACL（访问控制列表）**         | 针对某个对象 (Object)，记录所有允许访问它的主体及操作  | **列视角** |
+| **Capabilities List（能力表）** | 针对某个主体 (Subject)，列出其对所有对象拥有的操作权限 | **行视角** |
 
 #### ACL vs. Capabilities 对比
 
@@ -957,7 +949,7 @@ From an administration perspective, using only capability lists for access contr
 | **Take-Grant 模型**       | 图结构表达权限转移（动态演化） | 模拟权限继承/传播路径      | 分析较复杂，不直观              |
 | **Access Control Matrix** | 矩阵表达静态访问权限           | 清晰直观，适合静态权限管理 | 可扩展性差，主体/对象多时不实用 |
 
-### 7. Bell-LaPadula Model**（保密性导向）**- BLP模型 - 以机密性为核心
+### 7. Bell-LaPadula Model（保密性导向）- BLP模型 - 以机密性为核心
 
 Bell–LaPadula 模型由美国国防部（DoD）于 1970 年代开发，专为多级安全策略（Multilevel Security, MLS）设计，**重点是防止敏感信息泄漏**。
 
@@ -982,18 +974,16 @@ By design, the Bell–LaPadula model prevents the leaking or transfer of classif
 
 #### Lattice-Based Access Control（格状访问控制）
 
-BLP 是强制访问控制（MAC）的一种实现形式，安全级别构成一个“格”（Lattice）。
-主体只能访问“上下界”之间的资源 —— 比如：机密（Confidential）只能访问“保密 ≤ 等级 ≤ 机密”的对象。
+BLP 是**强制访问控制（MAC）**的一种实现形式，安全级别构成一个**“格”（Lattice）**。
+主体只能访问“**上下界**”之间的资源 —— 比如：机密（Confidential）只能访问“保密 ≤ 等级 ≤ 机密”的对象。
 
-#### Trusted Subject 例外
+#### Trusted Subject 特权用户例外
 
 特权用户（trusted subject）可以打破 * 属性规则（即允许写入低级别对象），用于**合法的信息降密操作**（如公开解密文档）。
 
-------
-
 #### 局限性
 
-- 只关注**保密性**，忽略完整性与可用性；
+- 只关注**保密性** (Confidentiality)，忽略完整性 (Integrity) 与可用性 (Availability)；
 - 假设所有系统转换都安全；
 - 不支持现代特性如共享、联网；
 - 不防止 covert channel（隐蔽通道）泄漏。
@@ -1020,7 +1010,7 @@ The Bell–LaPadula model was designed in the 1970s, so it does not support many
 
 ### 8. Biba Model - 以完整性为核心
 
-核心区别：关注数据是否被篡改
+核心区别：关注数据是否被篡改 - Integrity
 Biba 模型诞生于 Bell–LaPadula 之后，是其“镜像模型”，关注防止数据污染，强调保持数据完整性（Integrity），特别适用于财务系统、数据库系统等对数据真实性要求极高的场景。
 
 #### 两大核心规则
@@ -1172,7 +1162,7 @@ The Clark–Wilson model uses security labels to grant access to objects, but on
 
 #### 工作原理
 
-- 一旦用户访问了一个**冲突类（Conflict Class）\**中的数据（如公司 A 的文档），系统将\**自动屏蔽**该用户访问该冲突类中其他实体（如公司 B）数据的权限。
+- 一旦用户访问了一个**冲突类（Conflict Class）中的数据（如公司 A 的文档），系统将自动屏蔽**该用户访问该冲突类中其他实体（如公司 B）数据的权限。
 - 这种**“信息气泡”或“动态隔离”**机制称为 **Cone of Silence** 或 Ethical Wall。
 - 冲突类与用户权限是**动态变化的**，随着访问行为自动调整。
 
@@ -1327,13 +1317,13 @@ Understanding how “star” is used in the context of the Bell–LaPadula and B
 
 总结对比
 
-| 模型            | 类型         | 关键概念                  | 特点/适用                      |
-| --------------- | ------------ | ------------------------- | ------------------------------ |
-| Goguen–Meseguer | 完整性       | 域隔离、预定义访问        | 非干扰理论基础                 |
-| Sutherland      | 完整性       | 状态限制、防止干扰        | 应用于隐蔽通道防护             |
-| Graham–Denning  | 访问控制     | 8项安全操作               | 安全生命周期管理               |
-| HRU             | 访问控制     | 权限动态编辑+矩阵模型     | 对权限演化建模                 |
-| “Star” 属性     | 安全模型概念 | * 读/写限制（与方向相关） | 保密性（Bell）与完整性（Biba） |
+| 模型            | 类型         | 关键概念                  | 特点/适用                               |
+| --------------- | ------------ | ------------------------- | --------------------------------------- |
+| Goguen–Meseguer | 完整性       | 域隔离、预定义访问        | 非干扰理论基础                          |
+| Sutherland      | 完整性       | 状态限制、防止干扰        | 应用于隐蔽通道防护                      |
+| Graham–Denning  | 访问控制     | 8项安全操作               | 安全生命周期管理                        |
+| HRU             | 访问控制     | 权限动态编辑+矩阵模型     | 对权限演化建模                          |
+| “Star” 属性     | 安全模型概念 | * 读/写限制（与方向相关） | 保密性（Bell-LaPadula）与完整性（Biba） |
 
 #### **信息安全模型对照总览表**
 
@@ -1347,7 +1337,7 @@ Understanding how “star” is used in the context of the Bell–LaPadula and B
 | **Sutherland**                  | 完整性 / 信息流            | 状态限制 + 禁止推理干扰  | 合法状态转换，控制隐蔽通道                 | 高完整性计算、推理阻断系统          |
 | **Graham–Denning**              | 访问控制（Access Control） | 主体与对象的生命周期管理 | 8个操作规则：创建/删除/授权/转移等         | 安全管理系统，操作系统              |
 | **Harrison–Ruzzo–Ullman (HRU)** | 动态访问控制               | 权限变化及可验证性       | 基于访问控制矩阵 + 原语操作规则            | 细粒度权限控制、权限继承与变化      |
-| **Take–Grant**                  | 权限传递                   | 权限继承与复制           | Take / Grant / Create / Remove 四规则      | 授权系统，现代 ACL 权限结构建模     |
+| **Take–Grant**（有向图）        | 权限传递                   | 权限继承与复制           | Take / Grant / Create / Remove 四规则      | 授权系统，现代 ACL 权限结构建模     |
 | **Access Control Matrix**       | 基础访问控制模型           | 主体-对象-操作 映射      | 行为矩阵：行=主体，列=对象                 | 系统权限表建模基础，操作系统        |
 | **State Machine Model**         | 基础理论模型               | 状态 + 状态转换的安全性  | 安全状态定义与验证                         | 其他模型（如 Bell/Biba）的基础      |
 | **Information Flow Model**      | 信息流控制                 | 控制信息流向、类型       | 阻止未授权流动 + 控制转换路径              | 多级系统、混合级别对象流            |
@@ -1367,26 +1357,135 @@ Understanding how “star” is used in the context of the Bell–LaPadula and B
 
 ## Select Controls Based on Systems Security Requirements 
 
-### 1. Common Criteria
+Often trusted third parties are used to perform security evaluations; the most important result from such testing is their “seal of approval” that the system meets all essential criteria.
 
-### 2. Authorization to Operate
+### 1. Common Criteria（CC）
+
+The Common Criteria (CC) defines various levels of testing and confirmation of systems’ security capabilities, and the number of the level indicates what kind of testing and confirmation has been performed. Nevertheless, it’s wise to observe that even the highest CC ratings do not equate to a guarantee that such systems are completely secure or that they are entirely devoid of vulnerabilities or susceptibilities to exploit. The Common Criteria was designed as a dynamic subjective product evaluation model and replaced previous static systems: 
+
+- U.S. Department of Defense’s **Trusted Computer System Evaluation Criteria (TCSEC)** 
+
+- EU’s **Information Technology Security Evaluation Criteria (ITSEC).**
+
+A document titled “Arrangement on the Recognition of Common Criteria Certificates in the Field of IT Security” was signed by representatives from government organizations in Canada, France, Germany, the United Kingdom, and the United States in 1998, making the document an international standard. Since then, 23 additional countries have signed the arrangement. The original arrangement documentation has been formally adopted as a standard and published as ISO/IEC 15408-1, -2, and -3 and primarily labeled as “Information technology — Security techniques — Evaluation criteria for IT security.”
+
+The objectives of the **CC guidelines** are as follows:
+
+■✓ To add to buyers’ confidence in the security of evaluated, rated IT products
+
+■✓ To eliminate duplicate evaluations (among other things, this means that if one country, agency, or validation organization follows the CC in rating specific systems and configurations, others elsewhere need not repeat this work)
+
+■✓ To keep making security evaluations more cost-effective and efficient
+
+■✓ To make sure evaluations of IT products adhere to high and consistent standards
+
+■✓ To promote evaluation and increase availability of evaluated, rated IT products
+
+■✓ To evaluate the functionality (in other words, what the system does) and assurance (in other words, how much can you trust the system) of the **target of evaluation (TOE)**
+
+The Common Criteria process is based on two key elements: 
+
+1. protection profiles: **Protection profiles (PPs)** specify for a product that is to be evaluated (the TOE) the security requirements and protections, which are considered the security desires, or the “I want,” from a customer. 
+2. security targets: **Security targets (STs)** specify the claims of security from the vendor that are built into a TOE. STs are considered the implemented security measures, or the “I will provide,” from the vendor. 
+
+In addition to offering security targets, vendors may offer packages of additional security features. A package is an intermediate grouping of security requirement components that can be added to or removed from a TOE (like the option packages when purchasing a new vehicle). This system of the PP and ST allows for flexibility, subjectivity, and customization of an organization’s specific security functional and assurance requirements over time.
+
+#### Evaluation assurance levels (EALs)
+
+An organization’s PP is compared to various STs from the selected vendor’s TOEs. The closest or best match is what the client purchases. The client initially selects a vendor based on published or marketed evaluation assurance levels (EALs) for currently available systems. Using Common Criteria to choose a vendor allows clients to request exactly what they need for security rather than having to use static fixed security levels. It also allows vendors more flexibility on what they design and create. A well-defined set of Common Criteria supports subjectivity and versatility, and it automatically adapts to changing technology and threat conditions. Furthermore, the EALs provide a method for comparing vendor systems that is more standardized (like the old TCSEC).
+
+##### Common Criteria Evaluation Assurance Levels (EAL)
+
+| Level | Assurance Level                              | Description                                                  |
+| ----- | -------------------------------------------- | ------------------------------------------------------------ |
+| EAL1  | Functionally tested                          | Applies when some confidence in correct operation is required but where threats to security are not serious. This is of value when independent assurance that due care has been exercised in protecting personal information is necessary. |
+| EAL2  | Structurally tested                          | Applies when delivery of design information and test results are in keeping with good commercial practices. This is of value when developers or users require low to moderate levels of independently assured security. It is especially relevant when evaluating legacy systems. |
+| EAL3  | Methodically tested and checked              | Applies when security engineering begins at the design stage and is carried through without substantial subsequent alteration. This is of value when developers or users require a moderate level of independently assured security, including thorough investigation of TOE and its development. |
+| EAL4  | Methodically designed, tested, and reviewed  | Applies when rigorous, positive security engineering and good commercial development practices are used. This does not require substantial specialist knowledge, skills, or resources. It involves independent testing of all TOE security functions. |
+| EAL5  | Semi-formally designed and tested            | Uses rigorous security engineering and commercial development practices, including specialist security engineering techniques, for semi-formal testing. This applies when developers or users require a high level of independently assured security in a planned development approach, followed by rigorous development. |
+| EAL6  | Semi-formally verified, designed, and tested | Uses direct, rigorous security engineering techniques at all phases of design, development, and testing to produce a premium TOE. This applies when TOEs for high-risk situations are needed, where the value of protected assets justifies additional cost. Extensive testing reduces risks of penetration, probability of covert channels, and vulnerability to attack. |
+| EAL7  | Formally verified, designed, and tested      | Used only for highest-risk situations or where high-value assets are involved. This is limited to TOEs where tightly focused security functionality is subject to extensive formal analysis and testing. |
+
+As with other evaluation criteria, the CC guidelines do not include evaluation of security in situ—that is, they do not address controls related to personnel, organizational practices and procedures, or physical security. Likewise, controls over electromagnetic emissions are not addressed, nor are the criteria for rating the strength of cryptographic algorithms explicitly laid out. Nevertheless, the CC guidelines represent some of the best techniques whereby systems may be rated for security.
+
+### 2. Authorization to Operate（ATO）
+
+For many environments, it is necessary to obtain an official approval to use secured equipment for operational objectives. This is often referred to as an Authorization to Operate (ATO). ATO is the current term for this concept as defined by the Risk Management Framework (RMF) (see Chapter 2,“Personnel Security and Risk Management Concepts”)
+
+An ATO is an official authorization to use a specific collection of secured IT/IS systems to perform business tasks and accept the identified risk. The assessment and assignment of an ATO is performed by an Authorizing Official (AO). An AO is an authorized entity who can evaluate an IT/IS system, its operations, and its risks, and potentially issue an ATO. Other terms for AO include designated approving authority (DAA), Approving Authority (AA), Security Control Assessor (SCA), and Recommending Official (RO).
+
+A typical ATO is issued for 5 years (although assigned time frames vary and the AO can adjust the time frame even after issuing an ATO) and must be reobtained whenever one of the following conditions occurs:
+
+1. The ATO time frame has expired.
+
+2. The system experiences a significant security breach.
+3. The system experiences a significant security change.
+
+The AO has the discretion to determine which breaches or security changes result in a loss of ATO. Either a modest intrusion event or the application of a substantial security patch could cause the negation of an ATO.
+
+An AO can issue **four types of authorization decisions**:
+
+1. **Authorization to Operate** This decision is issued when risk is managed to an acceptable level.
+
+2. **Common Control Authorization** This decision is issued when a security control is inherited from another provider and when the risk associated with the common control is at an acceptable level and already has a ATO from the same AO.
+3. **Authorization to Use** This decision is issued when a third-party provider (such as a cloud service) provides IT/IS servers that are deemed to have risk at an acceptable level; it is also used to allow for reciprocity in accepting another AO’s ATO.
+4. **Denial of Authorization** This decision is issued when risk is unacceptable.
+
+Please see NIST SP 800-37r2 for more on the Risk Management Framework and authorization.
 
 ## Understand Security Capabilities of Information Systems
 
+The security capabilities of information systems include memory protection, virtualization, Trusted Platform Module (TPM), encryption/decryption, interfaces, and fault tolerance. It is important to carefully assess each aspect of the infrastructure to ensure that it sufficiently supports security. Without an understanding of the security capabilities of information systems, it is impossible to evaluate them, nor is it possible to implement them properly.
+
 ### 1. Memory Protection
+
+Memory protection is a core security component that must be designed and implemented into an operating system. It must be enforced regardless of the programs executing in the system. Otherwise instability, violation of integrity, denial of service, and disclosure are likely results. Memory protection is used to prevent an active process from interacting with an area of memory that was not specifically assigned or allocated to it.
+
+#### Meltdown and Spectre
+
+**Meltdown** is an exploitation that can allow for the reading of private kernel memory contents by a nonprivileged process. Spectre can enable the wholesale theft of memory contents from other running applications. An astoundingly wide range of processors are vulnerable to one or both of these exploits. Although two different issues, they were discovered nearly concurrently and made public at the same time. Patches are widely available to address these issues in existing hardware, and future processors should have native mechanisms to prevent such exploitations. But such patches often cause a reduction in performance, so application of the patch should be considered carefully.
 
 ### 2. Virtualization
 
+Virtualization technology is used to host one or more operating systems within the memory of a single host computer or to run applications that are not compatible with the host OS. Virtualization can be a tool to isolate OSs, test suspicious software, or implement other security protections. See Chapter 9 for more information about virtualization.
+
 ### 3. Trusted Platform Module
+
+The Trusted Platform Module (TPM) is both a specification for a cryptoprocessor chip on a mainboard and the general name for implementation of the specification. A TPM can be used to implement a broad range of cryptography-based security protection mechanisms.
+
+A TPM chip is often used to store and process cryptographic keys for a hardware-supported or OS-implemented local storage device encryption system. A TPM is an example of a hardware security module (HSM). An HSM is a cryptoprocessor used to manage and store digital encryption keys, accelerate crypto operations, support faster digital signatures, and improve authentication. An HSM can be a chip on a motherboard, an external peripheral, a network-attached device, or an extension card (which is inserted into a device, such as a router, firewall, or rack-mounted server blade). HSMs include tamper protection to prevent their misuse even if an attacker gains physical access.
 
 ### 4. Interfaces
 
+A constrained or restricted interface is implemented within an application to restrict what users can do or see based on their privileges. Users with full privileges have access to all the capabilities of the application. Users with restricted privileges have limited access.
+
+Applications constrain the interface using different methods. A common method is to hide the capability if the user doesn’t have permissions to use it. Commands might be available to administrators via a menu or by right-clicking an item, but if a regular user doesn’t have permissions, the command does not appear. Other times, the command is shown but is dimmed or disabled. The regular user can see it but will not be able to use it.
+
+The purpose of a constrained interface is to limit or restrict the actions of both authorized and unauthorized users. The use of such an interface is a practical implementation of the Clark–Wilson model of security.
+
 ### 5. Fault Tolerance 
+
+Fault tolerance is the ability of a system to suffer a fault but continue to operate. Fault tolerance is achieved by adding redundant components such as additional disks within a redundant array of inexpensive disks (RAID) array, or additional servers within a failover clustered configuration. Fault tolerance is an essential element of security design. It is also considered part of avoiding single points of failure and the implementation of redundancy. For more details on fault tolerance, redundant servers, RAID, and failover solutions, see Chapter 18, “Disaster Recovery Planning.”
 
 ### 6. Encryption/Decryption
 
+Encryption is the process of converting plaintext to ciphertext, whereas decryption reverses that process. Symmetric and asymmetric methods of encryption and decryption can be used to support a wide range of security solutions to protect confidentiality and integrity. Please see the full coverage of cryptography in Chapters 6 and 7.
+
 ## Summary
 
+Secure systems are not just assembled; they are designed to support security. Systems that must be secure are judged for their ability to support and enforce the security policy. Programmers should strive to build security into every application they develop, with greater levels of security provided to critical applications and those that process sensitive information.
 
+There are numerous issues related to the establishment and integration of security into a product, including managing subjects and objects and their relationships, using open or closed systems, managing secure defaults, designing a system to fail securely, abiding by the “keep it simple” postulate, implementing zero trust (instead of trust but verify), and incorporating privacy by design. CIA can be protected using confinement, bounds, and isolation. Controls are used to implement security protections.
+
+Proper security concepts, controls, and mechanisms must be integrated before and during the design and architectural period in order to produce a reliably secure product. A trusted system is one in which all protection mechanisms work together to process sensitive data for many types of users while maintaining a stable and secure computing environment. In other words, trust is the presence of a security mechanism or capability. Assurance is the degree of confidence in satisfaction of security needs. In other words, assurance is how reliable the security mechanisms are at providing security.
+
+When security systems are designed, it is often helpful to derive security mechanisms from standard security models. Some of the security models that should be recognized include the trusted computing base, state machine model, information flow model, noninterference model, take-grant model, access control matrix, Bell–LaPadula model, Biba model, Clark–Wilson model, Brewer and Nash model, Goguen–Meseguer model, Sutherland model, Graham–Denning model, and Harrison–Ruzzo–Ullman model.
+
+Several security criteria exist for evaluating computer security systems. The Common Criteria uses a subjective system to meet security needs and a standard Evaluation Assurance Level (EAL) to evaluate reliability.
+
+The NIST Risk Management Framework (RMF) establishes an Authorization to Operate (ATO) issued by an Authorizing Official (AO) in order to ensure that only systems with acceptable risk levels are used to perform IT operations.
+
+It is important to carefully assess each aspect of the infrastructure to ensure that it sufficiently supports security. Without an understanding of the security capabilities of information systems, it is impossible to evaluate them, nor is it possible to implement them properly. The security capabilities of information systems include memory protection, virtualization, Trusted Platform Module (TPM), encryption/decryption, interfaces, and fault tolerance.
 
 ## Exam Essentials
+

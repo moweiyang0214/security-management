@@ -541,7 +541,18 @@ Assurance varies from one system to another and often must be established on ind
 | **Access Control**    | 控制访问对象的权限和方式             | DAC、MAC、RBAC、ABAC          |
 | **Trust & Assurance** | 系统安全机制存在与可靠性的评估与验证 | TPM、Common Criteria、EAL等级 |
 
-## Understand the FUndamental Concepts of Security Models
+## Understand the Fundamental Concepts of Security Models
+
+**安全模型（Security Model）** 是信息安全领域中用于**形式化安全策略**的一种方法。其作用是：
+
+- 将抽象的安全策略（如“谁可以访问什么”）**映射成具体的、可操作的机制**；
+- 为系统设计者提供可以用来衡量实现是否符合安全目标的**技术蓝图**；
+- 通常包括 **一组规则 + 一种系统结构或机制**，对“访问控制”、“信息流”、“完整性”、“权限授权”等问题做出定义。
+
+**安全模型 ≠ 安全策略**
+
+- 策略定义“要做什么”
+- 模型定义“怎么做、谁来做、做的机制是什么”
 
 In information security, models provide a way to formalize security policies. Such models can be abstract or intuitive, but all are intended to provide an explicit set of rules that a computer can follow to implement the fundamental security concepts, processes, and procedures of a security policy. A security model provides a way for designers to map abstract statements into a security policy that prescribes the algorithms and data structures necessary to build hardware and software. Thus, a security model gives software designers something against which to measure their design and implementation.
 
@@ -549,23 +560,549 @@ In information security, models provide a way to formalize security policies. Su
 
 Several different methods are used to describe the necessary security attributes for an object. A security token is a separate object that is associated with a resource and describes its security attributes. This token can communicate security information about an object prior to requesting access to the actual object. In other implementations, various lists are used to store security information about multiple objects. A capabilities list maintains a row of security attributes for each controlled object. Although not as flexible as the token approach, a capabilities list generally offers quicker lookups when a subject requests access to an object. A third common type of attribute storage is called a security label, which is generally a permanent part of the object to which it’s attached. Once a security label is set, it usually cannot be altered. This permanence provides another safeguard against tampering that neither tokens nor capabilities lists provide.
 
-### 1. Trusted Computing Base
+##### 1. Security Token
 
+- **定义**：一个**独立的安全属性对象**，与受控资源关联；
+- **用法**：在访问资源前，**先传递 token** 给访问控制机制，以便验证；
+- **特点**：
+  - 可拆分、易于传递；
+  - 适合**面向对象或分布式系统**；
+  - 安全性需额外保障（token 本身可能被伪造或篡改）；
 
+📌 **例子**：OAuth 2.0 访问令牌、Kerberos Ticket
 
-### 2. State Machine Model
+##### 2. Capability List
 
-### 3. Information Flow Model
+- **定义**：系统为每个**对象**维护一张能力表，记录它可被哪些用户（或进程）访问、具备什么权限；
+- **本质**：一种列出“谁可以做什么”的访问控制列表；
+- **特点**：
+  - 查找快；
+  - **不太灵活**（需要逐个对象配置）；
+  - **不易管理大规模权限组合**；
 
-### 4. Noninterference Model
+📌 类似于 Linux 中的 file permission bits（如 rwxr-xr--）
+
+##### 3. Security Label
+
+- **定义**：标签是一个**嵌入对象本身**的属性，标记了其安全属性（如机密级别）；
+- **特点**：
+  - 不可篡改（或只能由特权管理员修改）；
+  - 常用于**强制访问控制模型**（MAC）；
+  - 实现了对**信息流的控制**（如高密级对象不能向低密级写）；
+
+📌 **例子**：
+
+- **Bell-LaPadula 模型** 使用安全标签实现机密性等级（Top Secret, Secret, Confidential）
+- **SELinux** 用标签控制系统进程对资源的访问
+
+| 机制类型          | 定位         | 存储位置       | 灵活性     | 安全性       | 应用模型示例       |
+| ----------------- | ------------ | -------------- | ---------- | ------------ | ------------------ |
+| Security Token    | 外部对象     | 分离于资源本体 | 高         | 中（需加密） | Kerberos, OAuth    |
+| Capabilities List | 系统级权限表 | 系统表         | 中         | 中           | ACLs, DAC 系统     |
+| Security Label    | 嵌入对象     | 对象自身       | 低（固定） | 高（防篡改） | Bell-LaPadula, MAC |
+
+“**Token 携带通行证，Label 贴在对象上，Capability 记在我手上。**”
+
+- **Token** → 像票证一样随身带、可转移
+- **Label** → 像标签贴在物体上，不易更改
+- **Capability** → 像清单在你手中，清楚写着“我能干啥”
+
+CISSP 考试中的要点理解
+
+- Security Models 是将策略（如 MAC、DAC、RBAC）**技术落地的框架**
+- **标签机制（Labels）** 是 MAC 的典型实现形式；
+- **Token 和 Capability List** 适合 DAC/RBAC 情境；
+- 考题常通过场景描述，要求识别使用的是哪种机制；
+- 掌握三种机制的特点、适用场景、优劣对比是答题关键；
+
+CISSP考点
+
+若题目提到“**一个主体带有对象权限的列表**” → Capability List
+
+若题目强调“**每个对象标记了一个不可更改的安全级别**” → Security Label（MAC）
+
+若题目说“**每个对象携带一个可分发的访问凭证或临时授权**” → Token（常见于临时会话或 SSO）
+
+### 1. Trusted Computing Base (TCB)
+
+**Trusted Computing Base (TCB)** 是指一个计算系统中被信任用来**强制执行安全策略**的全部软硬件组合。它是：
+
+- 操作系统 + 安全机制中最**核心、最可信、最小化**的子系统；
+- 其**完整性与正确性**是整个系统安全的基础；
+- 安全目标：**机密性、完整性、访问控制策略的执行**
+
+📌 理想设计中，**TCB 越小越好**，这样更易于验证其安全性与功能正确性（安全最小化原则）。
+
+The trusted computing base (TCB) design principle is the combination of hardware, software, and controls that work together to form a trusted base to enforce your security policy. The TCB is a subset of a complete information system. It should be as small as possible so that a detailed analysis can reasonably ensure that the system meets design specifications and requirements. The TCB is the only portion of that system that can be trusted to adhere to and enforce the security policy. It is the responsibility of TCB components to ensure that a system behaves properly in all cases and that it adheres to the security policy under all circumstances.
+
+#### Security Perimeter（安全半径）
+
+**Security Perimeter** 是一个**逻辑边界**，用于隔离 TCB 与系统的其他部分。其作用是：
+
+- 防止非授权代码直接访问 TCB；
+- 强制所有访问 TCB 的操作都通过受控通道进行。
+
+Trusted Path（受信通道）
+
+- 是 TCB 与用户或外部系统交互的**安全通道**；
+- 防止中间人攻击、恶意干扰；
+- 常见实现包括：**Ctrl+Alt+Del 登录界面**（Windows）确保用户输入不会被恶意程序捕捉。
+
+Trusted Shell（受信命令行）
+
+- 允许用户安全地使用命令行操作；
+- 防止用户“逃逸”出 shell 影响 TCB，也阻止其他恶意程序劫持 shell；
+- 多用于 **高安全级别的 CLI 环境**（如特权 shell、Secure Boot 控制台等）
+
+The security perimeter of your system is an imaginary boundary that separates the TCB from the rest of the system. This boundary ensures that no insecure communications or interactions occur between the TCB and the remaining elements of the computer system. For the TCB to communicate with the rest of the system, it must create secure channels, also called trusted paths. A trusted path is a channel established with strict standards to allow necessary communication to occur without exposing the TCB to security exploitations.
+
+A security perimeter may also allow for the use of a trusted shell. 
+
+A trusted shell allows a subject to perform command-line operations without risk to the TCB or the subject. 
+
+A trusted shell prevents the subject from being able to break out of isolation to affect the TCB and in turn prevents other processes from breaking into the shell to affect the subject.
+
+#### Reference Monitors and Security Kernels
+
+##### Reference Monitor（参考监控器）
+
+这是 TCB 中的一个 **核心概念**，其主要职责为：
+
+| 功能         | 描述                                                         |
+| ------------ | ------------------------------------------------------------ |
+| 访问控制判定 | 验证每一个对资源（object）的访问请求是否符合访问策略（policy） |
+| 独立性       | 独立于应用和用户，无法被篡改或绕过                           |
+| 完整性       | 每次访问都必须经过它（不可跳过）                             |
+| 审计能力     | 所有访问尝试都可被记录（包括成功与失败）                     |
+
+参考监控器是**访问控制模型的实践者**，如 MAC、DAC、RBAC 都可通过其实施。
+
+##### Security Kernel（安全内核）
+
+- 是参考监控器的**技术实现体**；
+- 包含了实现访问控制检查所需的所有硬件、固件、软件组件；
+- 提供**最小可信执行环境**，类似于 hypervisor 的“ring 0”级别。
+
+💡可以将 Reference Monitor 看作“访问控制的理论模型”，Security Kernel 是它的“实际执行引擎”。
+
+The part of the TCB that validates access to every resource prior to granting access requests is called the reference monitor. The reference monitor stands between every subject and object, verifying that a requesting subject’s credentials meet the object’s access requirements before any requests are allowed to proceed. Effectively, the reference monitor is the access control enforcer for the TCB. The reference monitor enforces access control or authorization based on the desired security model, whether discretionary, mandatory, role-based, or some other form of access control. The collection of components in the TCB that work together to implement reference monitor functions is called the security kernel. The reference monitor is a concept or theory that is put into practice via the implementation of a security kernel in software and hardware. The purpose of the security kernel is to launch appropriate components to enforce reference monitor functionality and resist all known attacks. The security kernel mediates all resource access requests, granting only those requests that match the appropriate access rules in use for a system.
+
+##### CISSP考点总结
+
+| 概念               | 说明                                                        |
+| ------------------ | ----------------------------------------------------------- |
+| TCB                | 系统中负责强制执行安全策略的最小可信组件集合                |
+| Security Perimeter | 分隔 TCB 与系统其他部分的边界，所有访问需通过受控通道       |
+| Trusted Path       | 保障用户与 TCB 间交互不被篡改，如 Ctrl+Alt+Del 登录界面     |
+| Reference Monitor  | 核心访问控制机制，所有 subject-object 请求必须通过它判断    |
+| Security Kernel    | Reference Monitor 的实际代码+硬件实现，系统最敏感的部分之一 |
+
+### 2. State Machine Model（状态机模型）
+
+**状态机模型** 是一种理论模型，用于描述如何通过**系统状态的变化**来确保系统始终处于安全状态。它是许多安全模型（如 Bell-LaPadula、Biba）的**理论基础**。
+
+该模型的核心思想源于计算机科学中的**有限状态机（Finite State Machine，FSM）**，FSM 是一个基于当前输入与当前状态，决定下一状态与输出的模型。
+
+| 概念                         | 说明                                                         |
+| ---------------------------- | ------------------------------------------------------------ |
+| **状态（State）**            | 系统在某一特定时刻的快照，包括用户会话、访问权限、系统资源等 |
+| **输入（Input）**            | 用户行为、系统事件、指令或外部交互                           |
+| **状态转移（Transition）**   | 接收输入或生成输出时，系统从一个状态转变到另一个状态         |
+| **安全状态（Secure State）** | 当前系统状态满足安全策略的所有要求                           |
+| **状态函数**                 | 数学表达为：`next_state = F(current_state, input)`           |
+| **输出函数**                 | 表达为：`output = F(current_state, input)`                   |
+
+#### State Machine 在安全中的应用
+
+##### 🎯 核心安全思想：
+
+**如果：**
+
+- 系统从 **一个安全状态** 通过 **合法的输入与处理逻辑** 只能转移到 **另一个安全状态**，
+
+**那么：**
+
+- 整个系统将始终维持在一个**安全状态机**中运行。
+
+> ✅ 这是一种对系统行为进行严格控制和验证的方法，确保**任意时间点**下都不偏离安全策略。
+
+------
+
+##### 🔄 示例说明
+
+示例：访问控制状态机
+
+假设有一个系统资源 `File_A`，其访问策略如下：
+
+- 仅当用户角色是“Manager”时才能读取；
+- 每当用户请求读取时，系统会检查当前状态（用户身份）与输入（读取请求）；
+- 只有当 `current_state = Manager` 且 `input = Read_Request` 时，系统才允许状态转移为 `Access_Granted`。
+
+其他任何组合都会导致转移为 `Access_Denied`。
+
+> 📌 每个可能的“状态转移路径”都必须**显式验证是否会破坏安全性**。这就要求开发者在设计时**穷举并验证所有可能路径**。
+
+**🧩 优点与实际意义**
+
+| 优点                             | 说明                                                         |
+| -------------------------------- | ------------------------------------------------------------ |
+| ✅ 强安全性验证基础               | 提供了形式化验证系统安全状态的理论模型                       |
+| ✅ 可作为其他模型的基础（如 BLP） | Bell-LaPadula、Biba、Clark-Wilson 等都在其基础上建立安全约束 |
+| ✅ 易于建模动态系统               | 模拟系统中的用户行为、指令处理、资源访问等状态变换           |
+
+#### 🧪 安全状态机模型的三大要求
+
+1. **系统启动于安全状态**；
+2. **每次状态转移都验证是否安全**；
+3. **仅允许合规的访问请求引起状态变化**；
+
+如果这三项都满足，就可以说该系统是一个“**安全状态机模型**”。
+
+------
+
+#### 🧠 与 TCB 和 Reference Monitor 的关系
+
+- **Reference Monitor** 依据安全策略决定是否允许某个状态转移；
+- **Security Kernel** 实现这一判断机制；
+- **State Machine Model** 则是理论基础，确保每次操作（即状态转移）都是合法的。
+
+The state machine model describes a system that is always secure no matter what state it is in. It’s based on the computer science definition of a **finite state machine (FSM)**. An FSM combines an external input with an internal machine state to model all kinds of complex systems, including parsers, decoders, and interpreters. Given an input and a state, an FSM transitions to another state and may create an output. Mathematically, the next state is a function of the current state and the input next state—that is, the next state = F(input, current state). Likewise, the output is also a function of the input and the current state output—that is, the output = F(input, current state).
+
+According to the state machine model, a state is a snapshot of a system at a specific moment in time. If all aspects of a state meet the requirements of the security policy, that state is considered secure. A transition occurs when accepting input or producing output.
+
+A transition always results in a new state (also called a state transition). All state transitions must be evaluated. If each possible state transition results in another secure state, the system can be called a secure state machine. A secure state machine model system always boots into a secure state, maintains a secure state across all transitions, and allows subjects to access resources only in a secure manner compliant with the security policy. The secure state machine model is the basis for many other security models.
+
+### 3. Information Flow Model（信息流模型）
+
+📌 核心目标：控制信息在系统内**流动的合法性**
+
+#### 定义与本质
+
+信息流模型基于 **状态机模型** 构建，其核心思想是：**只允许授权的信息流通，不允许未授权的信息跨越边界。**
+
+它不仅关注 **信息的“流向”**（如从高密级到低密级是否合理），还关注 **信息的“流类型”**（是否通过受控方式传输、是否包含敏感字段等）。
+
+#### 主要作用
+
+1. **防止信息泄露**
+   确保高安全级别的信息不能通过直接或间接路径（如 covert channels，隐蔽通道）泄露到低级别。
+2. **跨级别安全控制**
+   实施在具有多级安全策略（Multilevel Security，MLS）的系统中，控制不同级别 Subject 与 Object 之间的信息流向。
+3. **时间维度上的对象转换追踪**
+   可用于比较一个对象在不同时间点的两个状态之间的信息变化，判断是否存在未经授权的修改或泄漏。
+
+#### 信息流路径控制
+
+在该模型中，系统中任意两个组件之间的通信都必须明确声明并被授权：
+
+- ✔ 允许的信息路径（Authorized Flow）
+- ❌ 禁止的路径：如 covert channel（隐蔽路径）、side-channel（侧信道）
+
+例如：高密级用户向低密级用户复制文件——这是未授权的**向下信息流动**（write down），模型将拒绝此操作。
+
+The information flow model focuses on controlling the flow of information. Information flow models are based on the state machine model. Information flow models don’t necessarily deal with only the direction of information flow; they can also address the type of flow.
+
+Information flow models are designed to prevent unauthorized, insecure, or restricted information flow, often between different levels of security (known as multilevel models). Information flow can be between subjects and objects at the same or different classification levels. An information flow model allows all authorized information flows, and prevents all unauthorized information flows.
+
+Another interesting perspective on the information flow model is that it is used to establish a relationship between two versions or states of the same object when those two versions or states exist at different points in time. Thus, information flow dictates the transformation of an object from one state at one point in time to another state at another point in time. The information flow model also addresses covert channels by specifically excluding all undefined flow pathways.
+
+### 4. Noninterference Model（非干扰模型）
+
+核心目标：**低级别用户不应感知到高级别用户的行为**
+
+#### 定义与本质
+
+非干扰模型是建立在信息流模型基础之上的更严格模型，其理念是：
+
+> “一个高级别用户的行为**不能对**低级别用户产生**任何可感知的影响**。”
+
+这是信息流模型的一个**保密性扩展**，强调**不可见性**与**系统状态的独立性**。
+
+#### 问题示例
+
+假设 Subject A 是一个拥有密级信息的高级别用户，Subject B 是一个访客用户。
+
+- 若 A 执行某操作导致系统反应时间变慢，B 可能感知到此行为，从而**推断出某些信息**；
+- 即使没有直接信息传递，只要存在“干扰”行为，也可能泄露敏感信息。
+
+因此，非干扰模型试图构建这样一种环境：
+
+> **高密级的用户活动是“透明”的，低密级用户无法感知系统中其他人的行为。**
+
+#### 应用场景
+
+- 防止 covert channel、timing channel 等隐蔽通道攻击；
+- 适用于对信息隔离要求极高的军事或政府系统；
+- 防范恶意软件（如木马程序）通过间接方式泄露敏感数据。
+
+The noninterference model is loosely based on the information flow model. However, instead of being concerned about the flow of information, the noninterference model is concerned with how the actions of a subject at a higher security level affect the system state or the actions of a subject at a lower security level. Basically, the actions of subject A (high) should not affect or interfere with the actions of subject B (low) or even be noticed by subject B. If such violations occur, subject B may be placed into an insecure state or be able to deduce or infer information about a higher level of classification. This is a type of information leakage and implicitly creates a covert channel. Thus, the noninterference model can be imposed to provide a form of protection against damage caused by malicious programs, such as Trojan horses, backdoors, and rootkits.
+
+#### Composition Theories（组合理论）
+
+组合理论进一步分析多个系统之间如何组合时确保信息流的安全性。
+
+| 模型                  | 描述                                                     |
+| --------------------- | -------------------------------------------------------- |
+| **Cascading（级联）** | 系统 A 的输出作为系统 B 的输入，用于信息逐层传递         |
+| **Feedback（反馈）**  | 系统 A 和 B 互为输入输出，形成**循环路径**，信息双向流动 |
+| **Hookup（连接）**    | 系统 A 既将信息传给系统 B，又将信息发往外部实体          |
+
+这些理论帮助分析**系统组合**后信息流模型是否依然成立，从而避免系统间联合导致的新信息泄露路径。
+
+Some other models that fall into the information flow category build on the notion of inputs and outputs between multiple systems. These are called composition theories because they explain how outputs from one system relate to inputs to another system. There are three composition theories:
+
+- Cascading: Input for one system comes from the output of another system.
+- Feedback: One system provides input to another system, which reciprocates by reversing those roles (so that system A first provides input for system B and then system B provides input to system A).
+- Hookup: One system sends input to another system but also sends input to external entities.
+
+| 模型                       | 关注重点                         | 目标                                       |
+| -------------------------- | -------------------------------- | ------------------------------------------ |
+| **Information Flow Model** | 信息在系统内的“合法路径”与“途径” | 限制未经授权的信息泄露，规范流向和流量     |
+| **Noninterference Model**  | 高级行为是否被低级感知           | 确保敏感活动对外不可见，避免推测与泄露     |
+| **Composition Theories**   | 多系统联合后的信息流行为         | 判断系统组合后是否出现非法路径或新泄露通道 |
 
 ### 5. Take-Grant Model
 
-### 6. Access Control Matrix
+#### 核心理念
 
-### 7. Bell-LaPadula Model
+用图论描述权限的“获取与传播”。Take-Grant 模型使用**有向图**（Directed Graph）来表示系统中 **权限如何在主体和对象之间传递**。图中的每个节点代表主体（subject）或对象（object），边（edge）上标注的是当前的访问权限或操作能力。
 
-### 8. Biba Model
+#### 四大规则（基本操作）
+
+| 规则                  | 描述                                                         |
+| --------------------- | ------------------------------------------------------------ |
+| **1. Take（取得）**   | 如果主体 `X` 有“take”权限，则 `X` 可以从另一个主体 `Y` 处“取得”某个权限。 |
+| **2. Grant（授予）**  | 如果主体 `X` 有“grant”权限，则 `X` 可以将自己拥有的某个权限授予给另一个主体 `Y`。 |
+| **3. Create（创建）** | 允许主体创建新对象并自动成为其拥有者，也可新建权限边。       |
+| **4. Remove（移除）** | 允许主体删除其对某对象的权限。                               |
+
+四个操作定义了**权限传播**的完整生命周期，从生成、赋予、扩散，到撤销。
+
+The take-grant model employs a directed graph to dictate how rights can be passed from one subject to another or from a subject to an object. Simply put, a subject (X) with the grant right can grant another subject (Y) or another object (Z) any right that subject (X) possesses. Likewise, a subject (X) with the take right can take a right from another subject (Y). In addition to these two primary rules, the take-grant model has a create rule and a remove rule to generate or delete rights. The key to this model is that using these rules allows you to figure out when rights in the system can change and where leakage (that is, unintentional distribution of permissions) can occur.
+
+In essence, here are the four rules of the take-grant model:
+
+1. Take rule: Allows a subject to take rights over an object
+2. Grant rule: Allows a subject to grant rights to an object
+3. Create rule: Allows a subject to create new rights
+4. Remove rule: Allows a subject to remove rights it has
+
+It is interesting to ponder that the take and grant rules are effectively a copy function. This can be recognized in modern OSes in the process of inheritance, such as subjects inheriting a permission from a group or a file inheriting ACL values from a parent folder. The two additional rules (create and remove), which are not defined by a directed graph, are also commonly present in modern operating systems. For example, to obtain permission on an object, that permission does not have to be copied from a user account that already has that permission; instead, it is simply created by an account with privilege capability of create or assign permissions (which can be the owner of an object or a subject with full control or administrative privileges over the object).
+
+#### 安全分析与权限泄漏
+
+该模型可以用来分析：
+
+- **权限是否会“泄漏”**：即是否存在主体在没有明确授权的前提下，通过链式传播间接获得敏感权限。
+- **最小权限传播路径**：可以通过图遍历算法找到某个权限可能扩散的最短路径。
+
+现代操作系统中，“继承权限”（如 Windows 文件夹权限继承）就可以看作 take-grant 的一种表现形式。
+
+#### 应用场景
+
+- 文件系统权限分析
+- 操作系统中权限继承推理
+- 访问路径可达性验证（是否存在非法权限传播路径）
+
+### 6. Access Control Matrix（访问控制矩阵）
+
+**核心理念：二维矩阵形式展现“谁可以对什么资源做什么事”**
+
+该模型通过一个矩阵表示**主体（subjects）对客体（objects）拥有的操作权限**：
+
+|        | Object A | Object B | Object C |
+| ------ | -------- | -------- | -------- |
+| User X | Read     | Write    | —        |
+| User Y | —        | Read     | Execute  |
+
+其中：
+
+- 行（Row）对应于 **主体（User/Process）**
+- 列（Column）对应于 **对象（File/Printer）**
+- 单元格的内容即为该用户对该资源的**访问权限集合**
+
+An access control matrix is a table of subjects and objects that indicates the actions or functions that each subject can perform on each object. Each column of the matrix is an access control list (ACL) pulled from objects. Once sorted, each row of the matrix is a capabilities list for each listed subject. An ACL is tied to an object; it lists the valid actions each subject can perform. A capability list is tied to the subject; it lists valid actions that can be taken on each object included in the matrix.
+
+From an administration perspective, using only capability lists for access control is a management nightmare. A capability list method of access control can be accomplished by storing on each subject a list of rights the subject has for every object. This effectively gives each user a key ring of accesses and rights to objects within the security domain. To remove access to a particular object, every user (subject) that has access to it must be individually manipulated. Thus, managing access on each user account is much more difficult than managing access on each object (in other words, via ACLs). A capabilities table can be created by pivoting an access control matrix; this results in the columns being subjects and the rows being ACLs from objects.
+
+#### 衍生术语
+
+| 概念                            | 定义                                         | 本质结构   |
+| ------------------------------- | -------------------------------------------- | ---------- |
+| **ACL（访问控制列表）**         | 针对某个对象，记录所有允许访问它的主体及操作 | **列视角** |
+| **Capabilities List（能力表）** | 针对某个主体，列出其对所有对象拥有的操作权限 | **行视角** |
+
+#### ACL vs. Capabilities 对比
+
+| 特征       | ACL（基于对象）       | Capabilities（基于主体） |
+| ---------- | --------------------- | ------------------------ |
+| 管理便捷性 | ✅ 只改一处（对象）    | ❌ 多用户要同步修改权限   |
+| 灵活性     | ✅ 适合资源共享控制    | ❌ 不适合频繁变化的环境   |
+| 现实应用   | Windows/Unix 文件系统 | 通常不直接暴露           |
+| 安全审计   | ✅ 适合进行资源级审计  | ❌ 难以集中管理资源       |
+
+#### 现实意义
+
+访问控制矩阵被广泛应用于：
+
+- **文件系统权限管理（Windows ACL、Linux chmod）**
+- **数据库访问控制（如 GRANT 语句）**
+- **用户角色权限设计（RBAC/ABAC 的底层原型）**
+- **安全策略自动审计工具中用于检测权限过度分配**
+
+#### 总结对比
+
+| 模型                      | 特点                           | 优势                       | 缺点                            |
+| ------------------------- | ------------------------------ | -------------------------- | ------------------------------- |
+| **Take-Grant 模型**       | 图结构表达权限转移（动态演化） | 模拟权限继承/传播路径      | 分析较复杂，不直观              |
+| **Access Control Matrix** | 矩阵表达静态访问权限           | 清晰直观，适合静态权限管理 | 可扩展性差，主体/对象多时不实用 |
+
+### 7. Bell-LaPadula Model**（保密性导向）**- BLP模型 - 以机密性为核心
+
+Bell–LaPadula 模型由美国国防部（DoD）于 1970 年代开发，专为多级安全策略（Multilevel Security, MLS）设计，**重点是防止敏感信息泄漏**。
+
+它适用于军事或政府级系统，特别关注保密性（Confidentiality），通过控制信息从“高等级”向“低等级”流动来防止信息泄露。
+
+#### 三大核心规则
+
+| 属性                                | 说明                                              | 别名                       |
+| ----------------------------------- | ------------------------------------------------- | -------------------------- |
+| **Simple Security Property**        | **“No Read Up”**：不能读取比自己更高级别的对象    | 防止低权限人员访问敏感信息 |
+| **Star (\*) Property**              | **“No Write Down”**：不能写入比自己低级别的对象   | 防止信息向低密级泄露       |
+| **Discretionary Security Property** | 使用访问控制矩阵来进行基于所有者的访问控制（DAC） | 限定在同级别中的操作       |
+
+✅重点记忆方式：
+
+- **Simple = Read，Star = Write**
+- Bell–LaPadula = **No Read Up, No Write Down**
+
+The U.S. Department of Defense (DoD) developed the Bell–LaPadula model in the 1970s based on the DoD’s multilevel security policies. The multilevel security policy states that a subject with any level of clearance can access resources at or below its clearance level. However, within clearance levels, access to compartmentalized objects is granted only on a need-to-know basis.
+
+By design, the Bell–LaPadula model prevents the leaking or transfer of classified information to less secure clearance levels. This is accomplished by blocking lower-classified subjects from accessing higher-classified objects. With these restrictions, the Bell–LaPadula model is focused on maintaining confidentiality and does not address any other aspects of object security.
+
+#### Lattice-Based Access Control（格状访问控制）
+
+BLP 是强制访问控制（MAC）的一种实现形式，安全级别构成一个“格”（Lattice）。
+主体只能访问“上下界”之间的资源 —— 比如：机密（Confidential）只能访问“保密 ≤ 等级 ≤ 机密”的对象。
+
+#### Trusted Subject 例外
+
+特权用户（trusted subject）可以打破 * 属性规则（即允许写入低级别对象），用于**合法的信息降密操作**（如公开解密文档）。
+
+------
+
+#### 局限性
+
+- 只关注**保密性**，忽略完整性与可用性；
+- 假设所有系统转换都安全；
+- 不支持现代特性如共享、联网；
+- 不防止 covert channel（隐蔽通道）泄漏。
+
+Subjects under lattice-based access controls are assigned positions in a lattice (i.e., a multilayered security structure or multileveled security domains). Subjects can access only those objects that fall into the range between the least upper bound (LUB) (the nearest security label or classification higher than their lattice position) and the greatest (i.e., highest) lower bound (GLB) (the nearest security label or classification lower than their lattice position) of the labels or classifications for their lattice position.
+
+This model is built on a state machine concept and the information flow model. It also employs mandatory access controls and is a lattice-based access control concept. The lattice tiers are the classification levels defined by the security policy of the organization.
+
+There are three basic properties of this state machine:
+
+1. The Simple Security Property states that a subject may not read information at a higher sensitivity level (no read-up).
+
+2. The * (star) Security Property states that a subject may not write information to an object at a lower sensitivity level (no write-down). This is also known as the Confinement Property.
+
+3. The Discretionary Security Property states that the system uses an access matrix to enforce discretionary access control.
+
+These first two properties define the states into which the system can transition. No other transitions are allowed. All states accessible through these two rules are secure states. Thus, Bell–LaPadula–modeled systems offer state machine model security.
+
+The Bell–LaPadula properties are in place to protect data confidentiality. A subject cannot read an object that is classified at a higher level than the subject is cleared for. Because objects at one level have data that is more sensitive or secret than data in objects at a lower level, a subject (who is not a trusted subject) cannot write data from one level to an object at a lower level. That action would be similar to pasting a top-secret memo into an unclassified document file. The third property enforces a subject’s job/role-based need to know in order to access an object.
+
+An exception in the Bell–LaPadula model states that a “trusted subject” is not constrained by the * Security Property. A trusted subject is defined as “a subject that is guaranteed not to consummate a securitybreaching information transfer even if it is possible.” This means that a trusted subject is allowed to violate the * Security Property and perform a write-down, which is necessary when performing valid object declassification or reclassification.
+
+The Bell–LaPadula model was designed in the 1970s, so it does not support many operations that are common today, such as file sharing and networking. It also assumes secure transitions between security layers and does not address covert channels
+
+### 8. Biba Model - 以完整性为核心
+
+核心区别：关注数据是否被篡改
+Biba 模型诞生于 Bell–LaPadula 之后，是其“镜像模型”，关注防止数据污染，强调保持数据完整性（Integrity），特别适用于财务系统、数据库系统等对数据真实性要求极高的场景。
+
+#### 两大核心规则
+
+| 属性                             | 说明                                             | 别名               |
+| -------------------------------- | ------------------------------------------------ | ------------------ |
+| **Simple Integrity Property**    | **“No Read Down”**：不能读取较低完整性级别的数据 | 防止引入不可信输入 |
+| **Star (\*) Integrity Property** | **“No Write Up”**：不能写入较高完整性级别的数据  | 防止污染可信输出   |
+
+✅记忆方法：
+
+- **Simple = Read，Star = Write**
+- Biba = **No Read Down, No Write Up**
+
+#### 举例说明
+
+假设一个“高完整性”财务报表系统中，某员工账户等级较低，则：
+
+- 他**不能读取（read）**未经验证的数据（如互联网用户输入）；
+- 他**不能写入（write）**正式报表，以防引入错误或恶意修改。
+
+------
+
+#### 设计目标
+
+- 防止未授权主体修改对象；
+- 防止授权主体误改对象；
+- 保证对象的内部一致性（如校验和）和外部一致性（数据源准确性）；
+
+------
+
+#### 局限性
+
+- 不支持机密性（Confidentiality）或可用性（Availability）；
+- 假设程序能正确控制内部权限；
+- 不考虑权限分配策略；
+- 同样不防止 covert channel 攻击。
+
+The Biba model was designed after the Bell–LaPadula model, but it focuses on integrity. The Biba model is also built on a state machine concept, is based on information flow, and is a multilevel model. In fact, the Biba model is the inverted Bell–LaPadula model. The properties of the Biba model are as follows:
+
+1. The Simple Integrity Property states that a subject cannot read an object at a lower integrity level (no read-down).
+
+2. The * (star) Integrity Property states that a subject cannot modify an object at a higher integrity level (no write-up).
+
+In both the Biba and Bell–LaPadula models, there are two properties that are inverses of each other: simple and * (star). However, they may also be labeled as axioms, principles, or rules. What you should focus on is the simple and star designations. Take note that simple is always about reading and star is always about writing. In both cases, the rules define what cannot or should not be done. Usually, what is not prevented or blocked is allowed. Thus, even though a rule is stated as a No declaration, its opposite direction is implied as allowed. On the exam, the first and best answer as to the definition or meaning of a property is the negative statement, but if that is not an option, then the opposite implied operation is the next best selection.
+
+Consider the Biba properties. The second property of the Biba model is pretty straightforward. A subject cannot write to an object at a higher integrity level. That makes sense. What about the first property? Why can’t a subject read an object at a lower integrity level? The answer takes a little thought. Think of integrity levels as being like the purity level of air. You would not want to pump air from the smoking section into the clean room environment. The same applies to data. When integrity is important, you do not want unvalidated data read into validated documents. The potential for data contamination is too great to permit such access.
+
+Biba was designed to address three integrity issues:
+
+1. Prevent modification of objects by unauthorized subjects
+2. Prevent unauthorized modification of objects by authorized subjects
+3. Protect internal and external object consistency
+
+Biba requires that all subjects and objects have a classification label (it is still a DoD-derived security model). Thus, data integrity protection is dependent on data classification.
+
+Critiques of the Biba model reveal a few drawbacks:
+
+- It addresses only integrity, not confidentiality or availability.
+- It focuses on protecting objects from external threats; it assumes that internal threats are handled programmatically.
+- It does not address access control management, and it doesn’t provide a way to assign or change an object’s or subject’s classification level.
+- It does not prevent covert channels.
+
+Memorizing the properties of Bell–LaPadula and Biba can be challenging, but there is a shortcut. If you can memorize the graphical layout in Figure 8.6 above the dotted line, then you can figure out the rest. Notice that Bell–LaPadula is placed on the left and Biba is on the right, and the security benefit of each is listed below the model name. Then only the Bell–LaPadula model’s simple property is listed. That property is “No Read Up,” which is represented by an arrow pointing upward that is crossed out and labeled by an “S” for simple and an “R” for read. From there, all of the other rules are the opposing element of the pair or inverted. By memorizing the top graphic, once you are in the exam, you can draw that out on the provided dry-erase board. Then, you can quickly create the other rules. First, under Bell–LaPadula draw an arrow pointing down, cross it out, then label it with an “*” for start and a “W” for write. Now you have the “No Write Down” star property. You can then draw dotted arrows in the opposite direction of these two to indicate the implied opposite direction is allowed. Then take these four arrows of Bell–LaPadula and completely flip them over top to bottom to create the rules for Biba. The result should be the bottom graphic below the dotted line.
+
+#### Bell–LaPadula vs Biba 对比总结
+
+| 特征             | Bell–LaPadula                 | Biba                               |
+| ---------------- | ----------------------------- | ---------------------------------- |
+| 关注点           | **机密性（Confidentiality）** | **完整性（Integrity）**            |
+| 应用场景         | 军事、情报、国家安全          | 商业、财务、工业控制系统           |
+| Simple 属性      | No Read Up                    | No Read Down                       |
+| Star (*) 属性    | No Write Down                 | No Write Up                        |
+| 防止信息泄露方向 | 从高机密向低机密              | 从低完整性向高完整性               |
+| 允许的例外       | Trusted Subject 可降密        | 无特权主体可以破例写入高完整性数据 |
+| 安全属性覆盖     | 只关注保密性                  | 只关注完整性                       |
+
+#### 记忆图形法（考试技巧）
+
+- Bell–LaPadula（机密）→ ❌↑读，❌↓写
+- Biba（完整性）→ ❌↓读，❌↑写
+- 两者图形对称：一个关注信息**向下泄露**，一个关注信息**向上传染**
 
 ### 9. Clark-Wilson Model
 

@@ -153,7 +153,7 @@ You may be required to have default settings to make the product as easy to inst
 
 ### 4. Fail Securely（安全故障处理）
 
-**定义：**系统发生错误或崩溃时，仍能维护最小安全边界，不让攻击者趁虚而入。
+**定义: ** 系统发生错误或崩溃时，仍能维护最小安全边界，不让攻击者趁虚而入。
 
 System failures can occur due to a wide range of causes. Once the failure event occurs, how the system or environment handles the failure is important. The most desired result is for an application to fail securely. The first type of failure management is programmatic error handling (aka ***exception handling***). This is the process where a programmer codes in mechanisms to anticipate and defend against errors in order to avoid the termination of execution. Error handling is the inclusion of code that will attempt to handle errors when they arise before they can cause harm or interrupt execution.
 
@@ -1029,8 +1029,8 @@ Biba 模型诞生于 Bell–LaPadula 之后，是其“镜像模型”，关注�
 
 假设一个“高完整性”财务报表系统中，某员工账户等级较低，则：
 
-- 他**不能读取（read）**未经验证的数据（如互联网用户输入）；
-- 他**不能写入（write）**正式报表，以防引入错误或恶意修改。
+- 他 **不能读取（read）** 未经验证的数据（如互联网用户输入）；
+- 他 **不能写入（write）** 正式报表，以防引入错误或恶意修改。
 
 ------
 
@@ -1163,7 +1163,7 @@ The Clark–Wilson model uses security labels to grant access to objects, but on
 #### 工作原理
 
 - 一旦用户访问了一个**冲突类（Conflict Class）中的数据（如公司 A 的文档），系统将自动屏蔽**该用户访问该冲突类中其他实体（如公司 B）数据的权限。
-- 这种**“信息气泡”或“动态隔离”**机制称为 **Cone of Silence** 或 Ethical Wall。
+- 这种 **“信息气泡”或“动态隔离”** 机制称为 **Cone of Silence** 或 Ethical Wall。
 - 冲突类与用户权限是**动态变化的**，随着访问行为自动调整。
 
 #### 组成元素
@@ -1210,7 +1210,7 @@ Brewer and Nash was sometimes known as the Chinese Wall model, but this term is 
 - 主体只能对**预定义对象集合**执行**预定义操作**，不允许任意行为。
 - **一个主体域的成员不能影响另一个域的成员**，实现行为隔离。
 
-**目标：**通过预定义访问规则和分组隔离，**防止主体之间的交叉干扰（interference）**，实现高完整性控制。
+**目标: ** 通过预定义访问规则和分组隔离，**防止主体之间的交叉干扰（interference）**，实现高完整性控制。
 
 The Goguen–Meseguer model is an integrity model, although not as well known as Biba and the others. In fact, this model is said to be the foundation of noninterference conceptual theories. Often when someone refers to a noninterference model, they are actually referring to the Goguen–Meseguer model.
 
@@ -1241,7 +1241,7 @@ A common example of the Sutherland model is its use to prevent a covert channel 
 
 模型类型：**访问控制模型**
 
-模型特色: 通过**八种操作规则（protection rules）**实现主体与对象的安全生命周期管理。
+模型特色: 通过 **八种操作规则（protection rules）** 实现主体与对象的安全生命周期管理。
 
 #### 八个操作
 
@@ -1403,7 +1403,7 @@ The objectives of the **CC guidelines** are as follows:
 | **ST（Security Target）**    | 安全实现 “我能做到……” → 由厂商提出    |
 | **Package（安全功能包）**    | 可复用的安全功能模块组合              |
 
-🧠 记忆方式：PP 是需求方视角，ST 是实现方承诺
+🧠 **记忆方式：PP 是需求方视角，ST 是实现方承诺**
 
 The Common Criteria process is based on two key elements: 
 
@@ -1418,8 +1418,7 @@ An organization’s PP is compared to various STs from the selected vendor’s T
 
 ##### 七个 Evaluation Assurance Levels（EAL）
 
-用于衡量一个产品达到的保障等级，**越高越严格、越昂贵，但不是越高越好！**
-要 **根据应用场景选合适级别**（考试常考！）
+用于衡量一个产品达到的保障等级，**越高越严格、越昂贵，但不是越高越好！**要 **根据应用场景选合适级别**（考试常考！）
 
 | EAL  | 名称                                         | 适用场景 / 特点概括                                          |
 | ---- | -------------------------------------------- | ------------------------------------------------------------ |
@@ -1660,7 +1659,7 @@ The purpose of a constrained interface is to limit or restrict the actions of bo
 **关联安全属性**：
 
 - 可用性（Availability）
-- 消除单点故障（SPOF）
+- 消除单点故障（Single Point Of Failure）
 
 Fault tolerance is the ability of a system to suffer a fault but continue to operate. Fault tolerance is achieved by adding redundant components such as additional disks within a redundant array of inexpensive disks (RAID) array, or additional servers within a failover clustered configuration. Fault tolerance is an essential element of security design. It is also considered part of avoiding single points of failure and the implementation of redundancy. For more details on fault tolerance, redundant servers, RAID, and failover solutions, see Chapter 18, “Disaster Recovery Planning.”
 
@@ -1675,11 +1674,11 @@ Fault tolerance is the ability of a system to suffer a fault but continue to ope
 
 - 机密性（Confidentiality）
 - 完整性（Integrity）【结合哈希使用】
-- 身份验证 + 不可否认性（非对称加密）
+- 身份验证 + 不可否认性（必须是非对称加密）
 
 Encryption is the process of converting plaintext to ciphertext, whereas decryption reverses that process. Symmetric and asymmetric methods of encryption and decryption can be used to support a wide range of security solutions to protect confidentiality and integrity. Please see the full coverage of cryptography in Chapters 6 and 7.
 
-#### Security Capabilities 快速回忆表
+#### Security Capabilities of Information Systems 快速回忆表
 
 | 能力模块              | 目标                 | 实现技术/机制              | 关联安全模型 / 考点              |
 | --------------------- | -------------------- | -------------------------- | -------------------------------- |
@@ -1700,11 +1699,11 @@ Proper security concepts, controls, and mechanisms must be integrated before and
 
 When security systems are designed, it is often helpful to derive security mechanisms from standard security models. Some of the security models that should be recognized include the trusted computing base, state machine model, information flow model, noninterference model, take-grant model, access control matrix, Bell–LaPadula model, Biba model, Clark–Wilson model, Brewer and Nash model, Goguen–Meseguer model, Sutherland model, Graham–Denning model, and Harrison–Ruzzo–Ullman model.
 
-Several security criteria exist for evaluating computer security systems. The Common Criteria uses a subjective system to meet security needs and a standard Evaluation Assurance Level (EAL) to evaluate reliability.
+Several security criteria exist for evaluating computer security systems. The Common Criteria uses a subjective system to meet security needs and a standard Evaluation Assurance Level **(EAL) to evaluate reliability.**
 
 The NIST Risk Management Framework (RMF) establishes an Authorization to Operate (ATO) issued by an Authorizing Official (AO) in order to ensure that only systems with acceptable risk levels are used to perform IT operations.
 
-It is important to carefully assess each aspect of the infrastructure to ensure that it sufficiently supports security. Without an understanding of the security capabilities of information systems, it is impossible to evaluate them, nor is it possible to implement them properly. The security capabilities of information systems include memory protection, virtualization, Trusted Platform Module (TPM), encryption/decryption, interfaces, and fault tolerance.
+It is important to carefully assess each aspect of the infrastructure to ensure that it sufficiently supports security. Without an understanding of the security capabilities of information systems, it is impossible to evaluate them, nor is it possible to implement them properly. The security capabilities of information systems include **memory protection, virtualization, Trusted Platform Module (TPM), encryption/decryption, interfaces, and fault tolerance.**
 
 ## Exam Essentials
 

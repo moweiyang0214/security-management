@@ -273,9 +273,23 @@ Data storage devices are used to store information that may be used by a compute
 
 Primary memory, also known as primary storage, is the RAM that a computer uses to keep necessary information readily available to the CPU while the computer is running. Secondary memory (or secondary storage) includes all the familiar long-term storage devices that you use every day. Secondary storage consists of magnetic and optical media such as HDDs, SSDs, flash drives, magnetic tapes, CDs, DVDs, and flash memory cards.
 
+| 分类                  | 说明                          | 示例                     | 关键点                   |
+| --------------------- | ----------------------------- | ------------------------ | ------------------------ |
+| **Primary Memory**    | 临时数据处理，直接由 CPU 使用 | RAM、Cache、Registers    | 易失性，断电丢失         |
+| **Secondary Storage** | 长期数据保存                  | HDD、SSD、USB、DVD、磁带 | 非易失性，需 OS 协调访问 |
+
+🔐 **安全性区别**：二级存储因其持久性，**数据残留风险大**，需格外注意清除/加密措施。
+
 ##### Volatile vs. Nonvolatile
 
 The volatility of a storage device is simply a measure of how likely it is to lose its data when power is turned off or cycled. Devices designed to retain their data (such as magnetic media, ROMs, and optical media) are classified as nonvolatile, whereas devices such as static or dynamic RAM modules, which lose their data when power is removed, are classified as volatile.
+
+| 分类            | 电源断开是否保留数据 | 示例                       |
+| --------------- | -------------------- | -------------------------- |
+| **Volatile**    | ❌ 不保留             | RAM、Cache、Registers      |
+| **Nonvolatile** | ✅ 保留               | ROM、SSD、HDD、光盘、Flash |
+
+⚠️ 虽然 RAM 是易失性，但冷启动攻击等高级手段可**延缓电荷衰减**，读取部分内存残留数据。
 
 ##### Random vs. Sequential
 
@@ -283,7 +297,39 @@ Storage devices may be accessed in one of two fashions. Random access storage de
 
 Sequential storage devices, on the other hand, do not provide this flexibility. They require that you read (or speed past) all the data physically stored prior to the desired location. A common example of a sequential storage device is a magnetic tape drive.
 
-##### Memory Security Issues
+| 访问方式              | 描述             | 示例               | CISSP 场景             |
+| --------------------- | ---------------- | ------------------ | ---------------------- |
+| **Random Access**     | 任意位置快速访问 | RAM、SSD、HDD      | 大多数操作系统设计基础 |
+| **Sequential Access** | 顺序读取，速度慢 | 磁带、部分日志系统 | 适用于归档、批处理场景 |
+
+📌 **考点提示**：备份磁带 = **顺序访问**设备；SSD = **随机访问**设备（且有数据擦除挑战）。
+
+##### Memory Security Issues (Memory 安全风险与对策总结)
+
+1. **数据残留（Data Remanence）**
+
+- **定义**：数据在看似“删除”后依然残存于介质上的现象。
+- **解决方案**：
+  - 使用专业工具彻底**擦除（sanitization）**数据
+  - 采用 **DoD 5220.22-M** 标准的多次覆写
+  - 对 SSD：注意不能完全控制哪些块被擦除，传统 wipe 无法保证
+
+2. **冷启动攻击（Cold Boot Attack）**
+
+- **原理**：RAM 芯片在极低温状态下掉电后依然保持数据数秒到数分钟
+- **风险数据**：密码、加密密钥
+- **对策**：
+  - 禁用睡眠/休眠时保留内存
+  - 开启全盘加密并存储密钥在 TPM 中，而非内存中
+  - 设定 BIOS 密码、禁用 USB 启动
+
+3. **Crash Dump / Memory Dump 攻击**
+
+- **描述**：黑客提取系统崩溃转储文件或内存镜像，提取敏感信息
+- **对策**：
+  - 限制系统产生 dump 的权限
+  - 禁用调试工具访问生产环境
+  - 加密内存中的敏感数据（如密码）
 
 Memory stores and processes your data—some of which may be extremely sensitive. Any memory devices that may retain sensitive data should be purged before they are allowed to leave your organization for any reason. This is especially true for secondary memory and ROM/PROM/EPROM/EEPROM devices designed to retain data even after the power is turned off.
 
@@ -291,7 +337,7 @@ However, memory data retention issues are not limited to secondary memory (i.e.,
 
 There is a memory compromise, called the cold boot attack, that freezes memory chips to delay the decay of resident data when the system is turned off or the RAM is pulled out of the motherboard. See en.wikipedia.org/wiki/Cold_boot_attack. There are even attacks and tools that focus on memory image dumps or system crash dumps to extract encryption keys.
 
-##### Storage Media Security
+##### Storage Media Security (**物理存储设备的安全问题**)
 
 There are several concerns when it comes to the security of secondary storage devices:
 
@@ -300,35 +346,525 @@ There are several concerns when it comes to the security of secondary storage de
 3. Secondary storage devices are also prone to theft. Economic loss is not the major factor (after all, how much does a backup tape or a hard drive cost?), but the loss of confidential information poses great risks. For this reason, it is important to use full-disk encryption to reduce the risk of an unauthorized entity gaining access to your data. Many HDDs, SSDs, and flash devices offer on-device native encryption.
 4. Removable media pose a significant information disclosure risk, so securing them often requires encryption technologies.
 
+| 风险             | 描述                  | 推荐对策                                  |
+| ---------------- | --------------------- | ----------------------------------------- |
+| **数据残留**     | 擦除不彻底            | 数据擦除/销毁                             |
+| **数据泄漏**     | 设备丢失被盗          | 全盘加密                                  |
+| **移动介质攻击** | U盘/SD 卡植入恶意代码 | 限制插入端口 + 加密                       |
+| **SSD 擦除困难** | 特殊逻辑块无法清除    | 用 SSD-aware 工具进行 sanitize 或销毁设备 |
+
+##### CISSP 典型考点 & 提示
+
+| 考题方向         | 常见问法                                     | 正确选项提示                   |
+| ---------------- | -------------------------------------------- | ------------------------------ |
+| **存储设备分类** | 哪种是易失性存储？                           | RAM                            |
+| **介质处理**     | 磁带被擦除后如何确保数据不被恢复？           | Sanitization（多次擦除或销毁） |
+| **存储设备攻击** | 哪种攻击会冷冻内存芯片以读取密钥？           | Cold boot attack               |
+| **SSD 擦除问题** | 为什么对 SSD 使用零化方法不安全？            | 无法保证所有块被擦除           |
+| **数据泄露防御** | 确保移动硬盘被盗后数据无法读取，哪项最有效？ | 全盘加密                       |
+
+快速记忆口诀：**“残冷转移，全盘加密！”**
+
+代表：
+
+- 数据**残留**风险
+- **冷启动**攻击威胁
+- **崩溃转储**的内存镜像可被滥用
+- 媒体**转移过程泄密**
+- 推荐统一措施：**Full-Disk Encryption**
+
 #### Emanation Security
+
+**Emanation Security** 是信息安全中的一个子领域，专注于防止机密信息通过**非预期的电子信号、无线电波或电磁EM（Electromagnetic）辐射泄漏**。
+
+| 术语                  | 含义                                                   |
+| --------------------- | ------------------------------------------------------ |
+| **Emanation（辐射）** | 设备在运行中产生的电磁信号，可能包含敏感数据           |
+| **Van Eck Radiation** | 由显示设备或线路泄露的 EM 辐射，可被监听               |
+| **Van Eck Phreaking** | 攻击者利用接收器远程还原原始显示内容或数据的攻击       |
+| **TEMPEST**           | 一套美国政府标准和对策体系，用于防止电磁泄露和监听攻击 |
 
 Many electrical devices emanate electrical signals or radiation that can be intercepted and may contain confidential, sensitive, or private data. Obvious examples of emanation devices are wireless networking equipment and mobile phones, but many other devices are vulnerable to emanation interception that you might not expect, including monitors, network cables, modems, and internal or external media drives (hard drives, USB thumb drives, CDs, and so on). With the right equipment, adversaries can intercept electromagnetic or radio frequency signals (collectively known as emanations) from these devices and interpret them to extract confidential data.
 
-#### Input and Output Devices
+The types of countermeasures and safeguards used to protect against emanation attacks are known as TEMPEST countermeasures. **TEMPEST** was originally a government research study aimed at protecting electronic equipment from the electromagnetic pulse (EMP) emitted during nuclear explosions. It has since expanded to a general study of monitoring emanations and preventing their interception.
 
-##### Monitors
+Simply because of the kinds of electronic components from which they’re built, many computer hardware devices **emit electromagnetic (EM) radiation** during normal operation. The process of communicating with other machines or peripheral equipment creates emanations that can be intercepted. These emanation leaks can cause serious security issues but are generally easy to address.
 
-##### Printers
+TEMPEST-derived technology allows the electronic emanations that devices produce (known as **Van Eck radiation**) to be read from a distance (this process is known as **Van Eck phreaking**). TEMPEST eavesdropping or Van Eck phreaking countermeasures include the following:
 
-##### Keyboards/Mice
+1. **Faraday Cage** A Faraday cage is a box, mobile room, or entire building designed with an external metal skin, often a wire mesh that fully surrounds an area on all sides. This metal skin acts as an EM absorbing capacitor that prevents electromagnetic signals (emanations) from exiting or entering the area that the cage encloses. Faraday cages can be designed to block specific frequencies while allowing others—for example, blocking Wi-Fi while allowing walkie talkies and mobile phones.
 
-##### Modems
+2. **White Noise** White noise simply means broadcasting false traffic to mask and hide the presence of real emanations. White noise can consist of a real signal from another source that is not confidential, a constant signal at a specific frequency, a randomly variable signal, or even a jam signal that causes interception equipment to fail. Although this is similar to jamming devices, the purpose is to convolute the signal only for the eavesdropper, not the authorized user, rather than stopping even valid uses of emanations.
+3. **Control Zone** A third type of TEMPEST countermeasure, a control zone, is simply the implementation of both a Faraday cage and white noise generation to protect a specific area in an environment; the rest of the environment is not affected. A control zone can be a room, a floor, or an entire building.
 
-#### Firmware
+##### TEMPEST 对策详解
+
+| 对策类型                  | 描述                                       | 示例或关键点                     |
+| ------------------------- | ------------------------------------------ | -------------------------------- |
+| **Faraday Cage**          | 金属屏蔽结构，阻隔或吸收 EM 信号           | 数据中心、SCIF 安全通信房常用    |
+| **White Noise（白噪声）** | 引入虚假信号扰乱监听                       | 类似干扰器，但不影响正常用户使用 |
+| **Control Zone**          | 综合 Faraday Cage + 白噪声，用于高安全区域 | 例：军事通信室、政府安全机房     |
+
+**注意**：TEMPEST 通常是**物理性、工程性对策**，并非依赖软件配置或防火墙。
+
+In addition to the official TEMPEST countermeasure concepts, shielding, access control, and antenna management can be helpful against emanation eavesdropping. Shielding of cables (networking and otherwise) may be sufficient to reduce or block emanation access. This may be an element included in the manufacture of equipment, such as shielded twisted pair (STP), or may be accomplished by using shielding conduits or just replacing copper network cables with fiber-optic cables.
+
+##### UTP vs STP
+
+| 缩写    | 全称                    | 中文             |
+| ------- | ----------------------- | ---------------- |
+| **UTP** | Unshielded Twisted Pair | **非屏蔽双绞线** |
+| **STP** | Shielded Twisted Pair   | **屏蔽双绞线**   |
+
+| 特性                   | **UTP（非屏蔽）** | **STP（屏蔽）**               |
+| ---------------------- | ----------------- | ----------------------------- |
+| 是否有电磁屏蔽层       | ❌ 无              | ✅ 有屏蔽层（金属箔或编织网）  |
+| 抗 EMI（电磁干扰）能力 | 较弱              | 强                            |
+| 成本与安装难度         | 更便宜、安装简单  | 更贵，接地要求更严格          |
+| 典型应用场景           | 普通企业/家庭网络 | 高干扰环境（如工厂、机房）    |
+| 是否用于电磁安全防护   | 否                | 是，可作为**TEMPEST对策**之一 |
+
+**为什么 STP 与 CISSP 安全有关？**
+
+因为**电磁泄露（EMI、RFI）不仅会干扰通信质量，还可能导致数据泄漏**。攻击者可以通过监听电磁信号来重建网络传输数据，形成 **旁路攻击（Side-Channel Attack）**。
+
+因此，CISSP 在物理与网络安全章节中，会特别提到：
+
+- **UTP 安装方便，但不适用于高安全等级场景**
+- **STP 可用于防止**：
+  - 电磁干扰（EMI）
+  - 射频干扰（RFI）
+  - 电磁窃听（如 Van Eck 攻击）
+
+##### 光纤 vs STP
+
+虽然 STP 能防止泄露，但**光纤（Fiber Optic）**是最佳安全选择，因为：
+
+- 它通过 **光信号** 传输，不产生电磁信号
+- 无法被传统 EM 监听设备截获
+- 属于完全物理隔离的传输方式
+
+##### 其他有效的电磁防护措施
+
+| 方法                    | 描述                              | 特点                           |
+| ----------------------- | --------------------------------- | ------------------------------ |
+| **Shielded Cabling**    | 使用**屏蔽双绞线（STP）**或光纤   | 减少或阻断 EMI（电磁干扰）泄露 |
+| **Access Control**      | 防止未经授权者接近关键设备        | 属于物理访问控制的一部分       |
+| **Antenna Management**  | 控制无线设备天线功率与方向性      | 减少不必要的信号外泄范围       |
+| **Physical Separation** | 将高敏设备置于远离窗户/外墙的地方 | 低成本但有效的辅助策略         |
+
+##### CISSP 考试重点 & 易混陷阱提示
+
+| 考点                           | 说明                                | 易错点提示                         |
+| ------------------------------ | ----------------------------------- | ---------------------------------- |
+| **TEMPEST 是什么？**           | 一组用于防止电磁泄露的标准          | 并非加密协议！是物理性安全框架     |
+| **Van Eck 攻击属于哪类攻击？** | **旁路攻击（Side Channel Attack）** | 常和缓存侧信道攻击等混淆           |
+| **Faraday Cage 是什么？**      | 电磁信号屏蔽工具                    | 不影响内部设备工作，但屏蔽外部监听 |
+| **STP vs UTP**                 | STP 提供 EMI 屏蔽                   | UTP 无 EMI 防护，易受干扰          |
+| **光纤替代铜线的优势？**       | 几乎不泄露电磁信号，抗监听强        | 属于物理安全增强手段               |
+
+##### 快速记忆口诀：「**范艾克噪场盾，电磁泄露沉**」
+
+- **范**：Van Eck Radiation
+- **艾克**：Phreaking（监听还原技术）
+- **噪**：白噪声扰乱监听
+- **场**：控制区（Control Zone）
+- **盾**：Faraday Cage（EM 防护盾）
+- **电磁泄露沉**：EM 信号沉没，数据更安全！
+
+#### Input and Output Devices 输入/输出设备安全风险总结
+
+Input and output devices can present security risks to a system. Security professionals should be aware of these risks and ensure that appropriate controls are in place to mitigate them.
+
+##### Monitors（显示器）
+
+| 安全风险                         | 说明                                                         |
+| -------------------------------- | ------------------------------------------------------------ |
+| **电磁泄露**                     | 尤其是旧式 CRT 显示器，可被 TEMPEST/Van Eck 技术远程还原显示内容 |
+| **肩窥攻击（Shoulder Surfing）** | 通过肉眼或摄像头偷窥屏幕内容，适用于所有屏幕（包括移动设备） |
+
+📝 **考试易混点**：
+
+- Shoulder surfing ≠ TEMPEST。前者是**视觉偷窥**，后者是**EM监听**。
+
+TEMPEST technology can compromise the security of data displayed on a monitor. Generally, legacy cathode ray tube (CRT) monitors are more prone to radiate significantly, whereas most modern monitors leak much less (some claim not enough to reveal critical data); this includes liquid crystal display (LCD), light-emitting diode (LED), organic light-emitting diode (OLED), and quantum dot OLED (QLED).
+
+It is arguable that the biggest risk with any monitor is still shoulder surfing or telephoto lenses on cameras. The concept that someone can see what is on your screen with their eyes or a video camera is known as shoulder surfing. Don’t forget shoulder surfing is a concern for desktop displays, laptop displays, tablets, and mobile phones.
+
+##### Printers**（打印机）**
+
+| 风险类别         | 描述                                               |
+| ---------------- | -------------------------------------------------- |
+| **物理打印泄露** | 打印后未及时取走，或物理防护不足，易被窃取         |
+| **打印缓存风险** | 多功能打印机可能将文档缓存在硬盘中                 |
+| **网络攻击**     | 打印机常暴露在网络中，缺乏系统加固，易被远程利用   |
+| **旧式传真漏洞** | 有线传真接口可被利用恢复远程命令访问（AT命令漏洞） |
+
+✅ **对策建议**：
+
+- 安全打印（需身份验证）
+- 清除打印缓存
+- 禁用不必要的传真功能
+
+Printers also represent a security risk that is easy to overlook. Depending on the physical security controls used at your organization, it may be much easier to walk out with sensitive information in printed form than to walk out with a flash drive or magnetic media. If printers are shared, users may forget to retrieve their sensitive printouts, leaving them vulnerable to prying eyes. Many modern printers also store data locally, often on a hard drive, and some retain copies of printouts indefinitely. Printers are usually exposed on the network for convenient access and are often not designed to be secure systems.
+
+Concerns should also apply to multifunction printers (MFPs), especially those that include fax capabilities and that are network attached (whether wired or wireless). In 2018, researchers discovered that it is still possible to take over control of a computer system over a public switched telephone network (PSTN) line using ancient AT commands supported by modems and fax modems/machines. If you don’t always need fax capabilities, don’t leave the telephone line plugged in. If you do need always available fax capabilities, use a standalone fax machine.
+
+##### Keyboards/Mice**（输入设备）**
+
+| 风险类型           | 描述                                           |
+| ------------------ | ---------------------------------------------- |
+| **TEMPEST**        | 无线/有线键盘均可能泄露电磁信号                |
+| **硬件键盘记录器** | 小型物理装置可植入键盘线路，实现**键盘记录**   |
+| **无线窃听**       | 蓝牙或无线键鼠信号可被拦截，若未加密则风险极高 |
+
+📌 **考试角度理解**：这是**旁路攻击（side-channel attack）**的一种。
+
+Keyboards, mice, and similar input devices are not immune to security vulnerabilities either. All of these devices are vulnerable to TEMPEST monitoring. Also, keyboards are vulnerable to less sophisticated bugging. A simple device can be placed inside a keyboard or along its connection cable to intercept all the keystrokes that take place and transmit them to a remote receiver using a radio signal. This has the same effect as TEMPEST monitoring but can be done with much less expensive gear. Additionally, if your keyboard and mouse are wireless, including Bluetooth, their radio signals can be intercepted.
+
+##### Modems**（调制解调器）**
+
+| 风险类别         | 描述                                                     |
+| ---------------- | -------------------------------------------------------- |
+| **绕过边界防御** | 老式拨号调制解调器提供“外部直接连接”入口，绕过防火墙/VPN |
+| **隐蔽泄密通道** | 内部人员可利用调制解调器创建“隐秘数据外传通道”           |
+| **复古攻击**     | 使用 AT 命令等可重新激活隐藏通信端口                     |
+
+🔒 **应对建议**：
+
+- 禁用或淘汰所有未授权调制解调器
+- 管理端口（如 RJ-11）与设备物理接口的使用
+- 启用网络行为监测系统识别“非预期流量模式”
+
+With the advent of ubiquitous broadband and wireless connectivity, modems are becoming a scarce legacy computer component. If your organization is still using older equipment, there is a chance that a modem is part of the hardware configuration. Modems allow users to create uncontrolled access points into your network. In the worst case, if improperly configured, they can create extremely serious security vulnerabilities that allow an outsider to bypass all your perimeter protection mechanisms and directly access your network resources. At best, they create an alternate egress channel that insiders can use to funnel data outside your organization. But keep in mind that these vulnerabilities can be exploited only if the modem is connected to an operational telephone landline.
+
+You should seriously consider an outright ban on modems in your organization’s security policy unless you truly need them for business reasons. In those cases, security officials should know the physical and logical locations of all modems on the network, ensure that they are correctly configured, and make certain that appropriate protective measures are in place to prevent their illegitimate use.
+
+#### Firmware (固件安全)
+
+##### **Firmware 基础**
+
+| 项目         | 说明                                            |
+| ------------ | ----------------------------------------------- |
+| **Firmware** | ROM/EEPROM/Flash 上的低层嵌入式软件             |
+| **用途**     | 控制硬件基本运行逻辑，如 BIOS/打印机/IoT        |
+| **更新方式** | Flashing，可能被滥用为攻击载体（见：phlashing） |
+
+Firmware (also known as microcode) is a term used to describe software that is stored in a ROM or an EEPROM chip. This type of software is changed infrequently (actually, never, if it’s stored on a true ROM chip as opposed to an EEPROM or flash chip) and often drives the basic operation of a computing device.
+
+Many hardware devices, such as printers and modems, need some limited set of instructions and processing power to complete their tasks while minimizing the burden placed on the OS itself. In many cases, these “mini” OSs are entirely contained in firmware chips onboard the devices they serve. Firmware is commonly used by mobile devices, Internet of Things (IoT) equipment, edge computing devices, fog computing devices, and industrial control systems.
+
+##### BIOS vs UEFI（启动固件演进）
+
+| 项目           | BIOS （Basic input/output system） | UEFI（Unified Extensible Firmware Interface） |
+| -------------- | ---------------------------------- | --------------------------------------------- |
+| **架构**       | 传统 x86，16位                     | CPU 独立、支持 GUI 与网络                     |
+| **驱动支持**   | 固定驱动                           | 动态驱动加载                                  |
+| **启动盘支持** | 2.2TB 限制                         | 支持大容量盘（>2TB）                          |
+| **安全机制**   | 基本启动验证                       | Secure Boot / Measured Boot / 网络启动支持    |
+
+1. **Basic input/output system (BIOS)** is the legacy basic low-end firmware or software embedded in a motherboard’s EEPROM or flash chip. The BIOS contains the OS-independent primitive instructions that a computer needs to start up and load the OS from disk. The BIOS identifies and initiates the basic system hardware components, such as the hard drive, optical drive, and video card, so that the bootstrapping process of loading an OS can begin. In most modern systems, the BIOS has been replaced by UEFI.
+
+2. **Unified Extensible Firmware Interface (UEFI)** provides support for all of the same functions as BIOS with many improvements, such as support for larger hard drives (especially for booting), faster boot times, enhanced security features, and even the ability to use a mouse when making system changes (BIOS was limited to keyboard control only). UEFI also includes a CPU-independent architecture, a flexible pre-OS environment with networking support, measured boot, boot attestation (aka secure boot), and backward and forward compatibility. It also runs CPU-independent drivers (for system components, drive controllers, and hard drives).
+
+The process of updating the UEFI, BIOS, or firmware is known as flashing. If hackers or malware can alter the UEFI, BIOS, or firmware of a system, they may be able to bypass security features or initiate otherwise prohibited activities. There have been a few examples of malicious code embedding itself into UEFI, BIOS, or firmware. There is also an attack known as phlashing, in which a malicious variation of official BIOS or firmware is installed that introduces remote control or other malicious features into a device.
+
+Boot attestation or secure boot is a feature of UEFI that aims to protect the local OS by preventing the loading or installing of device drivers or an OS that is not signed by a preapproved digital certificate. Secure boot thus protects systems against a range of low-level or boot-level malware, such as certain rootkits and backdoors. Secure boot ensures that only drivers and OSs that pass attestation (the verification and approval process accomplished through the validation of a digital signature) are allowed to be installed and loaded on the local system.
+
+Measured boot is an optional feature of UEFI that takes a hash calculation of every element involved in the booting process. The hashes are performed by and stored in the Trusted Platform Module (TPM). If foul play is detected in regard to booting, the hashes of the most recent boot can be accessed and compared against known-good values to determine which (if any) of the boot components have been compromised. Measured boot does not interrupt or stop the process of booting; it just records the hash IDs of the elements used in the boot. Thus, it is like a security camera. It does not prevent a malicious action; it just records whatever occurs in its area of view.
+
+##### UEFI 安全机制详解
+
+| 安全功能                      | 描述                               | 类比                         |
+| ----------------------------- | ---------------------------------- | ---------------------------- |
+| **Secure Boot（安全启动）**   | 只加载通过签名验证的 OS / 驱动     | 门卫验证身份才能进入         |
+| **Measured Boot（度量启动）** | TPM 记录启动元素哈希，用于事后审计 | 监控摄像头录像，供事后分析   |
+| **Phlashing 攻击**            | 恶意固件“合法刷入”                 | 持久性后门（在 OS 级别以下） |
+
+📌 **攻击者若控制 UEFI，可绕过 OS 层全部防御**
+
+##### 快速记忆技巧 & 考点口诀
+
+> **“屏肩波泄键盘录，印留网连传真复；闪刷固件藏后门，启动双盾保主机。”**
+
+解释：
+
+- **屏**：Monitor（可电磁泄露）
+- **肩**：Shoulder Surfing
+- **波泄**：EM 辐射泄露（Van Eck）
+- **键盘录**：硬件键盘记录器
+- **印留**：打印文件被遗忘
+- **网连传真复**：打印/传真设备连接网络，复古攻击如 AT 指令利用
+- **闪刷**：Firmware flashing
+- **后门**：恶意固件构造持久后门
+- **双盾**：Secure Boot + Measured Boot
+- **主机**：系统完整性保障核心
 
 ## Client-Based Systems
 
+**Client-based vulnerabilities** = 发生在客户端（如浏览器、操作系统、缓存、前端代码）的安全问题，而非服务器。
+
+典型攻击包括：
+
+- **移动代码攻击**（JavaScript、Java applets、ActiveX 等）
+- **本地缓存投毒**
+- **浏览器漏洞利用**
+- **恶意脚本注入（XSS、CSRF）**
+
+这些攻击通常借助合法渠道（网页、插件、邮件、下载等）在客户端执行恶意代码，**即便服务器完全安全也可能中招**。
+
+Client-based vulnerabilities place the user, their data, and their system at risk of compromise and destruction. A client-side attack is any attack that is able to harm a client. Generally, when attacks are discussed, it’s assumed that the primary target is a server or a server-side component. A client-side or client-focused attack is one where the client itself, or a process on the client, is the target. A common example of a client-side attack is a malicious website that transfers malicious mobile code (such as an applet) to a vulnerable browser running on the client. Client-side attacks can occur over any communications protocol, not just Hypertext Transfer Protocol (HTTP). Another potential vulnerability that is client based is the risk of poisoning of local caches.
+
 ### 1. Mobile Code
 
-### 2. Local Caches
+**Applet**：早期常见的嵌入式代码块（如 Java Applet），运行在客户端，执行计算或显示交互。
+
+**JavaScript**：现代网页中最常用的客户端代码，具备逻辑、访问 DOM、网络请求能力。
+
+| 角色   | 好处                     |
+| ------ | ------------------------ |
+| 客户端 | 响应快、减少对服务器依赖 |
+| 服务器 | 降低负载、保护业务逻辑   |
+
+##### 安全风险
+
+| 攻击                        | 描述                                   |
+| --------------------------- | -------------------------------------- |
+| **恶意 Applet**             | 被篡改执行恶意操作                     |
+| **XSS（跨站脚本攻击）**     | 攻击者注入 JS 获取敏感数据             |
+| **CSRF（跨站请求伪造）**    | 攻击者诱导用户浏览器执行未授权操作     |
+| **Same-Origin Policy 绕过** | 理论上 JS 不应访问其他域，但可以被绕过 |
+| **Sandbox 逃逸**            | JS 越权访问系统资源                    |
+
+##### 防护措施
+
+| 层级         | 对策                                                         |
+| ------------ | ------------------------------------------------------------ |
+| **浏览器端** | 自动更新、禁用高危插件、安装脚本控制扩展（如 NoScript、uBlock） |
+| **服务器端** | 实施 CSP（内容安全策略）、使用 JS 安全子集（SES, ADsafe）    |
+| **网络层**   | 部署 Web Application Firewall（WAF）过滤异常请求             |
+
+Applets are code objects sent from a server to a client to perform some action. In fact, applets are actually self-contained miniature programs that execute independently of the server that sent them—that is, mobile code. The arena of the web is undergoing constant flux. The use of applets is not as common today as it was in the early 2010s. However, applets are not absent from the web, and most browsers still support them (or still have add-ons present that support them). Thus, even when your organization does not use applets in your internal or public web design, your web browsers could encounter them while surfing the public web.
+
+Imagine a web server that offers a variety of financial tools to web users. One of these tools might be a mortgage calculator that processes a user’s financial information and provides a monthly mortgage payment based on the loan’s principal and term and the borrower’s credit information. Instead of processing this data and returning the results to the client system, the remote web server might send to the local system an applet that enables it to perform those calculations itself. This provides a number of benefits to both the remote server and the end user:
+
+- The processing burden is shifted to the client, freeing up resources on the web server to process requests from more users.
+- The client is able to produce data using local resources rather than waiting for a response from the remote server. In many cases, this results in a quicker response to changes in the input data.
+- In a properly programmed applet, the web server does not receive any data provided to the applet as input, therefore maintaining the security and privacy of the user’s financial data.
+
+JavaScript is supported by most browsers via a dedicated JavaScript engine. Most of the implementations use sandbox isolation to restrict JavaScript to web-related activities while minimizing its ability to perform general-purpose programming tasks. Also, most browsers default to enforcing the same-origin policy. The same-origin policy prohibits JavaScript code from accessing content from another origin. The origin is typically defined by a combination of protocol (i.e., HTTP vs. HTTPS), domain/IP address, and port number. If other content has any one of these origin elements different from the origin of the JavaScript code, the code will be blocked from accessing that content.
+
+However, there are ways of abusing JavaScript. Hackers can create believable fake websites that look and act like a valid site, including duplicating the JavaScript dynamic elements. But since the JavaScript code is in the HTML document sent to the browser, a malicious hacker could alter that code to perform harmful actions, such as copying or cloning credentials and distributing them to the attacker. Malicious hackers have also found means to breach the sandbox isolation and even violate same-original policies from time to time, so JavaScript should be considered a threat. Whenever you allow code from an unknown and thus untrusted source to execute on your system, you are putting your system at risk of compromise. XSS and XSRF/CSRF can be used to exploit JavaScript support in browsers.
+
+Here are some responses to these risks:
+
+1. Keep browsers updated (client side).
+2. Implement JavaScript subsets (such as ADsafe, Secure ECMAScript [SES], or Caja) (server side).
+3. Use a content security policy (CSP) that attempts to rigidly enforce same-origin restrictions for most browser-side active technologies (integrated into browsers and referenced by HTML header values).
+
+As with most web applications, insertion attacks are common, so watch out for injection of odd or abusive JavaScript code in the input being received by a web server.
+
+As a client, you may gain some benefit by being behind a web application firewall (WAF) or next-generation firewall (NGFW). We do not recommended disabling JavaScript outright—that would cause most of the web to stop functioning in your browser. Instead, the use of add-ons, browser helper objects (BHOs), and extensions may reduce the risk of JavaScript. Two examples include NoScript for Mozilla Firefox and UBlock Origin for Chrome and Edge (based on Chromium).
+
+### 2. Local Caches - 本地缓存
+
+There are many types of local caches, including DNS cache, ARP cache, and temporary internet files. See Chapter 11 for details about DNS cache and ARP cache abuses.
+
+##### 缓存种类
+
+| 类型               | 说明                         |
+| ------------------ | ---------------------------- |
+| **DNS 缓存**       | 将域名解析结果保存在本地     |
+| **ARP 缓存**       | 保存 IP ⇄ MAC 映射表         |
+| **浏览器临时文件** | 保留网页、脚本、图片、视频等 |
+
+##### 缓存安全风险
+
+| 攻击方式                  | 描述                                             |
+| ------------------------- | ------------------------------------------------ |
+| **Cache Poisoning**       | 在缓存中植入伪造数据或恶意文件                   |
+| **Split-Response Attack** | 分裂 HTTP 响应，插入恶意文件至缓存               |
+| **DOM-based XSS**         | 使用缓存中的脚本或 HTML 元素触发攻击             |
+| **持久化攻击**            | 即便后续访问合法网站，也可能调用被污染的缓存内容 |
+
+##### 防护建议
+
+| 对策                    | 说明                                                     |
+| ----------------------- | -------------------------------------------------------- |
+| **缩短缓存寿命**        | 缓存内容存储时间越短，被利用的窗口越小                   |
+| **禁用预载功能**        | 防止未请求的内容被缓存（preloading）                     |
+| **退出清除缓存/Cookie** | 浏览器关闭时自动清空敏感信息                             |
+| **自动清理工具**        | 使用脚本或工具定期清除临时文件（如 CCleaner、BleachBit） |
+
+Temporary internet files or the internet files cache is the temporary storage of files downloaded from internet sites that are being held by the client’s utility (typically a browser) for current and possibly future use. Mostly this cache contains website content, but other internet services can use a file cache as well. A variety of exploitations, such as the split-response attack, can cause the client to download content and store it in the cache that was not an intended element of a requested web page. DOM XSS may be able to access and use locally cached files to execute malicious code or exfiltrate data (see Chapter 21). Mobile code scripting attacks could also be used to plant false content in the cache. Once files have been poisoned in the cache, then even when a legitimate web document calls on a cached item, the malicious item will be activated.
+
+Client utilities should be managing the local files cache, but those utilities might not always be doing the best job. Often the defaults are for efficiency and performance, not for security. Consider reconfiguring the cache to only retain files for a short period of time, minimize the cache size, and disable preloading of content. Keep in mind that these changes can reduce browsing performance when on slower or high-latency connections. You may want to configure the browser to delete all cookies and cache upon exit. Although you can typically perform a manual cache wipe, you would have to remember to do that. Another option is to use an automated that can be configured to wipe temporary internet files on a schedule or upon targeted program close.
+
+##### CISSP 考试重点提示
+
+| 考点类别                | 关键问法                        | 正确思维                            |
+| ----------------------- | ------------------------------- | ----------------------------------- |
+| **客户端攻击面**        | 哪些攻击是面向客户端？          | 移动代码、缓存投毒、XSS             |
+| **JavaScript 安全模型** | Same-Origin Policy 起什么作用？ | 限制跨域访问资源                    |
+| **CSP 策略**            | 什么能减缓 XSS 风险？           | CSP 头部控制资源加载范围            |
+| **缓存中毒风险**        | Split-Response 攻击影响？       | 注入恶意内容进缓存中                |
+| **防护措施**            | 防移动代码攻击首选？            | 浏览器更新、脚本隔离、CSP、插件辅助 |
+
+##### 快速记忆口诀： “动码潜藏毒，缓存藏后门；同源是护栏，清理是扫雷。”
+
+解读：
+
+- 动码（Mobile Code）易被篡改，藏有“毒”
+- 本地缓存被投毒后，合法内容也变成“后门”
+- Same-Origin Policy 是核心“护栏”
+- 清理缓存是扫除潜在残留“炸弹”
 
 ## Server-Based Systems
 
-### 1. Large-Scale Parallel Data Systems
+在 CISSP 中，**服务器端安全不仅关心服务器本身**，还涉及如下关键目标：
 
-### 2. Grid Computing
+1. **保障数据流的完整性与可用性**
+2. **防止过载、阻断和服务中断**
+3. **支持多线程/并发计算任务的安全执行**
+4. **识别并控制分布式和对等式计算架构中的隐性风险**
 
-### 3. Peer to Peer
+### 0. Data Flow Control（数据流控制）
+
+✅ 目标
+
+- 确保数据稳定传输
+- 控制节奏、防止拥塞
+- 避免数据丢失/重复
+- 抵御恶意/非恶意导致的 DoS
+
+⚠️ 风险与应对
+
+| 风险                | 描述                     | 对策                           |
+| ------------------- | ------------------------ | ------------------------------ |
+| **数据过载**        | 接收端无法处理高速数据流 | 使用缓冲、速率限制、QoS        |
+| **拥塞攻击**        | 大量连接压垮服务器       | 防火墙、DoS 检测、负载均衡     |
+| **延迟/丢包**       | 高并发或网络瓶颈导致     | 负载均衡 + 冗余架构            |
+| **服务拒绝（DoS）** | 资源耗尽型攻击           | 网络/应用层 DoS 防御（如 WAF） |
+
+#### **负载均衡器（Load Balancer）**
+
+> 将请求“智能地”分配到多台服务器
+
+**负载均衡算法示例**：
+
+- Round-robin（轮询）
+- Least connections（最少连接）
+- Weighted response time（响应时间权重）
+- Resource-based（基于 CPU/内存使用率）
+
+📌 **安全重点**：确保负载均衡设备本身安全，防止它成为单点故障或攻击目标。
+
+An important area of server-based concern, which may include clients as well, is the issue of data flow control. Data flow is the movement of data between processes, between devices, across a network, or over communication channels. Management of data flow ensures not only efficient transmission with minimal delays or latency, but also reliable throughput using hashing and confidentiality protection with encryption. Data flow control also ensures that receiving systems are not overloaded with traffic, especially to the point of dropping connections or being subject to a malicious or even self-inflicted denial of service. When data overflow occurs, data may be lost or corrupted or may trigger a need for retransmission. These results are undesirable, and data flow control is often implemented to prevent these issues from occurring. Data flow control may be provided by networking devices, including routers and switches, as well as network applications and services.
+
+A load balancer is used to spread or distribute network traffic load across several network links or network devices. A load balancer may be able to provide more control over data flow. The purpose of load balancing is to obtain more optimal infrastructure utilization, minimize response time, maximize throughput, reduce overloading, and eliminate bottlenecks. Although load balancing can be used in a variety of situations, a common implementation is spreading a load across multiple members of a server farm or cluster. A load balancer might use a variety of techniques to perform load distribution, including random choice, round robin, load/utilization monitoring, and preferencing. See Chapter 12, “Secure Communications and Network Attacks,” for more on load balancing.
+
+A denial-of-service (DoS) attack can be a severe detriment to data flow control. It is important to monitor for DoS attacks and implement mitigations. See Chapter 17, “Preventing and Responding to Incidents,” for a discussion of these attacks and potential defenses.
+
+### 1. Large-Scale Parallel Data Systems - 并行系统
+
+#### 分类与特性
+
+| 类型                      | 描述                                  | 安全/稳定性                          |
+| ------------------------- | ------------------------------------- | ------------------------------------ |
+| **SMP（对称多处理）**     | 多 CPU/核，**共享 OS 和内存总线**     | 易于集中管理，适用于高 IOPS 场景     |
+| **AMP（非对称多处理）**   | 每个处理器**独立运行 OS**、有专属内存 | 灵活性强，适合任务隔离，但管理复杂   |
+| **MPP（大规模并行处理）** | 上千台节点共同处理一个任务            | 易于横向扩展，但对协调器依赖大、昂贵 |
+
+🧠 联想记忆：
+
+- **SMP**：多个厨师在同一个厨房同时工作（共享资源）
+- **AMP**：多个厨房各自做各自的菜（隔离、可定制）
+- **MPP**：一个主厨调度上千个小厨房完成超级复杂大餐（高并发、高成本）
+
+Parallel data systems or parallel computing is a computation system designed to perform numerous calculations simultaneously. But parallel data systems often go far beyond basic multiprocessing capabilities. They often include the concept of dividing up a large task into smaller elements, and then distributing each subelement to a different processing subsystem for parallel computation. This implementation is based on the idea that some problems can be solved efficiently if broken into smaller tasks that can be worked on concurrently. Parallel data processing can be accomplished by using distinct CPUs or multicore CPUs, virtual systems, or any combination of these. Large-scale parallel data systems must also be concerned with performance, power consumption, and reliability/stability issues.
+
+Within the arena of multiprocessing or parallel processing there are several divisions. The first division is between symmetric multiprocessing (SMP) and asymmetric multiprocessing (AMP).
+
+The scenario where a single computer contains multiple processors that are treated equally and controlled by a single OS is called symmetric multiprocessing (SMP). In SMP, processors share not only a common OS but also a common data bus and memory resources. In this type of arrangement, systems may use a large number of processors. The collection of processors works collectively on a single or primary task, code, or project.
+
+In asymmetric multiprocessing (AMP), the processors are often operating independently of one another. Usually, each processor has its own OS and/or task instruction set, as well as a dedicated data bus and memory resources. Under AMP, processors can be configured to execute only specific code or operate on specific tasks (or specific code or tasks are allowed to run only on specific processors; this might be called affinity in some circumstances).
+
+A variation of AMP is massive parallel processing (MPP), where numerous AMP systems are linked together in order to work on a single primary task across multiple processes in multiple linked systems. Some computationally intensive operations, such as those that support the research of scientists and mathematicians, require more processing power than a single OS can deliver. Such operations may be best served by MPP. MPP systems house hundreds or even thousands of processors, each of which has its own OS and memory/bus resources. Some MPPs have over 10 million execution cores. When the software that coordinates the entire system’s activities and schedules them for processing encounters a computationally intensive task, it assigns responsibility for the task to a single processor (not so different from the Master Control Program [MCP] in the popular movie “Tron”). This processor in turn breaks the task up into manageable parts and distributes them to other processors for execution. Those processors return their results to the coordinating processor, where they are assembled and returned to the requesting application. MPP systems are extremely powerful (not to mention extremely expensive!) and are used in a great deal of computing or computational-based research.
+
+Both types of multiprocessing provide unique advantages and are suitable for different types of situations. SMP systems are adept at processing simple operations at extremely high rates, whereas MPP systems are uniquely suited for processing very large, complex, computationally intensive tasks that lend themselves to decomposition and distribution into a number of subordinate parts.
+
+The arena of large-scale parallel data systems is still evolving. It is likely that many management issues are yet to be discovered and solutions to known issues are still being sought. Large-scale parallel data management is likely a key tool in managing big data and will often involve cloud computing (see Chapter 16), grid computing, or peer-to-peer computing solutions.
+
+### 2. Grid Computing（网格计算）
+
+loosely-coupled 分布式计算网络，用**“志愿节点”**聚合空闲资源完成大任务。
+
+特点
+
+- 参与者可以随时加入/退出
+- 节点来源随机、异构
+- 处理科学任务：如 SETI@Home、蛋白质折叠模拟等
+
+安全问题
+
+| 风险               | 描述                                                       |
+| ------------------ | ---------------------------------------------------------- |
+| **数据外泄**       | 工作包内容对所有节点开放，**不适合处理私密/商业数据**      |
+| **结果不可控**     | 节点可能掉线、延迟、结果出错，影响结果完整性               |
+| **中心化控制风险** | 中央服务器故障或被攻陷，可能导致**任务错配或恶意指令下发** |
+
+📌 考点：**Grid 不适合处理保密性要求高的数据！**
+
+Grid computing is a form of parallel distributed processing that loosely groups a significant number of processing nodes to work toward a specific processing goal. Members of the grid can enter and leave the grid at random intervals. Often, grid members join the grid only when their processing capacities are not being taxed for local workloads. When a system is otherwise in an idle state, it could join a grid group, download a small portion of work, and begin calculations. When a system leaves the grid, it saves its work and may upload completed or partial work elements back to the grid. Many interesting uses of grid computing have developed, including projects seeking out intelligent aliens, performing protein folding, predicting weather, modeling earthquakes, planning financial decisions, and solving for primes.
+
+The biggest security concern with grid computing is that the content of each work packet is potentially exposed to the world. Many grid computing projects are open to the world, so there is no restriction on who can run the local processing application and participate in the grid’s project. This also means that grid members could keep copies of each work packet and examine the contents. Thus, grid projects will not likely be able to maintain secrecy and are not appropriate for private, confidential, or proprietary data.
+
+Grid computing can also vary greatly in computational capacity from moment to moment. Work packets are sometimes not returned, returned late, or returned corrupted. This requires significant reworking and causes instability in the speed, progress, responsiveness, and latency of the project as a whole and with individual grid members. Time-sensitive projects might not be given sufficient computational time to finish by a specific chronological deadline.
+
+Grid computing often uses a central primary core of servers to manage the project, track work packets, and integrate returned work segments. If the central servers are overloaded or go offline, complete failure or crashing of the grid can occur. However, usually when central grid systems are inaccessible, grid members complete their current local tasks and then regularly poll to discover when the central servers come back online. There is also a potential risk that a compromise of the central grid servers could be leveraged to attack grid members or trick grid members into performing malicious actions instead of the intended purpose of the grid community.
+
+### 3. Peer to Peer （P2P网络）
+
+类似 Grid，但没有中央管理；以节点对节点实时互联为基础。
+
+应用场景
+
+- BitTorrent（文件分发）
+- Skype/Zoom（VoIP 通信）
+- 区块链（分布式账本）
+
+⚠️ 安全问题
+
+| 问题         | 描述                         |
+| ------------ | ---------------------------- |
+| **版权风险** | 容易成为非法分发渠道         |
+| **数据泄露** | 缺乏统一加密或身份验证机制   |
+| **难以监管** | 无中央控管，恶意节点难以隔离 |
+| **带宽耗尽** | 无限制的数据交换可压垮网络   |
+
+📌 对比记忆：
+
+- **Grid = 有“指挥部”的志愿军队**
+- **P2P = 每个节点都自己决定怎么连接谁，不受控制**
+
+Peer-to-peer (P2P) technologies are networking and distributed application solutions that share tasks and workloads among peers. This is similar to grid computing; the primary differences are that there is no central management system and the services are usually provided in real time rather than as a collection of computational power. Common examples of P2P include many VoIP services, BitTorrent (for data/file distribution), and tools for streaming audio/music distribution.
+
+Security concerns with P2P solutions include a perceived inducement to pirate copyrighted materials, the ability to eavesdrop on distributed content, a lack of central control/ oversight/management/filtering, and the potential for services to consume all available bandwidth.
+
+#### CISSP 考试重点提示
+
+| 考点               | 常考点类型                 | 正确理解                       |
+| ------------------ | -------------------------- | ------------------------------ |
+| **DoS 与流控关系** | 哪种机制可防止系统过载？   | 流控 + 负载均衡器              |
+| **Grid vs MPP**    | 哪种更适合高保密计算？     | MPP，因为 Grid 数据外泄风险高  |
+| **SMP vs AMP**     | SMP 是共享 OS 和内存的吗？ | ✅ 是，共享一切                 |
+| **P2P 安全隐患**   | 为什么 P2P 被认为不安全？  | 缺乏管理/加密，版权争议        |
+| **负载均衡目标**   | 负载均衡的核心目的？       | 降低延迟，避免瓶颈，提高稳定性 |
+
+快速记忆口诀
+
+**“SMP 同心干，AMP 分头算；MPP 万众一心搞科研。”**
+**“Grid 多人拼图，P2P 没头群舞；负载均衡稳如虎！”**
 
 ## Industrial Control Systems
 

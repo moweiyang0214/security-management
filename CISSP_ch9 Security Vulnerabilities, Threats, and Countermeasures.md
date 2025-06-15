@@ -797,7 +797,7 @@ The arena of large-scale parallel data systems is still evolving. It is likely t
 
 ### 2. Grid Computing（网格计算）
 
-loosely-coupled 分布式计算网络，用“志愿节点”聚合空闲资源完成大任务。
+loosely-coupled 分布式计算网络，用**“志愿节点”**聚合空闲资源完成大任务。
 
 特点
 
@@ -868,13 +868,81 @@ Security concerns with P2P solutions include a perceived inducement to pirate co
 
 ## Industrial Control Systems
 
+
+
 ## Distributed Systems
+
+
 
 ## High-Performance Computing (HPC) Systems
 
+
+
 ## Internet of Things
+
+
 
 ## Edge and Fog Computing
 
+
+
 ## Embedded Devices and Cyber-Physical Systems
+
+### 1. Static Systems
+
+### 2. Network-Enabled Devices
+
+### 3. Cyber-Physical Systems
+
+### 4. Elements Related to Embedded and Static Systems
+
+### 5. Security Concerns of Embedded and Static Systems
+
+## Specialized Devices
+
+## Microservices
+
+## Infra as Code
+
+## Virtualized Systems
+
+### 1. Virtual Software
+
+### 2. Virtualized Networking
+
+### 3. Software-Defined Everything
+
+### 4. Virtualization Security Mangement
+
+## Containerization
+
+## Serverless Architecture
+
+## Mobile Devices
+
+### 1. Mobile Device Security Features
+
+### 2. Mobile Device Deployment Policies
+
+## Essential Security Protection Mechanisms
+
+### 1. Process Isolation
+
+### 2. Hardware Segmentation
+
+### 3. System Security Policy
+
+## Common Security Architecture Flaws and Issues
+
+### 1. Covert Channels
+
+### 2. Attacks Based on Design or Coding Flaws
+
+### 3. Rootkits
+
+### 4. Incremental Attacks
+
+## Summary
+
+## Exam Essentials
 

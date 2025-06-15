@@ -797,7 +797,7 @@ The arena of large-scale parallel data systems is still evolving. It is likely t
 
 ### 2. Grid Computing（网格计算）
 
-loosely-coupled 分布式计算网络，用**“志愿节点”**聚合空闲资源完成大任务。
+loosely-coupled 分布式计算网络，用“志愿节点”聚合空闲资源完成大任务。
 
 特点
 

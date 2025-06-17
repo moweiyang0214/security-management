@@ -797,7 +797,7 @@ The arena of large-scale parallel data systems is still evolving. It is likely t
 
 ### 2. Grid Computing（网格计算）
 
-loosely-coupled 分布式计算网络，用**“志愿节点”**聚合空闲资源完成大任务。
+loosely-coupled 分布式计算网络，用“志愿节点”聚合空闲资源完成大任务。
 
 特点
 
@@ -866,83 +866,862 @@ Security concerns with P2P solutions include a perceived inducement to pirate co
 **“SMP 同心干，AMP 分头算；MPP 万众一心搞科研。”**
 **“Grid 多人拼图，P2P 没头群舞；负载均衡稳如虎！”**
 
-## Industrial Control Systems
+## Industrial Control Systems 工业控制系统安全
 
+**PLC**（Programmable Logic Controller）
+→ 单一设备控制（如装配线上的机械臂）
 
+**DCS**（Distributed Control System）
+→ 控制**多个 PLC 设备**，用于工业生产流程自动化
+→ 更适合**本地部署、实时控制**
+
+**SCADA**（Supervisory Control and Data Acquisition）
+→ 用于**远程监控和控制**广域分布的工业系统
+→ 主要做**数据采集与可视化控制**，可连接 DCS 和 PLC
+
+```
+单点控制      局域控制            广域管理
+   PLC   →   DCS         →      SCADA
+ 控制一个     控制多个设备         控制整个系统/地理区域
+  设备       通信内部PLC等        管理多个DCS与PLC
+```
+
+#### 三者功能对比总结表
+
+| 特性                 | **PLC**                          | **DCS**          | **SCADA**                |
+| -------------------- | -------------------------------- | ---------------- | ------------------------ |
+| 控制范围             | 单一设备                         | 多设备（区域）   | 跨区域、分布式           |
+| 是否具备高级流程控制 | ❌                                | ✅                | ❌                        |
+| 是否支持远程监控     | ❌                                | 限于局域         | ✅                        |
+| 通信对象             | 设备                             | PLC网络          | DCS + PLC网络            |
+| 常见场景             | 自动装配线                       | 精细制造/炼油厂  | 电网/输水管网/交通       |
+| 安全隐患             | 一旦被植入恶意代码可导致系统瘫痪 | 依赖本地网络保护 | 网络攻击面大，需重点保护 |
+
+#### ICS 安全挑战与历史教训
+
+| 问题                 | 描述                             | 代表事件                    |
+| -------------------- | -------------------------------- | --------------------------- |
+| **默认不含安全设计** | 老系统无认证、无加密、开放协议   | 老版 SCADA、Modbus          |
+| **老旧设备广泛部署** | 无法更新补丁，存在零日漏洞       | 化工/能源站常见             |
+| **隔离不彻底**       | 传统认为 OT 与 IT 网络是物理隔离 | 实际常通过 VPN/远程桌面暴露 |
+| **Stuxnet 攻击**     | 第一例针对 SCADA 系统的 Rootkit  | 2010 年伊朗核设施事件       |
+
+📌 **Stuxnet** 是一个经典案例，考试中经常用它来考 ICS 与 SCADA 安全问题。
+
+#### ICS 安全加固建议（CISSP角度）
+
+| 分类           | 控制措施                                                     |
+| -------------- | ------------------------------------------------------------ |
+| **网络层面**   | ICS 网络与企业网络物理/逻辑隔离，使用防火墙、DMZ、空中断开“air gap”策略 |
+| **访问控制**   | 强化物理访问控制，逻辑访问使用 MFA、RBAC                     |
+| **系统硬化**   | 禁用不必要服务，仅运行必要代码                               |
+| **日志与监控** | 所有指令、修改操作需进行完整日志记录与分析                   |
+| **补丁与更新** | 尽可能测试更新补丁后部署，或部署前进行网络层加固防护         |
+| **终端保护**   | 所有远程访问口应有端点检测（如 EDR）、跳板机管控等机制       |
+
+An industrial control system (ICS) is a form of computer-management device that controls industrial processes and machines, also known as operational technology (OT). ICSs are used across a wide range of industries, including manufacturing, fabrication, electricity generation and distribution, water distribution, sewage processing, and oil refining. There are several forms of ICS, including distributed control systems (DCSs), programmable logic controllers (PLCs), and supervisory control and data acquisition (SCADA).
+
+DCS units are typically found in industrial process plants where the need to gather data and implement control over a large-scale environment from a single location is essential. An important aspect of DCS is that the controlling elements are distributed across the monitored environment, such as a manufacturing floor or a production line, and the centralized monitoring location sends commands out of those localized controllers while gathering status and performance data. A DCS might be analog or digital in nature, depending on the task being performed or the device being controlled. For example, a liquid flow value DCS would be an analog system, whereas an electric voltage regulator DCS would likely be a digital system.
+
+A DCS focuses on processes and is state driven, whereas SCADA focuses on datagathering and is event driven. A DCS is used to control processes using a network of sensors, controllers, actuators, and operator terminals and is able to carry out advanced process control techniques. DCS is more suited to operating on a limited scale, whereas SCADA is suitable for managing systems over large geographic areas.
+
+PLC units are effectively single-purpose or focused-purpose digital computers. They are typically deployed for the management and automation of various industrial electromechanical operations, such as controlling systems on an assembly line or a large-scale digital light display (such as a giant display system in a stadium or on a Las Vegas Strip marquee).
+
+A SCADA system can operate as a standalone device, be networked together with other SCADA systems, or be networked with traditional IT systems. SCADA is often referred to as a human-machine interface (HMI) since it enables people to better understand, oversee, manage, and control complex machine and technology systems. SCADA is used to monitor and control a wide range of industrial processes, but it is not able to carry out advanced process control techniques. SCADA can communicate with PLCs and DCS solutions.
+
+Legacy SCADA systems were designed with minimal human interfaces. Often, they used mechanical buttons and knobs or simple LCD screen interfaces (similar to what you might have on a business printer or a GPS navigation device). However, modern networked SCADA devices may have more complex remote-control software interfaces.
+
+A PLC is used to control a single device in a standalone manner. DCS was used to interconnect several PLCs, but within a limited physical range, in order to gain centralized control, management, and oversight through networking. SCADA expanded this to large-scale physical areas to interconnect multiple DCSs and individual PLCs. For example, a PLC can control a single transformer, a DCS can manage a power station, and SCADA can oversee a power grid.
+
+In theory, the static design of SCADA, PLC, and DCS units and their minimal human interfaces should make the system fairly resistant to compromise or modification. Thus, little security was built into these industrial control devices, especially in the past. But there have been several well-known compromises of industrial control systems in recent years; for example, Stuxnet delivered the first-ever-known rootkit to a SCADA system located in a nuclear facility. Many SCADA vendors have started implementing security improvements into their solutions in order to prevent or at least reduce future compromises. However, in practice, SCADA and ICS systems are still often poorly secured, vulnerable, and infrequently updated, and older versions not designed for security are still in widespread use.
+
+Generally, typical security management and hardening processes can be applied to ICS, DCS, PLC, and SCADA systems to improve on whatever security is or isn’t present in the device from the manufacturer. Common important security controls include isolating networks, limiting access physically and logically, restricting code to only essential application, and logging all activity.
+
+The ISA99 standards development committee has established and is maintaining guidelines for securing ICS, DCS, PLC, and SCADA systems. Much of their work is integrated into the International Electrotechnical Commission’s (IEC) 62443 series of standards. To learn more about these standards, visit www.isa.org and iecee.org. NIST maintains ICS security standards in SP 800-82 (csrc.nist.gov/publications/detail/sp/800-82/ rev-2/final). North American Electric Reliability Corporation (NERC) maintains its own security guides for ICS as part of the Critical Infrastructure Protection (CIP) standards (www.nerc.com/pa/Stand/Pages/CIPStandards.aspx), which are similar to those of European Reference Network for Critical Infrastructure Protection (ERNCIP) (erncipproject.jrc.ec.europa.eu).
+
+#### 标准与规范指南（考试考点）
+
+| 标准组织           | 内容                      | 网址提示                                                    |
+| ------------------ | ------------------------- | ----------------------------------------------------------- |
+| **ISA/IEC 62443**  | 国际通用 ICS 安全架构标准 | [isa.org](https://www.isa.org/)                             |
+| **NIST SP 800-82** | ICS 网络安全指南（美）    | [csrc.nist.gov](https://csrc.nist.gov/)                     |
+| **NERC CIP**       | 北美电网安全标准          | [nerc.com](https://www.nerc.com/)                           |
+| **ERNCIP**         | 欧洲关键基础设施保护      | [erncip.jrc.ec.europa.eu](https://erncip.jrc.ec.europa.eu/) |
+
+#### CISSP 考试重点提示
+
+| 题型   | 考点                             | 重点                                     |
+| ------ | -------------------------------- | ---------------------------------------- |
+| 单选题 | 哪种系统适合大规模地理区域控制？ | ✅ SCADA                                  |
+| 单选题 | SCADA 最大的安全挑战是什么？     | ✅ 网络暴露/无安全设计                    |
+| 多选题 | 加固 ICS 系统的最佳做法？        | ✅ 网络隔离、访问限制、最小权限、日志收集 |
+| 场景题 | ICS 被恶意代码控制怎么办？       | ✅ 断网隔离、切换手动控制、调用应急预案   |
+| 记忆题 | ISA/IEC 62443 是什么？           | ✅ 工控安全标准                           |
+
+##### 快速记忆口诀
+
+> **“控一机是 PLC，控一厂是 DCS，控全网才是 SCADA。”**
+> **“SCADA 最怕连公网，安全要靠隔与控。**
 
 ## Distributed Systems
 
+**Distributed Computing Environment (DCE)**：多个互联的计算组件协作完成单一任务的架构。
 
+特性
 
-## High-Performance Computing (HPC) Systems
+- 由多个组件组成，但**对用户呈现为统一整体**
+- 可能是**同构（homogeneous）\**或\**异构（heterogeneous）**
+- 支持并发/异步/容错（fail-soft）
+- 通过 **IDL**（接口定义语言）实现跨语言、跨平台通信
 
+应用场景示例
 
+- DNS、SSO、LDAP
+- MMORPG（大型多人在线游戏）
+- Cloud / SaaS / Blockchain
+- Microservices / SOA / Serverless
+
+分布式系统架构举例
+
+| 架构类型                | 描述                       | 示例               |
+| ----------------------- | -------------------------- | ------------------ |
+| **Client-Server**       | 最基础的一种分布式结构     | Web App、邮件系统  |
+| **Three-Tier**          | 表现层、业务层、数据层分离 | 现代网站结构       |
+| **Multitier**           | 更复杂的模块化架构         | 微服务、微前端     |
+| **P2P**                 | 各节点平等交换资源         | 区块链、BitTorrent |
+| **SOA / Microservices** | 独立服务协同执行任务       | 电商后端、金融服务 |
+
+分布式系统的主要安全挑战
+
+| 风险类别              | 具体内容                       | 影响               |
+| --------------------- | ------------------------------ | ------------------ |
+| **横向移动攻击**      | 一节点被攻陷后可跨组件传播     | 全局失控、数据泄露 |
+| **身份伪装 / 冒充**   | 攻击者伪装合法用户或服务       | Bypass、权限提升   |
+| **通信监听与篡改**    | 中间人攻击（MITM）或未加密传输 | 机密泄露           |
+| **权限管理不统一**    | 不同组件使用不同权限模型       | 零权限越权风险高   |
+| **缺乏集中监控/审计** | 分布式架构导致日志难以统一     | 难以溯源、响应延迟 |
+
+A distributed system or a distributed computing environment (DCE) is a collection of individual systems that work together to support a resource or provide a service. Often a DCE is perceived by users as a single entity rather than numerous individual servers or components. DCEs are designed to support communication and coordination among their members in order to achieve a common function, goal, or operation.
+
+Some DCE systems are composed of homogenous members; others are composed of heterogeneous systems. Distributed systems can be implemented to provide resiliency, reliability, performance, and scalability benefits. Most DCEs exhibit numerous duplicate or concurrent components, are asynchronous, and allow for fail-soft or independent failure of components. A DCE is also known as (or at least described as) concurrent computing, parallel computing, and distributed computing. DCE solutions are implemented as client-server architectures (see the previous client and server sections as well as endpoint coverage in Chapter 11), as a three-tier architecture (such as basic web applications), as multitiered architectures (such as advanced web applications), and as peer-to-peer architectures (such as BitTorrent and most cryptocurrency blockchain ledgers (see Chapter 7). DCE solutions are often employed for scientific and medical research projects, in education projects, and in industrial applications requiring extensive computational resources.
+
+DCE forms the backbone of a wide range of modern internet, business, and communication technologies that you might use regularly, including DNS, single-sign on, directory services, massively multiplayer online role-playing games (MMORPGs), mobile networks, and most websites. DCE also makes possible a plethora of advanced technologies such as serviceoriented architecture (SOA), software-defined networking (SDN), microservices, infrastructure as code, serverless computing, virtualization, and cloud services. A DCE typically includes an Interface Definition Language (IDL). An IDL is a language used to define the interface between client and server processes or objects in a distributed system. IDL enables the creation of interfaces between objects when those objects are in varying locations or are using different programming languages; thus, IDL interfaces are language independent and location independent. There are numerous examples of DCE IDLs or frameworks, such as remote procedure calls (RPCs), the Common Object Request Broker Architecture (CORBA), and the Distributed Component Object Model (DCOM).
+
+There are some security issues inherent with DCE. The primary security concern is the interconnectedness of the components. This configuration could allow for error or malware propagation, and if an adversary compromises one component, it may grant them the ability to compromise other components in the collective through pivoting and lateral movement. Other common issues to consider and address include the following:
+
+- Access by unauthorized users
+- Masquerading, impersonation, and spoofing attacks of users and/or devices
+- Security control bypass or disablement
+- Communication eavesdropping and manipulation
+- Insufficient authentication and authorization
+- A lack of monitoring, auditing, and logging
+- Failing to enforce accountability
+
+The issues in this list are not unique to DCE, but they are especially problematic in a distributed system.
+
+Since distributed systems include members that may be distributed geographically, they have a larger potential attack surface than that of a single system. Thus, it is important to consider the collective threats and risks of the individual member components of a DCE as well as the communications interconnections between them. To secure DCE, encryption is needed for storage, transmission, and processing (such as homomorphic encryption). Also, strong multifactor authentication should be implemented. If a strict homogeneous component set is not maintained, heterogenous systems introduce their own risks, whether different OSs are in use or just different versions or patch levels of the same OS. The more varied the DCE components, the more challenging it is to maintain consistent security configuration, enforcement, monitoring, and oversight. If the DCE is so large or broadly distributed as to cross international boundaries, then data sovereignty issues need to be addressed.
+
+### Blockchain
+
+区块链（Blockchain）在分布式系统中的位置
+
+| 特性             | 描述                               |
+| ---------------- | ---------------------------------- |
+| **不可篡改账本** | 利用哈希链和时间戳保持事务完整性   |
+| **共识机制**     | 回滚操作需超过半数节点同意         |
+| **应用场景**     | 加密货币、供应链管理、合同管理等   |
+| **安全价值**     | 提供数据完整性保障，但不等于保密性 |
+
+**考点提醒**：区块链**防改但不防看**，不能替代加密。
+
+A blockchain is a collection or ledger of records, transactions, operations, or other events that are verified using hashing, timestamps, and transaction data. Each time a new element is added to the record, the whole ledger is hashed again. This system prevents abusive modification of the history of events by providing proof of whether the ledger has retained its integrity.
+
+The concept of blockchain was originally designed as part of the Bitcoin cryptocurrency in 2008. It has since been used because it’s a reliable transactional technology independent of cryptocurrencies.
+
+A distributed ledger or public ledger is hosted by numerous systems across the internet. This provides for redundancy and further supports the integrity of the blockchain as a whole. However, it is possible to reverse, undo, or discard events from the blockchain, but only by reverting to a previous edition of the ledger prior to when the “offending” event was added. But this means all other events since then must be discarded as well. With a public or distributed ledger, this can be accomplished only if a majority (over 50 percent) of the systems supporting/hosting the ledger agree to make the rollback change.
+
+### Data Sovereignty 数据主权
+
+It is the concept that, once information has been converted into a binary form and stored as digital files, it is subject to the laws of the country within which the storage device resides. In light of the growing use of cloud computing and other DCEs, data sovereignty is an important consideration if there are regulations in your industry that require data to remain in your country of origin or if the country of storage has vastly different laws as compared to your country of origin. Data sovereignty can have an impact on privacy, confidentiality, and accessibility of your data.
+
+**一旦数据落地某国，其受该国法律管辖**。
+
+常见影响场景：
+
+- 云服务部署在境外
+- GDPR 要求欧盟用户数据不可跨境
+- 美国 PATRIOT Act 可要求美国公司提交存储在全球的数据
+
+安全考量
+
+| 领域       | 风险                                       |
+| ---------- | ------------------------------------------ |
+| **隐私**   | 非母国法律可能允许访问个人数据             |
+| **可用性** | 地缘政治因素可能导致数据被强制隔离         |
+| **合规性** | 企业可能违反跨境监管政策（如 GDPR, HIPAA） |
+
+CISSP视角：分布式系统的安全措施
+
+| 安全类别           | 对策示例                               |
+| ------------------ | -------------------------------------- |
+| **认证与授权**     | 强制多因素认证、统一 IAM               |
+| **通信安全**       | 使用 TLS / VPN 加密内部通信            |
+| **微分段**         | 控制系统间最小连接路径（如使用 SDN）   |
+| **集中日志审计**   | 使用 SIEM 收集所有节点的日志           |
+| **配置一致性管理** | 自动化配置管理（如 Ansible, Puppet）   |
+| **数据加密**       | 存储+传输+处理（如同态加密）一体化保护 |
+| **主权合规管理**   | 数据地理标签 + 云服务提供商 SLA 审查   |
+
+CISSP 考试重点提示
+
+| 题型   | 考法                           | 正确理解                         |
+| ------ | ------------------------------ | -------------------------------- |
+| 场景题 | 某组件被攻陷，哪类风险最严重？ | 横向移动 / 权限绕过              |
+| 单选题 | 区块链最核心的安全属性是？     | ✅ 数据完整性                     |
+| 多选题 | 分布式系统安全重点措施有哪些？ | ✅ 加密、统一认证、配置管理、审计 |
+| 概念题 | 什么是数据主权？               | 数据受存储地法律控制             |
+| 对比题 | DCE vs 传统系统的安全挑战？    | ✅ 攻击面更广，管理更难，组件更杂 |
+
+快速记忆口诀
+
+> **“分布式虽强，控制不能忘；链中不可改，传输需加码；数据落哪国，法律别犯错。”**
+
+- 分布式 = 多节点，管理更难
+- 区块链 = 不可篡改，但不等于保密
+- 主权合规 = 你在哪里存数据，你就受哪里的法律约束
+
+## High-Performance Computing (HPC) Systems 高性能计算系统
+
+HPC = 针对**大规模复杂计算或实时数据处理**需求设计的超高速计算平台。
+
+### 应用场景
+
+| 领域     | 示例                            |
+| -------- | ------------------------------- |
+| 科学研究 | 气候模拟、宇宙模拟、药物设计    |
+| 工业工程 | CAD/CAE、模拟仿真、制造流程优化 |
+| 商业分析 | 高频交易、大数据分析、3D建模    |
+| 人工智能 | 神经网络训练、自然语言处理      |
+| 医疗健康 | 基因序列分析、癌症检测          |
+
+### 架构三要素
+
+| 组件                       | 描述                             | 安全风险                   |
+| -------------------------- | -------------------------------- | -------------------------- |
+| **计算资源（Compute）**    | 多核心 CPU/GPU、大规模分布式系统 | 单点漏洞、越权计算滥用     |
+| **网络能力（Networking）** | 低延迟高带宽互连                 | 拒绝服务攻击、数据窃听     |
+| **存储容量（Storage）**    | 快速读取大数据集                 | 数据泄露、残留、合规性问题 |
+
+⚠️ **性能瓶颈 → 安全瓶颈**：慢速 I/O 或网络不仅影响效率，也会拖慢防护检测响应。
+
+High-performance computing (HPC) systems are computing platforms designed to perform complex calculations or data manipulations at extremely high speeds. Super computers and MPP solutions are common examples of HPC systems. HPC systems are used when real-time or near-real-time processing of massive data is necessary for a particular task or application. These applications can include scientific studies, industrial research, medical analysis, societal solutions, and commercial endeavors.
+
+Many of the products and services we use today, including mobile devices and their apps, IoT devices, ICS solutions, streaming media, voice assistants, 3D modeling and rendering, and AI/ML calculations, all depend on HPC to exist. As the population of internet and computing devices increase, as the datasets being collected continue to increase exponentially, and as new uses of that data and those devices are conceived, HPC will be in even greater demand in the future.
+
+An HPC solution is composed of three main elements: compute resources, network capabilities, and storage capacity. Each element must be able to provide equivalent capabilities in order to optimize overall performance. If storage is too slow, then data cannot be fed to the application processing on the compute resources. If networking capacity is not sufficient, then users of a resource will experience latency or even a benign denial of service (DoS).
+
+### RTOS（Real-Time Operating System）
+
+RTOS = 针对“实时响应”需求设计的操作系统，**以确定性响应速度为核心目标**。
+
+#### 两种实时性
+
+| 类型                         | 描述                               | 示例                        |
+| ---------------------------- | ---------------------------------- | --------------------------- |
+| **硬实时（Hard Real-Time）** | 必须在确定时间内响应，否则后果严重 | 飞控系统、自动驾驶          |
+| **软实时（Soft Real-Time）** | 一定延迟可容忍，尽量减少延迟即可   | 数位笔、音频播放、AR/VR渲染 |
+
+#### 两种调度机制
+
+| 类型           | 描述                                   |
+| -------------- | -------------------------------------- |
+| **事件驱动型** | 根据任务优先级动态切换（高优先级抢占） |
+| **时间共享型** | 根据时钟中断、时间片轮转调度           |
+
+A concept related to HPC is that of the real-time OS (RTOS). Often HPCs implement RTOS compute capability or otherwise attempt to achieve real-time processing and operations.
+
+A real-time operating system (RTOS) is designed to process or handle data as it arrives on the system with minimal latency or delay. An RTOS is usually stored on read-only memory (ROM) and is designed to operate in a hard real-time or soft real-time condition. A hard real-time solution is for mission-critical operations where delay must be eliminated or minimized for safety, such as autonomous cars. A soft real-time solution is used when some level of modest delay is acceptable under typical or normal conditions, as it is for most consumer electronics, such as the delay between a digitizing pen and a graphics program on a computer.
+
+RTOSs can be event-driven or time-sharing. An event-driven RTOS will switch between operations or tasks based on preassigned priorities. A time-sharing RTOS will switch between operations or tasks based on clock interrupts or specific time intervals. An RTOS is often implemented when scheduling or timing is the most critical part of the task to be performed.
+
+A security concern using RTOSs is that these systems are often focused and singlepurpose, leaving little room for security. They often use custom or proprietary code, which may include unknown bugs or flaws that could be discovered by attackers. An RTOS might be overloaded or distracted with bogus datasets or process requests by malware. When deploying or using RTOSs, use isolation and communication monitoring to minimize abuses.
+
+#### HPC / RTOS 的安全挑战
+
+| 问题                     | 描述                                         | 举措                    |
+| ------------------------ | -------------------------------------------- | ----------------------- |
+| **系统精简不含安全模块** | RTOS 常常仅包含最基本运行逻辑，无防火墙/认证 | 外部加固、最小可用网络  |
+| **专用代码或固件风险**   | 专用硬件使用私有代码，难以检测漏洞           | 代码审计、通信控制      |
+| **资源诱骗（数据泛洪）** | 虚假数据或攻击可占满实时处理通道             | 限速机制、隔离系统      |
+| **恶意中断干扰**         | 定时攻击扰乱任务调度（软实时风险高）         | 时钟保护、完整性监测    |
+| **难以更新补丁**         | 固件/ROM系统更新困难，长期暴露风险           | 网络隔离 + 静态加固设计 |
+
+📌 **考试关注**：RTOS = **确定性 > 功能性**，因此安全模块通常不内建，要额外部署。
+
+#### 与其他系统的对比关系
+
+| 类型                            | 描述               | 调度重点           | 是否实时             |
+| ------------------------------- | ------------------ | ------------------ | -------------------- |
+| **通用 OS（如 Linux/Windows）** | 多功能、多任务     | 响应尽量快         | ❌                    |
+| **RTOS（嵌入式控制系统）**      | 高速实时、任务唯一 | **响应时间恒定**   | ✅                    |
+| **HPC 平台（超级计算）**        | 并发大任务处理     | 计算吞吐、数据并行 | 可近实时，但非主目标 |
+
+#### 安全实践建议（CISSP 实战思路）
+
+| 分类             | 控制措施                                         |
+| ---------------- | ------------------------------------------------ |
+| **网络保护**     | 强隔离、防护 RTOS 控制接口、内网流量加密         |
+| **系统加固**     | 移除未使用模块，防止代码注入，固化配置           |
+| **输入验证**     | 对 RTOS 输入源进行完整性校验、白名单机制         |
+| **资源调度控制** | 使用任务优先级保护关键线程，拒绝低优先级泛滥请求 |
+| **异常监测**     | 利用外部监控系统侦测执行偏差、资源异常           |
+
+#### CISSP 考试重点提示
+
+| 考题类型 | 考点                       | 正确理解                           |
+| -------- | -------------------------- | ---------------------------------- |
+| 场景题   | 自动驾驶系统使用何种 OS？  | ✅ 硬实时 RTOS                      |
+| 单选题   | 哪类系统最注重确定性响应？ | ✅ RTOS                             |
+| 多选题   | HPC 系统设计三大元素？     | ✅ 计算、网络、存储                 |
+| 安全考点 | RTOS 系统的最大风险？      | ✅ 缺乏内建安全性、攻击面小但危险大 |
+| 对比题   | RTOS 与一般 OS 最大区别？  | ✅ 响应确定性 vs 功能多样性         |
+
+**“HPC 重吞吐，RTOS 抓时度；超算靠联动，实时靠速度。”**
+
+- HPC = 高吞吐大数据并发
+- RTOS = 秒级响应、控制核心设备
+- 安全靠加固，不靠原生功能！
 
 ## Internet of Things
 
+| 项目     | **IoT（Internet of Things）**        | **Embedded Systems（嵌入式系统）** |
+| -------- | ------------------------------------ | ---------------------------------- |
+| 概念     | 具有联网能力的智能设备               | 内嵌在设备中的专用控制系统         |
+| 独立性   | 可以是独立硬件                       | 通常是集成于设备内部               |
+| 联网能力 | ✅（几乎默认接入网络）                | ❌ 可选，常常无网络                 |
+| 示例     | 智能摄像头、智能门铃、手环、语音助手 | 微波炉控制板、汽车电控系统         |
 
+📌 **考点提示**：IoT 是“独立、联网、可远程控制”的智能硬件，而嵌入式系统是“内嵌控制”的。
 
-## Edge and Fog Computing
+#### IoT 面临的主要安全挑战
 
+| 风险类型            | 描述                        | 案例                 |
+| ------------------- | --------------------------- | -------------------- |
+| **弱配置/默认密码** | 出厂默认账号常未更改        | Mirai 僵尸网络       |
+| **缺乏加密**        | 数据传输无加密              | 语音助手被监听       |
+| **无补丁更新机制**  | 固件无法升级                | 漏洞长期暴露         |
+| **隐私泄露**        | 传感器/摄像头泄露信息       | 儿童玩具监听隐私     |
+| **横向入侵跳板**    | 攻击者控制 IoT 设备进入内网 | 通过打印机攻击企业网 |
+| **未隔离的网络**    | 所有设备在同一子网中        | IoT 成为攻击入口     |
+| **供应链问题**      | 不受信任厂商，硬件后门      | 便宜摄像头含间谍模块 |
 
+#### 安全部署建议：企业与家庭适用
 
-## Embedded Devices and Cyber-Physical Systems
+| 安全措施                        | 描述                                                 |
+| ------------------------------- | ---------------------------------------------------- |
+| **网络隔离（VLAN/路由器划分）** | 与主业务网断开，三层路由隔离                         |
+| **设备硬化**                    | 改默认密码、关闭不必要功能                           |
+| **补丁与更新机制**              | 定期检查固件更新、启用自动更新                       |
+| **物理访问控制**                | 防止设备被盗用或物理篡改                             |
+| **最小权限配置**                | 只开放必要服务端口与 API                             |
+| **日志监控**                    | 使用 SIEM 或日志分析系统记录设备行为                 |
+| **选择可信厂商**                | 评估安全声明、安全更新历史、安全认证（如 ISO 27001） |
+
+📌 **CISSP 提示**：IoT 安全首要原则就是 **“不信任出厂默认配置”**！
+
+#### 特殊场景：IIoT（工业物联网）
+
+工业物联网（**IIoT**）是 IoT 在工业与基础设施中的进阶版本，常结合 **ICS、DCS、SCADA** 系统。
+
+| 应用领域     | 示例                               |
+| ------------ | ---------------------------------- |
+| 制造业       | 自动流水线、焊接机械臂、预测性维护 |
+| 公共基础设施 | 电网、排水、交通信号控制           |
+| 环境感知     | 城市空气/噪声监测、水位传感器      |
+| 工业自动化   | 边缘计算 + 云计算优化控制流程      |
+
+#### 安全风险升级
+
+- 与 OT 系统耦合（ICS）
+- 连入云服务（云暴露）
+- 使用边缘/雾计算（边界模糊）
+- 可能跨国部署（数据主权问题）
+
+#### 企业 IoT 典型部署案例：三路由器模型（Three Dumb Routers）
+
+一种家庭或小型组织 IoT 隔离策略，适用于不懂 VLAN 的场景
+
+```
+        ┌──────────────┐
+        │  Internet    │
+        └────┬─────────┘
+             ↓
+        ┌──────────────┐
+        │ Router A (主)│ ← 管理主业务网（办公网络）
+        └────┬─────────┘
+             ↓
+        ┌──────────────┐
+        │ Router B     │ ← 客户访客 Wi-Fi
+        └────┬─────────┘
+             ↓
+        ┌──────────────┐
+        │ Router C     │ ← IoT 网络（电视、音箱、传感器）
+        └──────────────┘
+```
+
+📌 **层层隔离，控制信任边界；简单粗暴，却很有效。**
+
+#### IoT 相关CISSP标准
+
+| 组织      | 文档                                                         | 链接               |
+| --------- | ------------------------------------------------------------ | ------------------ |
+| **NIST**  | [SP 800-213](https://csrc.nist.gov/publications/detail/sp/800-213/final) IoT 安全框架 | IoT Risk Framework |
+| **OWASP** | [IoT Top 10](https://owasp.org/www-project-internet-of-things/) | 漏洞清单与缓解建议 |
+| **ISO**   | ISO/IEC 30141:2018 IoT 架构参考模型                          | IoT 建模与治理基础 |
+
+#### CISSP 考试重点提示
+
+| 题型   | 考法                         | 正确理解                                 |
+| ------ | ---------------------------- | ---------------------------------------- |
+| 场景题 | 公司摄像头被入侵，如何防御？ | 网络隔离 + 默认配置检查                  |
+| 多选题 | IoT 安全加固方法             | ✅ 网络隔离、最小权限、补丁更新、物理安全 |
+| 单选题 | IoT 与嵌入式系统最大区别？   | ✅ 独立联网 vs 嵌入整机结构中             |
+| 术语题 | IIoT 属于哪个系统演进？      | ICS / OT 系统结合云计算                  |
+| 原则题 | IoT 安全最关键意识？         | ✅ 不信任默认设置，必须手动硬化           |
+
+快速记忆口诀
+
+> **“万物皆可联，默认最危险；连网不隔离，漏洞遍地起。”**
+> **“物联网重配置，隔离分网强防御。”**
+
+Smart devices are a range of devices that offer the user a plethora of customization options, typically through installing apps, and may take advantage of on-device or in-the-cloud machine learning (ML) processing. The products that can be labeled “smart devices” are constantly expanding and already include smartphones, tablets, music players, home assistants, extreme sport cameras, virtual reality/augmented reality (VR/AR) systems, and fitness trackers.
+
+The Internet of Things (IoT) is a class of smart devices that are internet-connected in order to provide automation, remote control, or AI processing to appliances or devices. IoT may often perform functions and operate similar to an embedded system, but they are different. An IoT device is almost always a separate and distinct hardware device that is used on its own or in conjunction with an existing system (such as a smart IoT thermostat for a heating, ventilation, and air-conditioning [HVAC] system). An embedded system is one where the computer control component has been integrated into the structure, design, and operation of the larger mechanism, often even built into the same chassis or case.
+
+The security issues related to IoT are often about access and encryption. All too often an IoT device was not designed with security as a core concept or even an afterthought. This has resulted in numerous home and office network security breaches. Additionally, once an attacker has remote access to or through an IoT device, they may be able to access other devices on the compromised network. When electing to install IoT equipment, evaluate the security of the device as well as the security reputation of the vendor. If the device does not have the ability to meet or accept your existing security baseline, then don’t compromise your security just for a flashy gadget.
+
+One possible secure implementation is to deploy a distinct network for the IoT equipment, which is kept separate and isolated from the primary network. This configuration is often known as three dumb routers. Other standard security practices are beneficial to IoT, including keeping systems patched, limiting physical and logical access, monitoring all activity, and implementing firewalls and filtering.
+
+Although we often associate smart devices and IoT with home or personal use, they are also a concern to every organization. This is partly because of the use of mobile devices by employees within the company’s facilities and even on the organizational network.
+
+Another concern is that many IoT or networked automation devices are often used in the business environment. This includes environmental controls, such as HVAC management, air quality control, debris and smoke detection, lighting controls, door automation, personnel and asset tracking, and consumable inventory management and auto-reordering (such as coffee, snacks, printer toner, paper, and other office supplies). Thus, both smart devices and IoT devices are potential elements of a modern business network that need appropriate security management and oversight. For some additional reading on the importance of proper security management of smart devices and IoT equipment, see “NIST Initiatives in IoT”
+
+A common IoT device deployed in a business environment is sensors. Sensors can measure just about anything, including temperature, humidity, light levels, dust particles, movement, acceleration, and air/liquid flow. Sensors can be linked with cyber-physical systems to automatically adjust or alter operations based on the sensor’s measurements, such as turning on the air conditioning when the temperature rises above a threshold. Sensors can also be linked to ICS, DCS, and SCADA solutions.
+
+The precautions related to facility automation devices are the same as for smart devices, IoT, and wearables. Always consider the security implications, evaluate the included or lacking security features, consider implementing the devices in an isolated network away from your other computer equipment, and only use solutions that provide robust authentication and encryption.
+
+Often IoT devices—in fact, almost all hardware and software—will have insecure or weak defaults. Never assume defaults are good enough. Always evaluate the setting and configuration options of acquired IoT products and make changes that optimize security and support business functions. This is especially relevant to default passwords, which must always be changed and verified.
+
+**Industrial Internet of Things (IIoT)** is a derivative of IoT that focuses more on industrial, engineering, manufacturing, or infrastructure level oversight, automation, management, and sensing. IIoT is an evolution of ICS and DCS that integrates cloud services to perform data collection, analysis, optimization, and automation. Examples of IIoT include edge computing and fog computing (see the section “Edge and Fog Computing,” earlier in this chapter).
+
+## Edge and Fog Computing（边缘计算，雾计算）
+
+#### 核心概念对比：Edge vs Fog Computing
+
+| 特征           | **Edge Computing**（边缘计算） | **Fog Computing**（雾计算）    |
+| -------------- | ------------------------------ | ------------------------------ |
+| **计算位置**   | 在设备本地（网络边缘）         | 在本地网络节点（LAN 层）       |
+| **处理模式**   | 分布式、自主处理               | 局部集中式处理                 |
+| **延迟性**     | 极低，适合实时响应             | 较低，仍依赖局部中心           |
+| **示例设备**   | 智能摄像头、自动驾驶汽车       | 本地服务器、网关、控制器       |
+| **适用场景**   | 快速、分布式响应需求场景       | 本地聚合计算与协调场景         |
+| **数据流向**   | 处理数据**不出本地设备**       | 数据汇总至**局域中心设备**处理 |
+| **与云的关系** | 补充云计算，实现“近端处理”     | 云前缓冲与本地调度层           |
+
+**一句话总结**：
+
+- **Edge = 就地决策，就地处理**
+- **Fog = 局域中心智能调度**
+
+#### 架构演进流程图（从中心到边缘）
+
+```
+Mainframe → Client/Server → Cloud → Fog → Edge
+   |            |            |       |     |
+中心计算      分布处理        虚拟集中 本地调度 本地处理
+```
+
+**Mainframe**：集中大机房计算
+
+**Client/Server**：服务器分担任务
+
+**Cloud**：虚拟化中心远程计算
+
+**Fog**：LAN 层的协调与决策中心
+
+**Edge**：数据来源处直接完成计算处理
+
+**Edge computing** is a philosophy of network design where data and the compute resources are located as close as possible in order to optimize bandwidth use while minimizing latency. In edge computing, the intelligence and processing are contained within each device. Thus, rather than having to send data off to a master processing entity, each device can process its own data locally. The architecture of edge computing performs computations closer to the data source, which is at or near the edge of the network. This is distinct from performing processing in the cloud on data transmitted from remote locations. Edge computing is often implemented as an element of IIoT (Industrial Internet of Things) solutions, but edge computing is not limited to this type of implementation.
+
+**Edge computing** can be viewed as the next evolution of computing concepts. Originally, computing was accomplished on core mainframe computers where applications were executed on the central system but where controlled or manipulated via thin clients. Then the distributed concept of client/server moved computing out to endpoint devices. This allowed for the execution of decentralized applications (i.e., not centrally controlled) that ran locally on the endpoint system. From there, virtualization led to cloud computing. Cloud computing is a type of centralized application execution on remote data center systems, controlled remotely by endpoints. Finally, edge computing is the use of devices that are close to or at the endpoint where applications are centrally controlled but the actual execution is as close to the user or network edge as possible.
+
+One potential use for edge devices is the deployment of mini-web servers by ISPs to host static or simple pages for popular sites that are located nearer to the bulk of common visitors than the main web servers. This speeds up the initial access to the front page of a popular organization’s web presence, but then subsequent page visits are directed to and served by core or primary web servers that may be located elsewhere. Other examples of edge computing solution include security systems, motion detecting cameras, image recognition systems, IoT and IIoT devices, self-driving cars, optimized content delivery network (CDN) caching, medical monitoring devices, and video conferencing solutions.
+
+**Fog computing** is another example of advanced computation architectures, which is also often used as an element in an IIoT deployment. Fog computing relies on sensors, IoT devices, or even edge computing devices to collect data, and then transfer it back to a central location for processing. The fog computing processing location is positioned in the LAN. Thus, with fog computing, intelligence and processing are centralized in the LAN. The centralized compute power processes information gathered from the fog of disparate devices and sensors.
+
+In short, edge computing performs processing on the distributed edge systems, whereas fog computing performs centralized processing of the data collected by the distributed sensors. Both edge and fog computing can often take advantage of or integrate the use of microcontrollers, embedded devices, static devices, cyber-physical systems, and IoT equipment.
+
+#### 应用场景对比
+
+| 场景            | 推荐架构   | 原因                       |
+| --------------- | ---------- | -------------------------- |
+| 自动驾驶汽车    | Edge       | 毫秒级响应，不能依赖网络   |
+| 工厂设备协调    | Fog        | 多传感器集中控制，统一逻辑 |
+| 内容分发（CDN） | Edge       | 靠近用户，提高加载速度     |
+| 医疗监测设备    | Edge + Fog | 数据初处理后本地中转分析   |
+| 智慧城市摄像头  | Fog        | 管控摄像头、聚合分析       |
+
+#### 安全挑战与策略
+
+##### Edge/Fog 特有风险
+
+| 风险                       | 描述                          |
+| -------------------------- | ----------------------------- |
+| **分布式攻击面广**         | 每个节点都是潜在攻击入口      |
+| **设备安全难统一**         | 使用微控制器/IoT 硬件种类繁多 |
+| **缺乏统一认证/更新机制**  | 易被利用为僵尸网络节点        |
+| **数据本地处理隐私暴露**   | 本地存储敏感数据容易泄露      |
+| **边缘设备不含加密或日志** | 无检测、响应能力              |
+
+#### 安全建议（CISSP导向）
+
+| 控制项                 | 描述                             |
+| ---------------------- | -------------------------------- |
+| **身份验证统一化**     | 使用集中身份管理（如 IAM + PKI） |
+| **零信任架构**         | 每个节点都需独立认证、细粒度授权 |
+| **微分段策略**         | 网络与物理隔离，最小连接路径     |
+| **日志回传与集中监控** | 所有边缘行为必须上报             |
+| **自动更新机制**       | 建立统一 OTA 更新平台            |
+| **数据加密**           | 存储+传输+处理三位一体加密机制   |
+
+#### 考试关联知识体系
+
+| 概念                       | 所属模块                  | 示例考点                            |
+| -------------------------- | ------------------------- | ----------------------------------- |
+| **Edge Computing**         | 物联网、分布式架构        | 哪种架构适合本地快速响应？          |
+| **Fog Computing**          | ICS / IIoT / LAN 集中控制 | 什么用于本地传感器聚合处理？        |
+| **Cyber-Physical Systems** | 嵌入式、RTOS、智能控制    | RTOS 安装于何处？与 Edge 结合如何？ |
+| **Data Locality**          | 数据主权与延迟优化        | 为什么采用边缘处理而非云端？        |
+
+## Embedded Devices(嵌入式设备) and Cyber-Physical Systems (CPS) 
+
+| 概念                             | 定义                                                 | 示例                              |
+| -------------------------------- | ---------------------------------------------------- | --------------------------------- |
+| **Embedded System**              | 集成在设备中的专用计算组件，用于控制/自动化/远程监控 | 智能打印机、工业焊接臂、医疗设备  |
+| **Microcontroller**              | 小型片上计算单元（CPU+存储+I/O）                     | Arduino、Raspberry Pi             |
+| **Static System**                | 非持久化、不允许用户修改状态的系统                   | 机场自助值机机、宾馆公共电脑、ATM |
+| **Network-Enabled Device**       | 自带联网功能的设备                                   | 智能电视、路由器、机顶盒          |
+| **Cyber-Physical System（CPS）** | 控制物理世界的计算系统                               | 自动驾驶、智能家居控制、智能电网  |
+| **IIoT**                         | 工业级物联网，用于监测、分析与自动化                 | 工厂传感器与边缘计算网关          |
+
+注意：
+
+- **嵌入式系统 ≠ CPS ≠ IoT**，但三者往往重叠。
+- 大多数嵌入式设备是**静态系统（Static）**，不支持动态变更、补丁更新困难。
+
+#### 架构层次图：从通用计算到嵌入式控制
+
+```
+┌────────────────────────┐
+│ General Purpose Systems│  ⟶  云服务器、台式机、笔记本
+└────────────────────────┘
+            ↓
+┌────────────────────────┐
+│ Embedded Systems       │  ⟶  打印机、电视、摄像头
+└────────────────────────┘
+            ↓
+┌────────────────────────┐
+│ Cyber-Physical Systems │  ⟶  空调系统、焊接臂、遥控探测车
+└────────────────────────┘
+            ↓
+┌────────────────────────┐
+│ IIoT / IoT             │  ⟶  控制系统、智能传感器、远程控制平台
+└────────────────────────┘
+```
+
+#### 安全风险总览与分层管控
+
+##### 核心风险
+
+| 类型                         | 描述                                    |
+| ---------------------------- | --------------------------------------- |
+| **无法升级/打补丁**          | 固件更新机制缺失或依赖厂商响应          |
+| **默认/硬编码凭据**          | 用户无法更改，攻击者轻易利用            |
+| **弱加密或预共享密钥**       | 加密算法落后，秘钥管理差                |
+| **资源限制无法部署传统安全** | CPU、内存、电力不足，无法运行防护机制   |
+| **攻击入口**                 | 设备可能作为“跳板”进入主网络或用于 DDoS |
+| **供应链风险**               | 设备厂商或后端云平台可信度低            |
+
+#### 安全控制措施与建议（CISSP视角）
+
+##### 网络分段 & 隔离
+
+- 使用 **VLAN、空中断网（Air Gap）、隔离子网** 管理嵌入式与静态设备
+- 应用 **ISFW（内部分段防火墙）** 控制横向移动风险
+
+##### 身份认证控制
+
+- 拒绝使用默认凭据，强制更换
+- 尽可能使用 **设备认证（如 mutual certificate authentication）**
+
+##### 固件与软件管理
+
+- 使用**受控更新流程（manual update）**而非自动推送
+- 检查数字签名、来源验证（可使用“wrapper”机制）
+
+##### 日志与监控
+
+- 使用**外部 SIEM** 或日志服务器收集活动信息
+- 针对 CPS 设置传感器行为阈值报警
+
+##### 物理 & 逻辑安全
+
+- 避免设备暴露于不可信环境（如公共接入区）
+- 施加物理锁定与远程访问限制
+
+#### 设备示例安全分析（考试可能出现）
+
+| 设备                  | 类型              | 风险提示                           |
+| --------------------- | ----------------- | ---------------------------------- |
+| **智能打印机（MFD）** | 嵌入式 + 网络设备 | 打印任务泄露，远程控制面板存在漏洞 |
+| **ATM/值机终端**      | 静态系统          | 用户信息未清除，系统恢复未完全     |
+| **Raspberry Pi**      | 微控制器/嵌入式   | 使用公共镜像，系统默认口令易被滥用 |
+| **自助医疗设备**      | CPS + IoT         | 数据存储未加密，蓝牙数据广播暴露   |
+| **智能摄像头**        | IoT/嵌入式        | 云服务弱认证，后门或监听漏洞       |
+
+#### 考试重点提示
+
+| 考点类型 | 问题样式                       | 正确理解                          |
+| -------- | ------------------------------ | --------------------------------- |
+| 概念类   | Cyber-Physical System 是什么？ | 控制物理环境的计算系统            |
+| 应用类   | 哪些是静态环境示例？           | ✅ ATM、宾馆公共电脑、固定的 kiosk |
+| 风险类   | 为什么嵌入式设备难以防护？     | ✅ 资源限制、不可升级、默认口令    |
+| 控制类   | 如何保护 IoT/嵌入式设备？      | ✅ 网络隔离、更新审查、最小权限    |
+| 拓展类   | 什么是 wrapper？               | ✅ 限制更新渠道的验证封装          |
+
+##### 快速记忆口诀
+
+> **“嵌入物理控，更新难、口令同；不信默认网，隔离是王道。”**
+
+解释：
+
+- 嵌入式设备控制现实世界
+- 固件难更新、默认密码泛滥
+- 网络不能混用主业务网
+- 最安全做法是网络分段和“零信任”
+
+------
+
+##### 总结建议
+
+嵌入式与静态设备的安全管理不同于通用服务器与终端，需要：
+
+- **更细粒度的网络管理**
+- **更严格的更新策略**
+- **更主动的风险评估**
+
+An embedded system is any form of computing component added to an existing mechanical or electrical system for the purpose of providing automation, remote control, and/or monitoring. The embedded system is typically designed around a limited set of specific functions in relation to the larger product to which it is attached. It may consist of the same components found in a typical computer system, or it may be a microcontroller (an integrated chip with onboard memory and peripheral ports).
+
+Embedded systems can be a security risk because they are generally static systems, meaning that even the administrators who deploy them have no real means to alter the device’s operations in order to address security vulnerabilities. Some embedded systems can be updated with patches from the vendor, but often patches are released months after a known exploit is found in the wild. It is essential that embedded systems be isolated from the internet and from a private production network to minimize exposure to remote exploitation, remote control, or malware compromise.
+
+Security concerns for embedded systems include the fact that most are designed with a focus on minimizing cost and extraneous features. This often leads to a lack of security and difficulty with upgrades or patches. Because an embedded system may be in control of a mechanism in the physical world, a security breach could cause harm to people and property.
+
+#### Microcontrollers
+
+A microcontroller is similar to, but less complex than a system on a chip, or SoC (see Chapter 11). A microcontroller may be a component of an SoC. A microcontroller is a small computer consisting of a CPU (with one or more cores), memory, various input/ output capabilities, RAM, and often nonvolatile storage in the form of flash or ROM/ PROM/EEPROM. Examples include Raspberry Pi, Arduino, and a field-programmable gate array (FPGA).
+
+1. **Raspberry Pi** is a popular example of a 64-bit microcontroller or a single-board computer. These types of microcontrollers provide a small form-factor computer that can be used to add computer control and monitoring almost anything. A Raspberry Pi includes a CPU, RAM, video, and peripheral support (via USB), and some include onboard networking. The Raspberry Pi includes its own custom OS, but dozens of alternative OSs can be installed as a replacement. There is a broad and diverse development community around the Raspberry Pi that is using it as part of science experiments to control coffeemakers.
+2. **Arduino** is an open source hardware and software organization that creates singleboard 8-bit microcontrollers for building digital devices. An Arduino has limited RAM, a single USB port, and I/O pins for controlling additional electronics (such as servo motors or LED lights), and does not include an OS. Instead, Arduino can execute C++ programs specifically written to its limited instruction set. Whereas Raspberry Pi is a miniature computer, Arduino is a much simpler device.
+3. **A field-programmable gate array (FPGA)** is a flexible computing device intended to be programmed by the end user or customer. FPGAs are often used as embedded devices in a wide range of products, including industrial control systems (ICSs).
 
 ### 1. Static Systems
 
+Static systems (aka static environments) is a set of conditions, events, and surroundings that don’t change. In theory, once understood, a static environment doesn’t offer new or surprising elements. A static IT environment is any system that is intended to remain unchanged by users and administrators. The goal is to prevent, or at least reduce, the possibility of a user implementing change that could result in reduced security or functional operation. This is also known as a nonpersistent environment or a stateless system, as opposed to a persistent environment or stateful system, which allows changes and retains them between access events and reboots.
+
+Examples of static systems include the check-in kiosk at the airport, an ATM, and often the complimentary guest computer at a hotel or library. Those guest computers are configured to provide the user with a temporary desktop environment to perform a restricted range of tasks. However, when the user terminates their session due to timeout or logging out, the system discards all the previous sessions information and changes and restores a pristine version of the environment for the next user. Static systems can be implemented in a variety of ways, including using local VMs or remotely accessed VDI (Virtual Desktop Infrastructure).
+
+In technology, static environments are applications, OSs, hardware sets, or networks that are configured for a specific need, capability, or function, and then set to remain unaltered. However, although the term static is used, there are no truly static systems. There is always the chance that a hardware failure, a hardware configuration change, a software bug, a software-setting change, or an exploit may alter the environment, resulting in undesired operating parameters or actual security intrusions.
+
+Sometimes the phrase static OS is used to refer to the concept of a static system/environment or to indicate a slight variation. That variation is that the OS itself is beyond the ability of the user to change but the user can install or use applications. Often, those applications may be limited, restricted, or controlled in order to avoid allowing an application to alter the otherwise static OS. Some potential examples of static OSs would be smart TVs, gaming systems/consoles, or mobile devices where only applications from a vendor-controlled app store can be installed.
+
 ### 2. Network-Enabled Devices
+
+Network-enabled devices are any type of device (whether mobile or stationary) that has native network capabilities. This generally assumes the network in question is a wireless type of network, primarily that provided by a mobile telecommunications company. However, it can also refer to devices that connect to Wi-Fi (especially when they can connect automatically), devices that share data connectivity from a wireless telco service (such as a mobile hot spot), and devices with RJ-45 jacks to receive a standard Ethernet cable for a wired connection. Network-enabled devices include smartphones, mobile phones, tablets, smart TVs, settop boxes, or an HDMI-stick streaming-media player (such as a Roku Player, Amazon Fire TV, or Google TV [previously known as Android TV and Chromecast]), network-attached printers, game systems, and much more. Examples of embedded systems include networkattached printers, smart TVs, HVAC controls, smart appliances, smart thermostats, vehicle entertainment/driver assist/self-driving systems, and medical devices. Network-enabled devices may be embedded systems or used to create embedded systems. Network-enabled devices are also often static systems.
 
 ### 3. Cyber-Physical Systems
 
+Cyber-physical systems refer to devices that offer a computational means to control something in the physical world. In the past, these might have been referred to as embedded systems, but the category of cyber-physical seems to focus more on the physical world results rather than the computational aspects. Cyber-physical devices and systems are essentially key elements in robotics and sensor networks. Basically, any computational device that can cause a movement to occur in the real world is considered a robotic element, whereas any such device that can detect physical conditions (such as temperature, light, movement, and humidity) is a sensor. Examples of cyber-physical systems include prosthetics to provide human augmentation or assistance, collision avoidance in vehicles, air traffic control coordination, precision in robot surgery, remote operation in hazardous conditions, and energy conservation in vehicles, equipment, mobile devices, and buildings.
+
+Another extension of cyber-physical systems, embedded systems, and network-enabled devices is that of the Internet of Things (IoT). As discussed earlier, IoT is the collection of devices that can communicate over the internet with one another or with a control console in order to affect and monitor the real world. IoT devices might be labeled as smart devices or smart-home equipment. Many of the ideas of industrial environmental control found in office buildings are finding their way into more consumer-available solutions for small offices or personal homes. IoT is not limited to static location equipment but can also be used in association with land, air, or water vehicles or on mobile devices. IoT devices are usually static systems, since they may only run the firmware provided by the manufacturer.
+
 ### 4. Elements Related to Embedded and Static Systems
+
+Mainframes are high-end computer systems used to perform highly complex calculations and provide bulk data processing. Older mainframes may be considered static environments because they were often designed around a single task or supported a single mission-critical application. These configurations didn’t offer significant flexibility, but they did provide for high stability and long-term operation.
+
+Modern mainframes are much more flexible and are often used to provide high-speed computation power in support of numerous virtual machines. Each virtual machine can be used to host a unique OS and in turn support a wide range of applications. If a modern mainframe is implemented to provide fixed or static support of one OS or application, it may be considered a static environment.
+
+Game consoles, whether home systems or portable systems, are potentially examples of static systems. The OS of a game console is generally fixed and is changed only when the vendor releases a system upgrade. Such upgrades are often a mixture of OS, application, and firmware improvements. Although game console capabilities are generally focused on playing games and media, modern consoles may offer support for a range of cultivated and third-party applications. The more flexible and open-ended the app support, the less of a static system it becomes.
+
+HVAC can be controlled by an embedded solution (which might be also known as a smart device or an IoT device). Physical security controls protect against physical attacks, whereas logical and technical controls only protect against logical and technical attacks. HVAC is discussed further in Chapter 10.
+
+Many printers are network-attached printers, meaning they can be directly connected to the network without being directly attached to a computer. A network-attached printer serves as its own print server. It may connect to the network via cable or through wireless. Some devices are more than just printers and may include fax, scanning, and other functions. These are known as multifunction devices (MFDs) or MFPs. Any device connected to a network can be a potential breach point. This may be due to flaws in the firmware of the device as well as whether the device uses communication encryption.
+
+An MFD/MFP can be considered an embedded device if it has integrated network capabilities that allow it to operate as an independent network node rather than a direct-attached dependent device. Thus, network-attached printers and other similar devices pose an increased security risk because they often house full-fledged computers within their chassis. Network security managers need to include all such devices in their security management strategy in order to prevent these devices from being the targets of attack, used to house malware or attack tools, or grant outsiders remote-control access. Many MFDs/MFPs have embedded web servers for remote management, which can be a vector of compromise. Also, most MFPs/MFDs (as well as fax machines and copiers) have storage devices where print jobs are stored, which may allow for access or recovery by unauthorized entities.
+
+Surveillance systems include any device that is intended to monitor and track assets and/ or subjects. These can be embedded systems, or they can be dedicated sensors. Examples include security cameras, door open/close sensors, movement sensors, scales in access control vestibules, and smartcard readers.
+
+In-vehicle computing systems, medical systems/devices, aircraft/UAV/drones, and smart meters are all potential examples of embedded, static, network-attached, and cyber-physical systems. These were discussed previously in this chapter.
 
 ### 5. Security Concerns of Embedded and Static Systems
 
+Embedded, static, network-enabled, cyber-physical, and specialized systems are usually more limited or constrained based on their design or hardware capabilities compared to typical endpoint, server, and networking hardware. These constraints can have security implications.
+
+Some embedded and specialized systems run on replaceable or rechargeable batteries. Others only receive a small amount of power from a USB plug or special power adapter/converter. These power limitations can restrict the speed of operations, which in turn can limit the execution of security components. If additional power is consumed, the device might overheat. This could result in slower performance, crashing, or destruction.
+
+Most embedded and specialized systems use less-capable CPUs. This is due to cost and power savings or limitations. Fewer computing capabilities means fewer functions, which means fewer security operations.
+
+Many embedded and specialized systems have limited network capabilities. These network capabilities could be limited to wired only or wireless only. Within wireless, the device could be limited to a specific Wi-Fi version, frequency, speed, and/or encryption. Some devices using wireless are limited to special communication protocols, such as Zigbee or Bluetooth Low Energy (BLE).
+
+Many embedded and specialized systems are unable to process high-end encryption. The crypto on these special devices is often limited and may use older algorithms or poor keys, or just lack good key management. Some devices are known to have preshared and/or hardcoded encryption keys.
+
+Some embedded and specialized systems are difficult to patch, whereas others might not even offer patching or upgrading. Without update and patch management, vulnerable code will remain at risk.
+
+Some embedded and specialized systems do not use authentication to control subjects or restrict updates. Some devices use hard-coded credentials. These should be avoided. Only use equipment that allows for customized credentials, and choose devices that support mutualcertificate authentication.
+
+Some embedded and specialized systems have a limited transmission range due to low-power antennae. This can restrict the device’s usefulness or require signal boosting to compensate.
+
+Due to the low cost of some embedded and specialized systems, they might not include necessary security features. Other devices that do include needed security components may be too costly to be considered.
+
+Similar to supply chain issues, when an embedded or specialized system is used, the organization is automatically trusting the vendor of the device and the cloud service behind it. This implied trust may be misguided. Always thoroughly investigate vendors before relying on their product, and even then, segregate specialized systems in their own constrained network segments. See zero trust in Chapter 8.
+
+Based on these constraints and other concerns, security management of embedded and static systems must accommodate the fact that most are designed with a focus on minimizing costs and extraneous features. This often leads to a lack of security mechanisms and difficulty with upgrades or patches.
+
+Static environments, embedded systems, network-enabled devices, cyber-physical systems, high-performance computing (HPC) systems, edge computing devices, fog computing devices, mobile devices, and other limited or single-purpose computing environments need security management. Although they may not have as broad an attack surface and aren’t exposed to as many risks as a general-purpose computer, they still require proper security government. Many of the same general security management principles used over servers and endpoints can be applied to embedded, static, and cyber-physical systems.
+
+Network segmentation involves controlling traffic among networked devices. Complete or physical network segmentation occurs when a network is isolated from all outside communications, which means transactions can occur only between devices within the segmented network. You can impose logical network segmentation with switches using virtual local area networks (VLANs), or through other traffic-control means, including MAC addresses, IP addresses, physical ports, TCP or UDP ports, protocols, or application filtering, routing, and access control management. Network segmentation can be used to isolate embedded devices and static environments in order to prevent changes and/or exploits from reaching them. See Chapter 11 for more on segmentation.
+
+An application firewall is a device, server add-on, virtual service, or system filter that defines a strict set of communication rules for a service and all users. It’s intended to be an application-specific server-side firewall to prevent application-specific protocol and payload attacks. A network firewall is a hardware device, typically called an appliance, designed for general network filtering. A network firewall is designed to provide broad protection for an entire network. An internal segmentation firewall (ISFW) is used to create a network division or segment. Every network needs a network firewall. Many application servers need an application firewall. However, the use of an application firewall generally doesn’t negate the need for a network firewall. You should use firewalls in a series to complement each other, rather than seeing them as competitive solutions. See Chapter 17 for more on firewalls.
+
+Security layers exist where devices with different levels of classification or sensitivity are grouped together and isolated from other groups with different levels. This isolation can be absolute or one-directional. For example, a lower level may not be able to initiate communication with a higher level, but a higher level may initiate with a lower level. Isolation can also be logical or physical. Logical isolation requires the use of classification labels on data and packets, which must be respected and enforced by network management, OSs, and applications. Physical isolation requires implementing network segmentation or air gaps between networks of different security levels. See Chapter 5, “Protecting Security of Assets,” to learn more about managing data and asset classification.
+
+Manual updates should be used in static environments to ensure that only tested and authorized changes are implemented. Using an automated update system would allow for untested updates to introduce unknown security reductions. As with manual software updates, strict control over firmware in a static environment is important. Firmware updates should be implemented on a manual basis, only after thorough testing and review. Firmware version control or oversight of firmware release should focus on maintaining a stable operating platform while minimizing exposure to downtime or compromise.
+
+A wrapper is something used to enclose or contain something else. Wrappers are well known in the security community in relation to Trojan horse malware. A wrapper of that sort is used to combine a benign host with a malicious payload. Wrappers are also used as encapsulation solutions. Some static environments may be configured to reject updates, changes, or software installations unless they’re introduced through a controlled channel. That controlled channel can be a specific wrapper, such as an encrypted connection, mutualcertificate-based authentication, sourced from a preset IP address or domain name, and/or a digital signature. The wrapper may include integrity and authentication features to ensure that only intended and authorized updates are applied to the system.
+
+Even embedded and static systems should be monitored for performance, violations, compliance, and operational status. Some of these types of devices can perform on-device monitoring, auditing, and logging, whereas others may require external systems to collect activity data. Any and all devices, equipment, and computers within an organization should be monitored to ensure high performance and minimal downtime, and to detect and stop violations and abuse.
+
+As with any security solution, relying on a single security mechanism is unwise. Defense in depth uses multiple types of access controls in literal or theoretical concentric circles or layers. This form of layered security helps an organization avoid a monolithic security stance. A monolithic mentality is the belief that a single security mechanism is all that is required to provide sufficient security. With security control redundancy and diversity, a static environment can avoid the pitfalls of a single security feature failing; the environment has several opportunities to deflect, deny, detect, and deter any threat. Unfortunately, no security mechanism is perfect. Each individual security mechanism has a flaw or a workaround just waiting to be discovered and abused by a malicious hacker.
+
 ## Specialized Devices
+
+**专用设备**是为**单一目的**或特定行业设计的计算设备，具有明确边界、有限功能和定制系统。
+
+通常具备以下特点：
+
+- 静态、不可变配置
+- 多为嵌入式系统
+- 有联网功能（网络使其更强大，同时也更脆弱）
+- 控制现实世界的行为（CPS特性）
+
+#### 典型专用设备类型及风险一览
+
+| 设备类型            | 功能                       | 安全风险                               |
+| ------------------- | -------------------------- | -------------------------------------- |
+| **医疗设备**        | 监测或治疗患者，含远程操控 | 网络被攻破可致命（如心律调节器被关闭） |
+| **车载系统**        | 控制驾驶/引导/娱乐系统     | 若被接管或植入恶意代码，车辆可失控     |
+| **自动驾驶/无人机** | 自动导航/运输/飞行         | 遇到 DoS/信号干扰/远程劫持风险极高     |
+| **智能电表**        | 远程测量/监控用电行为      | 可用于窃听生活模式，或被用于入侵电网   |
+| **工业机器人**      | 组装、焊接等高精度作业     | 恶意指令可能造成设备损坏或人员受伤     |
+| **智能燃气/水表**   | 数据采集与优化供应         | 攻击可造成账单错误、拒绝服务、系统瘫痪 |
+
+#### 案例关联（CISSP 考题风格）
+
+| 场景                 | 题干描述                            | 正确选项                         |
+| -------------------- | ----------------------------------- | -------------------------------- |
+| 医疗设备             | 一心律调节器默认启用蓝牙远程维护    | 建议禁用不必要的远程连接         |
+| 智能车载娱乐系统     | 可通过 USB 安装应用，但缺少认证机制 | 高风险，应实施签名验证和访问控制 |
+| 自动化无人机送货系统 | 系统中存在未加密指令传输            | 实施端到端加密与命令签名         |
+| 智能电表平台         | 被注入假数据造成能源计费错误        | 引入签名验证与数据完整性检查     |
+
+#### 安全控制策略与防护建议（CISSP 构建角度）
+
+| 控制面         | 安全建议                                                    |
+| -------------- | ----------------------------------------------------------- |
+| **接入控制**   | 禁用默认账户，启用多因子认证                                |
+| **通信安全**   | 所有通信必须加密（TLS、VPN）                                |
+| **更新机制**   | 禁用自动更新，采用受控手动更新流程                          |
+| **防干扰能力** | 对无人系统构建信号丢失下的“安全降级”策略（如自毁/自动返航） |
+| **物理防护**   | 防止端口暴露、接口被接入攻击设备（如 USB 劫持）             |
+| **日志与监控** | 外部系统进行行为监控与异常检测（SIEM 集成）                 |
+| **零信任架构** | 将设备置于细粒度网络分段，默认拒绝除授权路径外所有通信      |
+
+#### 关联标准参考
+
+| 标准组织       | 标准文档                     | 内容概要                     |
+| -------------- | ---------------------------- | ---------------------------- |
+| **NIST**       | SP 800-82 / 800-53 / 800-183 | 工业控制系统与 CPS 安全框架  |
+| **FDA**        | Medical Device Cybersecurity | 医疗设备网络安全指南（美国） |
+| **ISO**        | ISO/IEC 81001-1:2021         | 医疗设备+IT 环境的网络安全   |
+| **FAA / EASA** | 无人机/UAV 认证要求          | 控制与通信加密强制要求       |
+
+#### 与其他架构关系
+
+| 系统类型              | 与专用设备关系                           |
+| --------------------- | ---------------------------------------- |
+| **嵌入式系统**        | 专用设备本质上多为嵌入式系统             |
+| **静态系统**          | 多数专用设备为非持久环境（用户无法更改） |
+| **CPS**               | 典型控制现实世界的行为（如自动刹车）     |
+| **IoT/IIoT**          | 通信能力让它们具有 IoT 架构属性          |
+| **Edge Computing**    | 可独立处理边缘感知任务                   |
+| **Cloud Integration** | 很多设备将数据回传云端（如智能电表）     |
+
+#### CISSP 考试重点提示
+
+| 类别         | 题型示例                   | 思维导图                      |
+| ------------ | -------------------------- | ----------------------------- |
+| 安全风险识别 | 医疗设备如何被攻击？       | 网络通信未加密 / 默认凭据     |
+| 最佳做法     | 如何保护智能汽车系统？     | 网络隔离 + 本地签名验证       |
+| 架构理解     | UAV 属于哪类系统？         | CPS + 自动化系统              |
+| 场景分析     | 智能电表遭 DoS 攻击影响？  | 服务中断 + 客户数据错误       |
+| 风控框架     | 哪种控制措施适合无人系统？ | Zero Trust + Signal Hardening |
+
+##### 快速记忆口诀
+
+> **“专设设备事关命，默认开启不可用；隔离通信要加密，更新认证重验证。”**
+
+解释：
+
+- 生命相关设备需重点防护（医疗/无人机）
+- 默认开放的远程访问是风险
+- 通信需要加密，更新流程要签名验证
+- 网络必须隔离，不能混用主网
+
+The realm of specialized equipment is vast and is always expanding. Specialized equipment is anything designed for one specific purpose, to be used by a specific type of organization, or to perform a specific function. They may be considered a type of DCS, IoT, smart device, endpoint device, or edge computing system. Some common examples of specialized devices are medical equipment, smart vehicles, autonomous aircraft, and smart meters.
+
+A growing number of medical systems are specialized devices that have been integrated with IoT technology to make them remotely accessible for monitoring and management. This may be a great innovation for medical treatment, but it also has security risks. All computer systems are subject to attack and abuse. All computer systems have faults and failings that can be discovered and abused by an attacker. Although most medical device vendors strive to provide robust and secure products, it is not possible to consider and test for every possibility of attack, access, or abuse. There have already been several instances of medical devices being remotely controlled, disabled, accessed, or attacked with a DoS. When using any medical device, consider whether remote access, wired or wireless, is essential to the medical care it is providing. If not, it may still make sense to disable the network feature of the medical device. Although the breach of a personal computer or smartphone may be inconvenient and/or embarrassing, the breach of a medical device can be life-threatening.
+
+In-vehicle computing systems can include the components used to monitor engine performance and optimize braking, steering, and suspension but can also include in-dash elements related to driving, environment controls, and entertainment. Early in-vehicle systems were static environments with little or no ability to be adjusted or changed, especially by the owner/driver. Modern in-vehicle systems may offer a wider range of capabilities, including linking a mobile device or running custom apps. In-vehicle computing systems may or may not have sufficient security mechanisms. Even if the system is only providing information, such as engine performance, entertainment, and navigation, it is important to consider what, if any, security features are included in the solution. Does it connect to cloud services? Are communications encrypted? How strong is the authentication? Is it easily accessible to unauthorized third parties? If the in-vehicle computing system is controlling the vehicle, which might be called automated driving or self-driving, it is even more important that security be a major design element of the system. Otherwise, a vehicle can be converted from a convenient means of transference to a box of death.
+
+Automated pilot systems have been part of aircraft for decades. In most of the airplanes that you have flown on, a human pilot was likely only in full control of the craft during takeoff and landing, and not always even then. For most of the flight, the autopilot system was likely in control of the aircraft. The military, law enforcement, and hobbyists have been using uncrewed aerial vehicles (UAVs) or drones for years, but usually under remote control. Now, with flight automation systems, drones can take off, fly to a destination, and land fully autonomously. There are even many retail businesses experimenting with, and in some countries implementing, drone delivery of food and/or other packages. The security of automated aircraft, drones, and UAVs is a concern for all of us. Are these systems secure against malware infection, signal disruption, remote control takeover, AI failure, and remote code execution? Does the drone have authenticated connections to the authorized control system? Are the drone’s communications encrypted? What will the aircraft do in the event that all contact with the control system is blocked through DoS or signal jamming? A compromised drone could result in the loss of your pizza, a damaged product, a few broken shingles, or severe bodily injury.
+
+A smart meter is a remotely accessible electrical meter. It allows the electricity provider to track energy use remotely. Some smart meters grant the customer the ability to view collected statistics as well. Third-party smart meters can be installed in a building that can identify equipment, appliances, and devices from their energy consumption signatures. These types of smart meters can track energy use by device and provide guidance on minimizing energy consumption.
 
 ## Microservices
 
+It is important to evaluate and understand the vulnerabilities in system architectures, especially in regard to technology and process integration. As multiple technologies and complex processes are intertwined in the act of crafting new and unique business functions, new issues and security problems often surface. As systems are integrated, attention should be paid to potential single points of failure as well as to emergent weaknesses in serviceoriented architecture (SOA). An SOA constructs new applications or functions out of existing but separate and distinct software services. The resulting application is often new; thus, its security issues are unknown, untested, and unprotected. All new deployments, especially new applications or functions, need to be thoroughly vetted before they are allowed to go live into a production network or the public internet.
+
+Microservices are an emerging feature of web-based solutions and are derivative of SOA. A microservice is simply one element, feature, capability, business logic, or function of a web application that can be called upon or used by other web applications. It is the conversion or transformation of a capability of one web application into a microservice that can be called upon by numerous other web applications.
+
+Microservices are often created as a means to provide purpose-specific business capabilities through services that are independently deployed. Often, microservices are small and focused on a singular operation, designed with few dependencies, and are based on fast short-term development cycles (similar to Agile). It is also common to deploy microservices based on immutable architecture or infrastructure as code.
+
+Microservices are a popular development strategy because they allow large complex solutions to be broken into smaller self-contained functions. This design also enables multiple programming groups to work on crafting separate elements or microservices simultaneously. The relationship to an application programming interface (API) is that each microservice must have a clearly defined (and secured!) API to allow for I/O between multiple microservices as well as to and from other applications. Microservices are a type of programming or design architecture, whereas APIs are a standardized framework to facilitate communications and data exchange.
+
+### Service Delivery Platform (SDP) 
+
+A service delivery platform (SDP) is a collection of components that provide the architecture for service delivery. SDP is often used in relation to telecommunications, but it can be used in many contexts, including VoIP, Internet TV, SaaS, and online gaming. An SDP is similar to a content delivery network (CDN) (see Chapter 11), as both are designed for the support of and efficient delivery of a resource (such as services of a SDP and multimedia of a CDN). The goal of an SDP is to provide transparent communication services to other content or service providers. Both SDPs and CDNs can be implemented using microservices.
+
 ## Infra as Code
 
-## Virtualized Systems
+Infrastructure as code (IaC) is a change in how hardware management is perceived and handled. Instead of seeing hardware configuration as a manual, direct hands-on, one-on-one administration hassle, it is viewed as just another collection of elements to be managed in the same way that software and code are managed under DevSecOps (security, development, and operations). With IaC, the hardware infrastructure is managed in much the same way that software code is managed, including: version control, predeployment testing, customcrafted test code, reasonableness checks, regression testing, and consistency in a distributed environment.
 
-### 1. Virtual Software
-
-### 2. Virtualized Networking
-
-### 3. Software-Defined Everything
-
-### 4. Virtualization Security Mangement
-
-## Containerization
-
-## Serverless Architecture
-
-## Mobile Devices
-
-### 1. Mobile Device Security Features
-
-### 2. Mobile Device Deployment Policies
-
-## Essential Security Protection Mechanisms
-
-### 1. Process Isolation
-
-### 2. Hardware Segmentation
-
-### 3. System Security Policy
-
-## Common Security Architecture Flaws and Issues
-
-### 1. Covert Channels
-
-### 2. Attacks Based on Design or Coding Flaws
-
-### 3. Rootkits
-
-### 4. Incremental Attacks
-
-## Summary
-
-## Exam Essentials
-
+This alteration in hardware management approach has allowed many organizations to streamline infrastructure changes so that they occur more easily, more rapidly, more securely and safely, and more reliably than before. IaC often uses definition files and rule sets that are machine readable to quickly deploy new settings and manage hardware consistently and efficiently. These files can be treated as software code in terms of development, testing, deployment, updates, and management. IaC is not

@@ -1708,6 +1708,54 @@ A smart meter is a remotely accessible electrical meter. It allows the electrici
 
 ## Microservices
 
+微服务是一种将单一应用拆解为多个**独立部署、互相通信的服务单元**的软件架构。
+
+| 特征           | 描述                                       |
+| -------------- | ------------------------------------------ |
+| **单一职责**   | 每个微服务只执行一项具体任务               |
+| **松耦合**     | 各服务间依赖最小，接口调用完成交互         |
+| **可独立部署** | 每个微服务可由不同团队用不同语言实现与部署 |
+| **快速迭代**   | 支持 Agile、CI/CD 流程开发                 |
+| **典型场景**   | 电商订单系统、金融清算服务、用户推荐服务等 |
+
+#### 与 SOA（面向服务架构）的关系
+
+| 对比项     | **SOA**      | **Microservices**         |
+| ---------- | ------------ | ------------------------- |
+| 架构粒度   | 粗           | 细（聚焦功能）            |
+| 通信机制   | 通常使用 ESB | 通过轻量级 API（如 REST） |
+| 部署模式   | 集中式       | 分布式（容器化）          |
+| 技术栈依赖 | 常统一       | 可异构（语言/平台多样）   |
+
+📌 **总结**：**微服务是 SOA 的微粒度演进版**，更灵活、更适合现代 DevOps/Cloud 环境。
+
+#### 微服务架构的主要安全挑战
+
+| 风险点               | 描述                           | 应对措施                                 |
+| -------------------- | ------------------------------ | ---------------------------------------- |
+| **API 攻击面扩大**   | 每个服务需暴露接口，增加暴露点 | 实施 API Gateway、认证、限速             |
+| **认证与授权碎片化** | 每个服务可能使用不同机制       | 引入统一身份管理服务（SSO、OAuth）       |
+| **通信数据泄露**     | 微服务间通信若未加密，风险高   | 全链路加密（mTLS）                       |
+| **配置失控**         | 快速迭代可能带来配置不一致     | 使用“基础架构即代码”（IaC） + 配置管理   |
+| **依赖链攻击**       | 组件复用，供应链风险暴露       | 签名验证、SBOM（软件物料清单）           |
+| **日志审计困难**     | 分布式环境日志分散             | 集中日志收集与 SIEM 监控                 |
+| **服务互信过度**     | 默认信任服务内部通信           | 实现 **Zero Trust 微分段（微服务网格）** |
+
+#### Microservices 与 API 的关系
+
+- **Microservices 是架构设计方式**
+- **API 是接口规范与通信桥梁**
+
+每个微服务都必须通过一个或多个 API 对外暴露功能。因此：
+
+| API 安全控制 | 关键技术                        |
+| ------------ | ------------------------------- |
+| 身份认证     | OAuth 2.0 / JWT / API Key       |
+| 访问控制     | RBAC / ABAC                     |
+| 通信保护     | TLS / mTLS                      |
+| 威胁防护     | API Gateway + WAF               |
+| 输入验证     | JSON Schema / Payload Filtering |
+
 It is important to evaluate and understand the vulnerabilities in system architectures, especially in regard to technology and process integration. As multiple technologies and complex processes are intertwined in the act of crafting new and unique business functions, new issues and security problems often surface. As systems are integrated, attention should be paid to potential single points of failure as well as to emergent weaknesses in serviceoriented architecture (SOA). An SOA constructs new applications or functions out of existing but separate and distinct software services. The resulting application is often new; thus, its security issues are unknown, untested, and unprotected. All new deployments, especially new applications or functions, need to be thoroughly vetted before they are allowed to go live into a production network or the public internet.
 
 Microservices are an emerging feature of web-based solutions and are derivative of SOA. A microservice is simply one element, feature, capability, business logic, or function of a web application that can be called upon or used by other web applications. It is the conversion or transformation of a capability of one web application into a microservice that can be called upon by numerous other web applications.
@@ -1718,9 +1766,56 @@ Microservices are a popular development strategy because they allow large comple
 
 ### Service Delivery Platform (SDP) 
 
+SDP 是一组用于**创建、部署、运行和管理服务**的框架架构，广泛用于电信、SaaS、VoIP 等场景。
+
+SDP 本质上是微服务 + API + 管理调度 + DevOps 的集中化运营平台。
+
 A service delivery platform (SDP) is a collection of components that provide the architecture for service delivery. SDP is often used in relation to telecommunications, but it can be used in many contexts, including VoIP, Internet TV, SaaS, and online gaming. An SDP is similar to a content delivery network (CDN) (see Chapter 11), as both are designed for the support of and efficient delivery of a resource (such as services of a SDP and multimedia of a CDN). The goal of an SDP is to provide transparent communication services to other content or service providers. Both SDPs and CDNs can be implemented using microservices.
 
+#### CISSP 考试重点提示
+
+| 类型   | 题干                           | 正确选项思维           |
+| ------ | ------------------------------ | ---------------------- |
+| 定义类 | 微服务与 API 的区别？          | 架构 vs 通信机制       |
+| 风险类 | 微服务通信被监听风险？         | 未启用 TLS/mTLS        |
+| 控制类 | 保护 API 的最佳方式？          | API Gateway + 身份验证 |
+| 架构类 | SDP 的主要用途是？             | 管理服务创建与交付     |
+| 场景类 | 某微服务未审计接口调用怎么办？ | 引入集中日志与追踪机制 |
+
+**“微小服务多，接口须锁好；部署快更新，认证不可少。”**
+**“微服务靠 API，接口即攻击面；SDP 总调度，集中保安全。”**
+
+#### 实践建议总结表（CISSP 安全视角）
+
+| 控制域     | 安全控制措施                             |
+| ---------- | ---------------------------------------- |
+| 身份认证   | 使用统一 OAuth、SSO 机制管理访问         |
+| 通信安全   | 服务间开启 **mTLS** 双向认证通道         |
+| API 管理   | 建立 API Gateway，设置频率限制和调用权限 |
+| 最小权限   | 微服务调用间只授予必要调用权限           |
+| 零信任策略 | 建立服务网格 + 微分段控制机制            |
+| 漏洞管理   | 快速响应 CVE + 集中依赖跟踪（SBOM）      |
+
 ## Infra as Code
+
+IaC 是将**基础设施管理自动化为可版本控制的代码**，使服务器、网络设备、存储等硬件资源的配置与变更，像软件开发那样统一管理。
+
+| 特征           | 描述                              |
+| -------------- | --------------------------------- |
+| **自动化部署** | 通过脚本或模板快速部署/配置环境   |
+| **版本控制**   | 使用 Git 等 VCS 工具管理配置变更  |
+| **一致性**     | 跨环境部署保持一致（如测试/生产） |
+| **可审计性**   | 所有变更都可溯源、审计与回滚      |
+| **可测试性**   | 可对 IaC 脚本进行语法与逻辑测试   |
+
+#### 常用工具
+
+| 工具               | 类型     | 功能特点                           |
+| ------------------ | -------- | ---------------------------------- |
+| **Terraform**      | 声明式   | 云平台中立，广泛支持 AWS/Azure/GCP |
+| **Ansible**        | 过程式   | 无 agent，适合配置管理             |
+| **Puppet / Chef**  | 声明式   | 适合大规模自动化与合规性检查       |
+| **CloudFormation** | AWS 专属 | 支持 JSON/YAML 模板                |
 
 Infrastructure as code (IaC) is a change in how hardware management is perceived and handled. Instead of seeing hardware configuration as a manual, direct hands-on, one-on-one administration hassle, it is viewed as just another collection of elements to be managed in the same way that software and code are managed under DevSecOps (security, development, and operations). With IaC, the hardware infrastructure is managed in much the same way that software code is managed, including: version control, predeployment testing, customcrafted test code, reasonableness checks, regression testing, and consistency in a distributed environment.
 
@@ -1728,7 +1823,35 @@ This alteration in hardware management approach has allowed many organizations t
 
 A derivative of IaC and DCE is software-defined networking (SDN). SDN is the management of networking as a virtual or software resource even though it technically still occurs over hardware. That is the same concept as IaC which treats the management of hardware as concept that can be managed in a means similar to how software can be managed. Similarly, just as DCE is a collection of individual systems that work together to support a resource or provide a service, so to is SDN a collection of hardware and software elements that are designed to provide a virtualization of networking management and control. Please see Chapter 11 for details on software-defined networking (SDN).
 
-#### Immutable Architecture
+##### IaC 安全考点（CISSP 出题重点）
+
+| 风险点                         | 安全建议                            |
+| ------------------------------ | ----------------------------------- |
+| **配置漂移**（部署后手动修改） | 推行 **不可变架构（immutable）**    |
+| **敏感信息泄露**（秘钥硬编码） | 使用 Vault 或 AWS Secrets Manager   |
+| **权限过大**                   | 实施最小权限原则（Least Privilege） |
+| **代码供应链风险**             | SBOM，代码签名验证，自动化静态分析  |
+| **未加密配置存储**             | 加密 IaC 存储库，限制访问范围       |
+| **部署代码未经审批**           | 建立 CI/CD 审批流程，强制代码审查   |
+
+#### Immutable Architecture（不可变架构）
+
+一旦部署的服务器/实例不被更改，更新 = 构建新版本 + 替换旧实例
+✅ 替换式部署，❌ 原地修改
+
+优点
+
+| 优势                  | 说明                               |
+| --------------------- | ---------------------------------- |
+| **一致性**            | 没有“雪花”服务器，环境统一         |
+| **可预测性**          | 每次部署从零构建，杜绝“部署意外”   |
+| **易于审计与回滚**    | 原有实例不变更，随时替换           |
+| **配合 CI/CD 更安全** | 每次部署都是自动构建并验证过的结果 |
+
+类比记忆法
+
+- **Pet vs Cattle**：传统服务器像宠物，要悉心照料；不可变架构中的服务器像牛群，坏了就替换
+- **Snowflake vs Phoenix**：雪花独一无二、难以复制；凤凰则是每次都从脚本中“重生”，一致且可控
 
 Immutable architecture is the concept that a server never changes once it is deployed. If there is a need to update, modify, fix, or otherwise alter, a new server is built or cloned from the current one, the necessary changes are applied, and then the new server is deployed to replace the previous one. Once the new server is validated, the older server is decommissioned. VMs are destroyed and the physical hardware/system is reused for future deployments.
 
@@ -1736,19 +1859,128 @@ The benefits of immutable architecture are reliability, consistency, and a predi
 
 The mindset of immutable architecture is often described with the analogy of pets versus cattle or snowflakes versus phoenixes. If a server is treated like a pet, when something goes wrong, everyone marshals to the rescue. However, if a server is treated like cattle, when something goes wrong, it is taken out back and shot, and another is brought in to replace it. If a server is managed uniquely, then it is a snowflake and requires specific focus and attention, causing an increase in administrative time and attention, not to mention complexity for the environment. If a server is always built from scratch, then when changes are needed a new system can be created with integrated improvements through automated processes, thus rising from the ashes (of previous decommissioned servers) like a phoenix. This minimizes administrative overhead, reduces deployment time, and maintains consistency in the environment.
 
+##### 与 SDN 的关联性（补充理解）
+
+**SDN（软件定义网络）** 是将网络设备管理抽象化为软件层，与 IaC 一样是“基础设施即代码”的延伸思维：
+
+- IaC 管理 **服务器/存储等资源**
+- SDN 管理 **网络配置/流量/安全策略**
+
+它们都是为实现：
+
+- **弹性部署**
+- **可版本控制的基础设施**
+- **自动化管理 & 安全可控**
+
 ## Virtualized Systems
+
+Virtualization technology is used to host one or more OSs within the memory of a single host computer or to run applications that are not compatible with the host OS. This mechanism allows virtually any OS to operate on any hardware. It also allows multiple OSs to work simultaneously on the same hardware. Common examples include VMware Workstation Pro, VMware vSphere and vSphere Hypervisor, VMware Fusion for Mac, Microsoft Hyper-V Server, Oracle VirtualBox, Citrix Hypervisor, and Parallels Desktop for Mac.
+
+Organizations are consistently implementing more virtualization technologies due to the huge cost savings available. For example, an organization may be able to reduce 100 physical servers to just 10 physical servers, with each physical server hosting 10 virtual servers. This reduces HVAC costs, power costs, and overall operating costs.
+
+The hypervisor, also known as the virtual machine monitor/manager (VMM), is the component of virtualization that creates, manages, and operates the virtual machines. The computer running the hypervisor is known as the host OS, and the OSs running within a hypervisor-supported virtual machine are known as guest OSs or virtualized systems.
+
+A type I hypervisor is a native or bare-metal hypervisor (Figure 9.3, top). In this configuration, there is no host OS; instead, the hypervisor installs directly onto the hardware where the host OS would normally reside. Type 1 hypervisors are often used to support server virtualization. This allows for maximization of the hardware resources while eliminating any risks or resource reduction caused by a host OS.
+
+A type II hypervisor is a hosted hypervisor (Figure 9.3, bottom). In this configuration, a standard regular OS is present on the hardware, and then the hypervisor is installed as another software application. Type II hypervisors are often used in relation to desktop deployments, where the guest OSs offer safe sandbox areas to test new code, allow the execution of legacy applications, support apps from alternate OSs, and provide the user with access to the capabilities of a host OS.
+
+Cloud computing is a natural extension and evolution of virtualization, the internet, distributed architecture, and the need for ubiquitous access to data and resources. However, it does have some potential security issues, including privacy concerns, regulation compliance difficulties, use of open versus closed source solutions, adoption of open standards, and whether or not cloud-based data is actually secured (or even securable). See Chapter 16 for details on cloud computing.
+
+Virtualization has several benefits, such as being able to launch individual instances of virtual servers or services as needed, real-time scalability, and being able to run the exact OS version needed for a specific application. Virtualization can also provide a reasonably secure means to continue to operate End-of-life (EOL) and End-of-service-life (EOSL)/end-ofsupport (EOS) OSs to support legacy business applications. Virtualized servers and services are indistinguishable from traditional servers and services from a user’s perspective. Additionally, recovery from damaged, crashed, or corrupted virtual systems is often quick, simply consisting of replacing the virtual system’s main hard drive file with a clean backup version and then relaunching it.
+
+Elasticity refers to the flexibility of virtualization and cloud solutions (see Chapter 16) to expand or contract resource utilization based on need. In relation to virtualization, host elasticity means additional hardware hosts can be booted when needed and then used to distribute the workload of the virtualized services over the newly available capacity. As the workload becomes smaller, you can pull virtualized services off unneeded hardware so that it can be shut down to conserve electricity and reduce heat. Elasticity can also refer to the ability of a VM/guest OS to take advantage of any unused hardware resources on the fly as needed, but then release those resources when they are not needed. For example, a hardware host supporting five VM-based guest OSs may have over 30 percent CPU computational capacity unused. If a process-intensive application is launched within one of the VMs, the additional hardware host CPU capacity could be consumed; then once the application completes its intensive work task, the resource would be released. Elasticity has been a common capability of classic standalone systems for decades, but now with virtualization, the use of resources is shared among more than just a few processes—it can span across multiple VMs on the same hardware host as well as potentially across numerous hardware hosts.
+
+It is also important to understand scalability in relation to elasticity. These terms are similar, but they are describing different concepts. Elasticity is the expansion or contraction of resources to meet current processing needs, whereas scalability is the ability to take on more work or tasks. Usually, scalability is a software characteristic that can handle more tasks or workloads, whereas elasticity is a hardware or platform characteristic where resources are optimized to meet demands of current tasks. A scalable system must also be elastic, but an elastic system does not need to be scalable.
+
+In relation to security, virtualization offers several benefits. It is often easier and faster to make backups of entire virtual systems than the equivalent native hardware-installed system. Snapshots (aka checkpoints) are backups of virtual machines. Plus, when there is an error or problem, the virtual system can be replaced by a snapshot backup in minutes. Malicious code compromise or infection of virtual systems rarely affects the host OS due to the hypervisor’s VM-to-VM and VM-to-host isolation. This allows for safe testing and experimentation.
+
+Virtualization is used for a wide variety of new architectures and system design solutions. Locally (or at least within an organization’s private infrastructure), virtualization can be used to host servers, client OSs, limited user interfaces (i.e., virtual desktops), applications, and more.
 
 ### 1. Virtual Software
 
+A virtual application or virtual software is a software product deployed in such a way that it is fooled into believing it is interacting with a full host OS. A virtual (or virtualized) application has been packaged or encapsulated so that it can execute but operate without full access to the host OS. A virtual application is isolated from the host OS so that it cannot make any direct or permanent changes to the host OS. Any changes, such as file writes, configuration file or registry modifications, or system setting alterations are intercepted by the isolation manager and recorded (typically into a single file). This allows the contained software to perceive it has interaction with the OS, without that interaction actually taking place. Thus, the virtualized application executes just like any regularly installed application, but it is only interacting and changing with a virtual representation of the OS, not the actual OS. In many instances, this concept is sandboxing. There are many products that provide software virtualization, including Citrix Virtual Apps, Microsoft App-V, Oracle Secure Global Desktop, Sandboxie, and VMware ThinApp.
+
+In many cases, operating an application in a software virtualization tool can effectively transform an installed application into a portable application. This means the application’s encapsulation and file can be moved to another OS (with the same software virtualization product), where it can execute. It may also be possible to place the application’s encapsulation onto removable media and be able to execute the software from a portable storage device plugged into another computer system.
+
+Some software virtualization solutions enable applications from one OS to be operated on another. For example, Wine allows some Windows software products to be executed on Linux.
+
+The concept software virtualization has evolved into its own virtualization derivative concept known as containerization, which is covered in a later section, “Containerization.”
+
 ### 2. Virtualized Networking
+
+The concept of OS virtualization has given rise to other virtualization topics, such as virtualized networks. A virtualized network or network virtualization is the combination of hardware and software networking components into a single integrated entity. The resulting solution allows for software control over all network functions: management, traffic shaping, address assignment, and so on. A single management console or interface can be used to oversee every aspect of the virtual network, a task that required physical presence at each hardware component in the past. Virtualized networks have become a popular means of infrastructure deployment and management by corporations worldwide. They allow organizations to implement or adapt other interesting network solutions, including SDNs, virtual SANs, guest OSs, and port isolation.
+
+Custom virtual network segmentation can be used in relation to virtual machines to make guest OSs members of the same network division as that of the host, or guest OSs can be placed into alternate network divisions. A virtual machine can be made a member of a different network segment from that of the host or placed into a network that only exists virtually and does not relate to the physical network media (effectively an SDN; see Chapter 11).
 
 ### 3. Software-Defined Everything
 
+Virtualization extends beyond just servers and networking. Software-defined everything (SDx) refers to a trend of replacing hardware with software using virtualization. SDx includes virtualization, virtualized software, virtual networking, containerization, serverless architecture, infrastructure as code, SDN (Chapter 11), VSAN (Chapter 11), software-defined storage (SDS) (Chapter 11), VDI, VMI, SDV, and software-defined data center (SDDC).
+
+The SDx examples that are not defined elsewhere (either in this chapter or in Chapter 11) are discussed here.
+
+Virtual desktop infrastructure (VDI) is a means to reduce the security risk and performance requirements of end devices by hosting desktop/workstation OS virtual machines on central servers that are remotely accessed by users. Thus, VDI is also known as a virtual desktop environment (VDE). Users can connect to the server to access their desktop from almost any system, including from mobile devices. Persistent virtual desktops retain a customizable desktop for the user. Nonpersistent virtual desktops are identical and static for all users. If a user makes changes, the desktop reverts to a known state after the user logs off. (See the discussion of static systems earlier in this chapter under “Static Systems.”)
+
+The term virtual desktop can refer to at least three different types of technology:
+
+- A remote access tool that grants the user access to a distant computer system by allowing remote viewing and control of the distant desktop’s display, keyboard, mouse, and so on.
+- An extension of the virtual application concept encapsulating multiple applications and some form of “desktop” or shell for portability or crossOS operation. This technology offers some of the features/benefits/applications of one platform to users of another without the need for using multiple computers, dual-booting, or virtualizing an entire OS platform.
+- An extended or expanded desktop larger than the display being used allows the user to employ multiple application layouts, switching between them using keystrokes or mouse movements.
+
+VDI has been adopted into mobile devices and has already been widely used in relation to tablets and laptop computers. It is a means to retain storage control on central servers, gain access to higher levels of system processing and other resources, and allow lower-end devices access to software and services beyond their hardware’s capacity. This has led to virtual mobile infrastructure (VMI), where the OS of a mobile device is virtualized on a central server. Thus, most of the actions and activities of the traditional mobile device are no longer occurring on the mobile device itself. This remote virtualization allows an organization greater control and security than when using a standard mobile device platform. It can also enable personally owned devices to interact with the VDI without increasing the risk profile.
+
+A thin client is a computer or mobile device with low to modest capability or a virtual interface that is used to remotely access and control a mainframe, virtual machine, VDI, or VMI. Thin clients were common in the 1980s when most computation took place on a central mainframe computer. Today, thin clients are being reintroduced as a means to reduce the expenses of high-end endpoint devices where local computation and storage are not required or are a significant security risk. A thin client can be used to access a centralized resource hosted on premises or in the cloud. All processing/storage is performed on the server or central system, so the thin client provides the user with display, keyboard, and mouse/touchscreen functionality.
+
+Software-defined visibility (SDV) is a framework to automate the processes of network monitoring and response. The goal is to enable the analysis of every packet and make deep intelligence-based decisions on forwarding, dropping, or otherwise responding to threats. SDV is intended to benefit companies, security entities, and managed service providers (MSPs). The goal of SDV is to automate detection, reaction, and response. SDV provides security and IT management with oversight into all aspects of the company network, both on-premises and in the cloud, with an emphasis on defense and efficiency. SDV is another derivative of IaC.
+
+Software-defined data center (SDDC) or virtual data center (VDC) is the concept of replacing physical IT elements with solutions provided virtually, and often by an external third party, such as a cloud service provider (CSP). SDDC is effectively another XaaS concept, namely IT as a service (ITaaS). It is similar to infrastructure as a service (IaaS), and thus some claim it is nothing more than a marketing or advertising term of misdirection.
+
+#### Services Integration
+
+Services integration, cloud integration, systems integration, and integration platform as a service (iPaaS) is the design and architecture of an IT/IS solution that stitches together elements from on-premises and cloud sources into a seamless productive environment. The goals of services integration are to eliminate data silos (a situation where data is contained in one area and thus inaccessible to other applications or business units), expand access, clarify processing visibility, and improve functional connectivity of onsite and offsite resources. This can also be viewed as an example of SDDC. See Chapter 16 for more on cloud services.
+
 ### 4. Virtualization Security Mangement
+
+The primary software component in virtualization is a hypervisor. The hypervisor manages the VMs, virtual data storage, and virtual network components. As an additional layer of software on the physical server, it represents an additional attack surface. If an attacker can compromise a physical host, the attacker can potentially access all of the virtual systems hosted on the physical server. Administrators often take extra care to ensure that virtual hosts are hardened.
+
+Although virtualization can simplify many IT concepts, it’s important to remember that many of the same basic security requirements still apply. Virtualization doesn’t lessen the security management requirements of an OS. Thus, patch management is still essential.
+
+For example, each VM’s guest OS still needs to be updated individually. Updating the host system doesn’t update the guest OSs. Also, don’t forget that you need to keep the hypervisor updated as well.
+
+When using virtualized systems, it’s important to protect the stability of the host. This usually means avoiding using the host for any purpose other than hosting the virtualized elements, especially in a server-focused deployment. If host availability is compromised, the availability and stability of the virtual systems are also compromised.
+
+Additionally, organizations should maintain backups of their virtual assets. Many virtualization tools include built-in tools to create full backups of virtual systems and create periodic snapshots, allowing relatively easy point-in-time restores.
+
+Virtualized systems should be security tested. The virtualized OSs can be tested in the same manner as hardware installed OSs, such as with vulnerability assessment and penetration testing.
+
+VM sprawl occurs when an organization deploys numerous virtual machines without an overarching IT management or security plan in place. Although VMs are easy to create and clone, they have the same licensing and security management requirements as a metal-installed OS. Uncontrolled VM creation can quickly lead to a situation where manual oversight cannot keep up with system demand. To prevent or avoid VM sprawl, a policy for developing and deploying VMs must be established and enforced. This should include establishing a library of initial or foundation VM images that are to be used to develop and deploy new services. In some instances, VM sprawl relates to the use of lower-powered equipment that results in poorly performing VMs. VM sprawl is a virtual variation of server sprawl and could allow for virtual shadow IT. 、
+
+VM escaping occurs when software within a guest OS is able to breach the isolationprotection provided by the hypervisor in order to violate the container of other guest OSs or to infiltrate a host OS. Several VM escape vulnerabilities have been discovered in a variety of hypervisors. Fortunately, the vendors have been fast to release patches. For example, Virtualized Environment Neglected Operations Manipulation (VENOM) (CVE-2015-3456) was able to breach numerous VM products that employed a compromised open source virtual floppy disc driver to allow malicious code to jump between VMs and even access the host.
+
+VM escaping can be a serious problem, but steps can be implemented to minimize the risk. First, keep highly sensitive systems and data on separate physical machines. An organization should already be concerned about over-consolidation resulting in a single point of failure; running numerous hardware servers so that each supports a handful of guest OSs helps with this risk. Keeping enough physical servers on hand to maintain physical isolation between highly sensitive guest OSs will further protect against a VM escape exploit. Second, keep all hypervisor software current with vendor-released patches. Third, monitor attack, exposure, and abuse indexes for new threats to your environment.
+
+#### Server Sprawl and Shadow IT
+
+Server sprawl or system sprawl is the situation where numerous underutilized servers are operating in your organization’s server room. These servers are taking up space, consuming electricity, and placing demands on other resources, but their provided workload or productivity does not justify their presence. This can occur if an organization purchases cheap lower-end hardware in bulk instead of selecting optimal equipment for specific use cases.
+
+Somewhat related to server sprawl is shadow IT.
+
+Shadow IT is a term used to describe the IT components (physical or virtual) deployed by a department without the knowledge or permission of senior management or the IT group. The existence of shadow IT is often due to complex bureaucracy that makes the acquisition of needed equipment overly difficult and time-consuming. Other terms that might be used to refer to shadow IT include embedded IT, feral IT, stealth IT, hidden IT, secret IT, and client IT.
+
+Shadow IT usually does not follow company security policy, and it might not be kept current and updated with patches. Shadow IT often lacks proper documentation, is not under consistent oversight and control, and may not be reliable or fault tolerant. Shadow IT greatly increases the risk of disclosure of sensitive, confidential, proprietary, and personal information to unauthorized insiders and outsiders. Shadow IT can be composed of physical devices, virtual machines, or cloud services.
 
 ## Containerization
 
+Containerization is the next stage in the evolution of the virtualization trend for both internally hosted systems and cloud providers and services. A virtual machine–based system uses a hypervisor installed onto the bare metal of the host server and then operates a full guest OS within each virtual machine, and each virtual machine often supports only a single primary application. This is a resource-wasteful design and reveals its origins as separate physical machines.
+
+Containerization or OS-virtualization is based on the concept of eliminating the duplication of OS elements in a virtual machine. Instead, each application is placed into a container that includes only the actual resources needed to support the enclosed application, and the common or shared OS elements are then part of the hypervisor. Some deployments claim to eliminate the hypervisor altogether and replace it with a collection of common binaries and libraries for the containers to call upon when needed. Containerization is able to provide 10 to 100 times more application density per physical server than that provided by traditional hypervisor virtualization solutions.
+
+There are many different technological solutions that are grouped into the concept of containerization. Some refer to the application instances as containers, zones, cells, virtual private servers, partitions, virtual environments, virtual kernels, or jails. Some containerization solutions allow for multiple concurrent applications within a single container, whereas others are limited to one per container. Many containerization solutions allow for customization of how much interaction applications in separate containers is allowed.
+
 ## Serverless Architecture
+
+Serverless architecture is a cloud computing concept where code is managed by the customer and the platform (i.e., supporting hardware and software) or server is managed by the cloud service provider (CSP). There is always a physical server running the code, but this execution model allows the software designer/architect/programmer/developer to focus on the logic of their code and not have to be concerned about the parameters or limitations of a specific server. This is also known as function as a service (FaaS).
+
+Applications developed on serverless architecture are similar to microservices, and each function is crafted to operate independently and autonomously. This allows each function to be independently scaled by the CSP (Cloud Service Provider). This is distinct from platform as a service (PaaS), where an entire execution environment or platform is spun up to host an application, and it is always running, consuming resources, racking up costs, even when it is not actively being used. With serverless architecture or FaaS, the functions run only when called and then terminate when their operations are completed, thus minimizing costs.
 
 ## Mobile Devices
 

@@ -2016,43 +2016,43 @@ iOS is the mobile device OS from Apple that is standard on the iPhone, iPad, and
 
 ### 1. Mobile Device Security Features
 
-#### Mobile Device Management
+#### 1. Mobile Device Management
 
 Administrators register employee devices with a mobile device management (MDM) system. Mobile device management (MDM) is a software solution to the challenging task of managing the myriad mobile devices that employees use to access company resources. The MDM system monitors and manages mobile devices and ensures that they are kept up-to-date. The goals of MDM are to improve security, provide monitoring, enable remote management, and support troubleshooting. Many MDM solutions support a wide range of devices and can operate across many service providers. You can use MDM to push or remove apps, manage data, and enforce configuration settings both over the air (across a carrier network) and over Wi-Fi connections. MDM can be used to manage company-owned devices as well as personally owned devices.
 
 Unified endpoint management (UEM) is a type of software tool that provides a single management platform to control mobile, PC, IoT, wearables, ICS, and other devices. UEM is intended to replace MDM and enterprise mobility management (EMM) products, by combining the features of numerous products into one solution.
 
-#### Device Authentication
+#### 2. Device Authentication
 
 Authentication on or to a mobile device is often fairly simple, especially for mobile phones and tablets. This is known as device authentication. However, a swipe or pattern access shouldn’t be considered true authentication. Whenever possible, use a password, provide a **personal identification number (PIN)**, offer your eyeball or face for recognition, scan your fingerprint, provide a **USB key**, or use a proximity device such as a **near-field communication (NFC)** or **radio-frequency identification (RFID)** ring or tile. These means of device authentication are much more difficult for a thief to bypass if properly implemented. It’s also prudent to combine device authentication with device encryption to block access to stored information via a connection cable.
 
 A strong password would be a great idea on a phone or other mobile device if locking the phone provided true security. But most mobile devices aren’t that secure, so even with a strong password, the device may still be accessible over Bluetooth, wireless, or a USB cable. If a specific mobile device blocked access to the device when the system lock was enabled, this would be a worthwhile feature to set to trigger automatically after a period of inactivity or manual initialization (often related to screen lock). This benefit is usually obtained when you enable both a device password and storage encryption.
 
-#### Full-Device Encryption
+#### 3. Full-Device Encryption
 
 Some mobile devices, including portable computers, tablets, and mobile phones, may offer full-device encryption (FDE). Many mobile devices either are pre-encrypted or can be encrypted by the user/owner. Once a mobile device is encrypted, the user’s data is protected whenever the screen is locked, which causes the physical data port on the device to be disabled. This prevents unauthorized access to data on the device through a physical cable connection as long as the screen remains locked.
 
 If most or all of the storage media of a device can be encrypted, this is usually a worthwhile feature to enable. However, encryption isn’t a guarantee of protection for data, especially if the device is stolen while unlocked or if the system itself has a known backdoor attack vulnerability.
 
-#### Communication Protection
+#### 4. Communication Protection
 
 Voice encryption may be possible on mobile devices when **Voice over Internet Protocol (VoIP)** services are used. VoIP service between computer-like devices is more likely to offer an encryption option than VoIP connections to a traditional landline phone or typical mobile phone. When a voice conversation is encrypted, eavesdropping becomes worthless because the contents of the conversation are undecipherable.
 
 This concept of communication protection should be applied to any type of transmission, whether video, text, or data. There are numerous apps that provide encrypted communications, many using standard and well-respected cryptography solutions, such as the Signal protocol (see Chapters 6 and 7 for more on encryption).
 
-#### Remote Wiping
+#### 5. Remote Wiping
 
 Remote wipe or remote sanitization is to be performed if a device is lost or stolen. A remote wipe lets you delete all data and possibly even configuration settings from a device remotely. The wipe process can be triggered over mobile phone service or sometimes over any internet connection (such as Wi-Fi). However, a remote wipe isn’t a guarantee of data security. The wiping trigger signal might not be received by the device. Thieves may be smart enough to prevent connections that would trigger the wipe function while they dump out the data. This could be accomplished by removing the **subscriber identity module (SIM) card,** **disabling Wi-Fi, and/or placing the device in a Faraday cage.**
 
 Additionally, a remote wipe is mostly a deletion operation and resetting the device back to factory conditions. The use of an undelete or data recovery utility can often recover data on a wiped device. To ensure that a remote wipe destroys data beyond recovery, the device should be encrypted (aka full-device encryption [FDE]). Thus, the undelete operation would only be recovering encrypted data, which the attacker should be unable to decipher.
 
-#### Device Lockout
+#### 6. Device Lockout
 
 Lockout on a mobile device is similar to account lockout on a company workstation. When a user fails to provide their credentials after repeated attempts, the account or device is disabled (locked out) for a period of time or until an administrator clears the lockout flag.
 
 Mobile devices may offer a device lockout feature, but it’s in use only if a screen lock has been configured. Otherwise, a simple screen swipe to access the device doesn’t provide sufficient security, because an authentication process doesn’t occur. Some devices trigger ever longer delays between access attempts as a greater number of authentication failures occur. Some devices allow for a set number of attempts (such as three) before triggering a lockout that lasts minutes or hours. Other devices trigger a persistent lockout and require the use of a different account or master password/code to regain access to the device. Some devices may even have a maximum number of logon attempts (such as 10), before securely wiping all data on the device and resetting back to factory settings. Be sure to know the exact nature of a device’s lockout mechanism before attempting to guess credentials; otherwise you might inadvertently trigger a security wipe.
 
-#### Screen Locks
+#### 7. Screen Locks
 
 A screen lock is designed to prevent someone from casually picking up and being able to use your phone or mobile device. However, most screen locks can be unlocked by swiping across the screen or drawing a pattern. Neither of these is truly a secure operation. These easybypass options may be the default on the device but should be changed to something more secure and resistive of unauthorized access, such as a **PIN, password, or biometric**. Otherwise, it is functioning as a screen saver rather than a secure screen lock.
 
@@ -2060,7 +2060,7 @@ A screen lock is designed to prevent someone from casually picking up and being 
 
 Screen locks are often triggered after a timeout period of nonuse. Most devices can be configured to auto-trigger a password-protected screen saver if the system is left idle for a few minutes. Similarly, many tablets and mobile phones can be set to trigger a screen lock and dim or turn off the display after a set time period, such as 30 seconds. The lockout feature ensures that if you leave your device unattended or it’s lost or stolen, it will be difficult for anyone else to be able to access your data or applications. To unlock the device, you must enter valid credentials (see the previous section, “Device Authentication”).
 
-#### GPS and Location Services
+#### 8. GPS and Location Services
 
 The **Global Positioning System (GPS)** is a satellite-based geographical location service. Many mobile devices include a **GPS chip** to support and benefit from localized services, such as navigation, so it’s possible to track those devices. The GPS chip itself is usually just a receiver of signals from orbiting GPS satellites. However, applications on the mobile device can record the GPS location of the device and then report it to an online service. You can use GPS tracking to monitor your own movements, track the movements of others (such as minors or delivery personnel), or track down a stolen device. But for GPS tracking to work, the mobile device must have internet or wireless phone service over which to communicate its location information. Apps are able to provide location-based services as well as reveal the location of the device (and thus its user/owner) to third parties (sometimes without consent). This risk needs to be evaluated in regard to the organizational security policy and relative location-based risks.
 
@@ -2078,7 +2078,7 @@ The most commonly discussed location service of a mobile device is that of GPS. 
 
 **Geofencing** is the designation of a specific geographical area that is then used to automatically implement features or trigger settings on mobile devices. A geofence can be defined by GPS coordinates, WiPS, or the presence of or lack of a specific wireless signal. A device can be configured to enable or disable features based on a geofenced area, such as an onboard camera or the Wi-Fi capability.
 
-#### Content Management
+#### 9. Content Management
 
 Content management is the control over mobile devices and their access to content hosted on company systems as well as the control of access to company data stored on mobile devices. Typically, an MCM (mobile content management) system is used to control company resources and the means by which they are accessed or used on mobile devices. An MCM can take into account a device’s capabilities, storage availability, screen size, bandwidth limitations, memory (RAM), and processor capabilities when rendering or sending data to mobile devices.
 
@@ -2086,7 +2086,7 @@ The goal of a content management system (CMS) for mobile devices is to maximize 
 
 A content filter, which may block access to resources, data, or services based on IP address, domain name, protocol, or keyword, is more often implemented as a firewall service rather than as an on-device mechanism. Therefore, content filtering is usually enforced by the network through which the communication is taking place.
 
-#### Application Control
+#### 10. Application Control
 
 Application control or application management is a device-management solution that limits which applications can be installed onto a device. It can also be used to force specific applications to be installed or to enforce the settings of certain applications in order to support a security baseline or maintain other forms of compliance. Using application control can often reduce exposure to malicious applications by limiting the user’s ability to install apps that come from unknown sources or that offer non-work-related features. This mechanism is often implemented by an MDM. Without application control, users could theoretically install malicious code, run data stealing software, operate apps that reveal location data, or not install business-necessary applications.
 
@@ -2096,25 +2096,25 @@ Due to the growth of malware, an application allow listing approach is one of th
 
 **Mobile application management (MAM)** is similar to an MDM but focuses only on app management rather than managing the entire mobile device.
 
-#### Push Notifications
+#### 11. Push Notifications
 
 Push notification services are able to send information to your device rather than having the device (or its apps) pull information from an online resource. Push notifications are useful in being notified about a concern immediately, but they can also be a nuisance if they are advertising or spam. Many apps and services can be configured to use push and/or pull notifications. Mostly, push notifications are a distraction, but it is possible to perform social engineering attacks via these messages as well as distribute malicious code or links to abusive sites and services.
 
 Push notifications are also a concern in browsers for both mobile devices and PCs. Another issue is that malicious or pernicious notifications may capture a user in a push locker. If the user denies agreement to a push prompt, it may redirect them to a subdomain where another push notification is displayed. If they deny again, then they are redirected again to yet another subdomain, to then see another push notification. This can be repeated indefinitely. Until your browser and/or **host-based intrusion detection system (HIDS)** can detect and respond to push lockers, the only response is to close/terminate the browser and not return to the same URL.
 
-#### Third-Party Application Stores
+#### 12. Third-Party Application Stores
 
 The **first-party** application (aka app) stores of **Apple iTunes and Google Play** are reasonable sources for apps for use on the typical or standard iOS and Android smartphone or device. For Android devices, the **second-party Amazon Appstore** is also a worthwhile source of apps. However, most other sources of apps for either smart-device platform are labeled as third-party application stores. Third-party app stores often have less rigorous security rules regarding hosting an app. On Android devices, simply enabling a single feature to install apps from unknown sources allows the use of third-party app stores (as well as sideloading; see the section “Sideloading,” later in this chapter). For Apple iOS devices, you are limited to the official iTunes App Store unless you jailbreak or root the device (which is not usually a security recommendation).
 
 When a mobile device is being managed by an organization, especially when using an MDM/UEM/MAM, most third-party sources of apps will be blocked. Such third-party app sources represent a significant increase in risk of data leakage or malware intrusion to an organizational network.
 
-#### Storage Segmentation
+#### 13. Storage Segmentation
 
 Storage segmentation is used to artificially compartmentalize various types or values of data on a storage medium. On a mobile device, storage segmentation may be used to isolate the device’s OS and preinstalled apps from user-installed apps and user data. Some MDMs/ UEMs further impose storage segmentation in order to separate company data and apps from user data and apps. This allows for ownership and rights over user data to be retained by the user, while granting ownership and rights over business data (such as remote wiping) to the organization, even on devices owned by the employee.
 
 With or without storage segmentation, risk can be reduced by minimizing the storage of nonessential data, sensitive data, and personal data (i.e., PII and PHI) on a device. So, even if a device is lost or stolen, the loss potential is kept to a minimum if there is little to no valuable data on the system for an adversary to gain access to.
 
-#### Asset Tracking and Inventory Control
+#### 14. Asset Tracking and Inventory Control
 
 **Asset tracking** is the management process used to maintain oversight over an inventory, such as deployed mobile devices. An asset-tracking system can be passive or active. Passive systems rely on the asset itself to check in with the management service on a regular basis, or the device is detected as being present in the office each time the employee arrives at work. An active system uses a polling or pushing technology to send out queries to devices in order to elicit a response.
 
@@ -2124,7 +2124,7 @@ Some **asset-tracking solutions** expand beyond hardware inventory management an
 
 **Inventory control** is the concept of using a mobile device as a means of tracking inventory in a warehouse or storage cabinet. Most mobile devices have a camera. Using a mobile device’s camera, apps that can take photos, scan bar codes, recognize things by shape/design, or interpret Quick Response (QR) codes can be used to track physical goods. Those mobile devices with RFID or NFC capabilities may be able to interact with objects or their containers that have been electronically tagged.
 
-#### Removable Storage
+#### 15. Removable Storage
 
 Many mobile devices support removable storage. Some devices support microSD cards, which can be used to expand available storage on a mobile device. However, most mobile phones require the removal of a back plate and sometimes removal of the battery in order to add or remove a storage card. Larger mobile phones, tablets, and laptop computers may support an easily accessible card slot on the side of the device.
 
@@ -2134,7 +2134,7 @@ In addition, there are mobile storage devices that can provide Bluetooth- or Wi-
 
 Organizations need to consider whether the use of removable storage on portable and mobile devices is a convenient benefit or a significant risk vector. If the former, proper access limitations and use training are necessary. If the latter, then a prohibition of removable storage can be implemented via MDM/UEM.
 
-#### Connection Methods
+#### 16. Connection Methods
 
 Mobile devices may support a number of various connection options. These may be network connections that link to an external provider, such as a telco, or the local private network.
 
@@ -2142,11 +2142,11 @@ For any organization, it is important to consider the scenarios where workers ar
 
 A range of wireless or radio-wave based communication concepts are covered in Chapter 11, including radio frequency identification (RFID), near-field communication (NFC), wireless/Wi-Fi (IEEE 802.11), Bluetooth (IEEE 802.15), and cellular/mobile networks.
 
-#### Disabling Unused Features
+#### 17. Disabling Unused Features
 
 Although enabling security features is essential for them to have any beneficial effect, it’s just as important to remove apps and disable features that aren’t essential to business tasks or common personal use. The wider the range of enabled features and installed apps, the greater the chance that an exploitation or software flaw will cause harm to the device and/ or the data it contains. Following common security practices, such as hardening, reduces the attack surface of mobile devices.
 
-#### Rooting or Jailbreaking
+#### 18. Rooting or Jailbreaking
 
 Rooting or jailbreaking (the special term for rooting Apple devices) is the action of breaking the digital rights management (DRM) security on the bootloader of a mobile device in order to be able to operate the device with root or full system privileges. Most mobile devices are locked in such a way as to restrict end-user activity to that of a limited user. But a **root user can manipulate the OS, enable or disable hardware features, and install software applications that are not available to the limited user.** Rooting may enable a user to change the core OS or operate apps that are unavailable in the standard app stores. However, this is not without its risks. Operating in rooted status also reduces security, since any executable also launches with full root privileges. Many forms of malicious code cannot gain footing on normal mode devices but can easily take root (pun intended) when the user has rooted or jailbroken their device.
 
@@ -2154,37 +2154,37 @@ Generally, an organization should prohibit the use of rooted devices on the comp
 
 It is legal to root a device if you fully own the device, if you are in a one- or two-year contract with a hardware fee, or if you are in a lease-to-own contract and you do not fully own the device until that contract is fulfilled. Legal root does not require a manufacturer, vendor, or telco to honor any warranty. In most cases, any form of system tampering, including rooting, voids your warranty. Rooting may also void your support contract or replacement contract. Rooting is actively suppressed by the telcos, many carriers, and some product vendors, Apple being the main example. A rooted device might be prohibited to operate over a telco network, access resources, download apps, or receive future updates. Thus, though it is often legal to root a device, there are numerous consequences to consider prior to altering a mobile device in that manner.
 
-#### Sideloading
+#### 19. Sideloading
 
 Sideloading is the activity of installing an app on a device by bringing the installer file to the device through some form of file transfer or USB storage method. Most organizations should prohibit user sideloading, because it may be a means to bypass security restrictions imposed by an app store, application allow listing, or the MDM/UEM/MAM. An MDM/UEM/MAMenforced configuration can require that all apps be digitally signed; this would eliminate sideloading and likely jailbreaking as well.
 
-#### Custom Firmware
+#### 20. Custom Firmware
 
 Mobile devices come preinstalled with a vendor- or telco-provided firmware or core OS. If a device is rooted or jailbroken, it can allow the user to install alternate custom firmware in place of the default firmware. Custom firmware may remove bloatware, add or remove features, and streamline the OS to optimize performance. You can find online discussion forums and communities, such as xda-developers.com and howardforums.com, that specialize in custom firmware for Apple and Android devices.
 
 An organization should not allow users to operate mobile devices that have custom firmware unless that firmware is preapproved by the organization.
 
-#### Carrier Unlocking
+#### 21. Carrier Unlocking
 
 Most mobile devices purchased directly from a telco are carrier locked. This means you are unable to use the device on any other telco network until the carrier lock is removed or carrier unlocked. Once you fully own a device, the telco should freely carrier unlock the phone, but you will have to ask for it specifically because they don’t do so automatically. If you have an account in good standing and are traveling to another country with compatible telco service, you may be able to get a telco to carrier unlock your phone for your trip so that you can temporarily use another SIM card for local telco services. Note that SIM cards are used for **Global System for Mobile communication (GSM)**-related phones, whereas Code Division Multiple Access (CDMA)-based phones use an electronic serial number (ESN), which is embedded into the phone to identify the device and user as well as control the device’s service and use.
 
 Having a device carrier unlocked is not the same as rooting. Carrier unlocked status only allows the switching of telco services (which is technically possible only if your device uses the same radio frequencies as the telco). A carrier unlocked device should not represent any additional risk to an organization; thus, there is likely no need for a prohibition of carrier unlocked devices on company networks.
 
-#### Firmware Over-the-Air (OTA) Updates
+#### 22. Firmware Over-the-Air (OTA) Updates
 
 Firmware over-the-air (OTA) updates are firmware updates that are downloaded from the telco or vendor over-the-air (via a data connection either provided by the carrier or via Wi-Fi). Generally, as a mobile device owner, you should install new firmware OTA updates onto a device once they become available. However, some updates may alter the device configuration or interfere with MDM/UEM restrictions. You should attempt to test new updates before allowing managed devices to receive them. You may have to establish a waiting period so that the MDM/UEM vendor can update their management product to properly oversee the deployment and configuration of the new firmware update. An organization’s standard patch management, configuration management, and change management policies should be applied to mobile devices.
 
-#### Key Management
+#### 23. Key Management
 
 Key management is always a concern when cryptography is involved. Most of the failures of a cryptosystem are based on the key management rather than on the algorithms. Good key selection is based on the quality and availability of random numbers. Most mobile devices must rely locally on poor random-number-producing mechanisms or access more robust random number generators (RNGs) over a wireless link. Once keys are created, they need to be stored in such a way as to minimize exposure to loss or compromise. The best option for key storage is usually removable hardware (such as a MicroSD HSM) or the use of a Trusted Platform Module (TPM), but these are not universally available on mobile devices.
 
-#### Credential Management
+#### 24. Credential Management
 
 The storage of credentials in a central location is referred to as credential management. Given the wide range of internet sites and services, each with its own particular logon requirements, it can be a burden to use unique names and passwords. Credential management solutions offer a means to securely store a plethora of credential sets. Often these tools employ a master credential set (multifactor being preferred) to unlock the dataset when needed. Some credential-management options can even provide auto-login options for apps and websites.
 
 A password vault is another term for a credential manager. These are often software solutions, sometimes hardware based, sometimes local only, and sometimes using cloud storage. They are used to generate and store credentials for sites, services, devices, and whatever other secrets you want to keep private. The vault itself is encrypted and must be unlocked to regain access to the stored items. Most password vaults use Password-Based Key Derivation Function 2 (PBKDF2) or Bcrypt (see Chapter 7) to convert the vault’s master password into a reasonably strong encryption key.
 
-#### Text Messaging
+#### 25. Text Messaging
 
 Short Message Service (SMS), Multimedia Messaging Service (MMS), and Rich Communication Services (RCS) are all useful communication systems, but they also serve as an attack vector (such as smishing and SPIM, discussed in Chapter 2, “Personnel Security and Risk Management Concepts”). These testing and messaging services are primarily operated and supported by the telco providers. Texting can be used as an authentication factor known as SMS-based 2FA. SMS-based 2FA is better than single-factor password only authentication, but it is not recommended if any other second factor option is available. See Chapter 13 for more on SMS-based 2FA.
 

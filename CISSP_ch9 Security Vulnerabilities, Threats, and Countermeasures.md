@@ -1510,8 +1510,6 @@ In short, edge computing performs processing on the distributed edge systems, wh
 - 网络不能混用主业务网
 - 最安全做法是网络分段和“零信任”
 
-------
-
 ##### 总结建议
 
 嵌入式与静态设备的安全管理不同于通用服务器与终端，需要：
@@ -1528,11 +1526,81 @@ Security concerns for embedded systems include the fact that most are designed w
 
 #### Microcontrollers
 
+**定义：**微控制器（Microcontroller，MCU）是一个“**小型集成式计算系统**”，通常包含：
+
+- 一个或多个 **CPU 核心**（通常为低功耗处理器）
+- **内存**（RAM）
+- **非易失性存储**（如 Flash、ROM、PROM、EEPROM）
+- 多种 **输入/输出接口**（GPIO、UART、SPI、I2C 等）
+
+它被设计用于控制一个设备的特定功能 —— 是 **嵌入式系统** 的核心组成部分。
+
 A microcontroller is similar to, but less complex than a system on a chip, or SoC (see Chapter 11). A microcontroller may be a component of an SoC. A microcontroller is a small computer consisting of a CPU (with one or more cores), memory, various input/ output capabilities, RAM, and often nonvolatile storage in the form of flash or ROM/ PROM/EEPROM. Examples include Raspberry Pi, Arduino, and a field-programmable gate array (FPGA).
 
 1. **Raspberry Pi** is a popular example of a 64-bit microcontroller or a single-board computer. These types of microcontrollers provide a small form-factor computer that can be used to add computer control and monitoring almost anything. A Raspberry Pi includes a CPU, RAM, video, and peripheral support (via USB), and some include onboard networking. The Raspberry Pi includes its own custom OS, but dozens of alternative OSs can be installed as a replacement. There is a broad and diverse development community around the Raspberry Pi that is using it as part of science experiments to control coffeemakers.
+
+   1. | 项目     | 描述                                                        |
+      | -------- | ----------------------------------------------------------- |
+      | 类型     | 单板计算机（Single-board Computer）                         |
+      | 架构     | 通常为 64 位 ARM CPU                                        |
+      | 特点     | 拥有 CPU、RAM、视频输出、USB 接口、以太网/Wi-Fi             |
+      | OS 支持  | 支持 Linux、Raspberry Pi OS、Ubuntu、甚至 Windows IoT Core  |
+      | 应用场景 | 教育/DIY 项目、IoT 网关、边缘设备、小型服务器、自动化控制等 |
+
+      关键词：功能强、通用性高，可运行完整 OS（非典型微控制器，更接近迷你 PC）
+
 2. **Arduino** is an open source hardware and software organization that creates singleboard 8-bit microcontrollers for building digital devices. An Arduino has limited RAM, a single USB port, and I/O pins for controlling additional electronics (such as servo motors or LED lights), and does not include an OS. Instead, Arduino can execute C++ programs specifically written to its limited instruction set. Whereas Raspberry Pi is a miniature computer, Arduino is a much simpler device.
-3. **A field-programmable gate array (FPGA)** is a flexible computing device intended to be programmed by the end user or customer. FPGAs are often used as embedded devices in a wide range of products, including industrial control systems (ICSs).
+
+   1. | 项目     | 描述                                                |
+      | -------- | --------------------------------------------------- |
+      | 类型     | 8-bit 微控制器开发平台（如 ATmega328）              |
+      | 架构     | AVR 或 ARM                                          |
+      | OS 支持  | 无操作系统，直接运行程序（裸机开发）                |
+      | 开发语言 | C/C++（通过 Arduino IDE）                           |
+      | I/O 接口 | 多个 GPIO，适合电机、传感器、LED 控制等             |
+      | 应用场景 | 教育、自动化实验、小型 IoT 控制器、机器人原型开发等 |
+
+      关键词：轻量、小巧、实时性强，适合控制任务
+
+3. **A field-programmable gate array (FPGA，现场可编程门阵列)** is a flexible computing device intended to be programmed by the end user or customer. FPGAs are often used as embedded devices in a wide range of products, including industrial control systems (ICSs).
+
+   1. | 项目     | 描述                                                |
+      | -------- | --------------------------------------------------- |
+      | 类型     | 可编程硬件逻辑器件（基于逻辑门级别）                |
+      | 开发语言 | 使用 Verilog 或 VHDL 描述硬件电路                   |
+      | 特性     | 高度定制化并行运算，适合硬件逻辑优化                |
+      | 应用场景 | 工业控制系统（ICS）、加密芯片、图像处理、航天军工等 |
+      | 优势     | 灵活可重构，可实现定制化硬件功能                    |
+
+      关键词：硬件级别编程，高性能并行处理，适合对时间和逻辑要求高的场景
+
+##### CISSP 安全关注点
+
+常见安全问题：
+
+| 风险             | 描述                                      |
+| ---------------- | ----------------------------------------- |
+| **固件漏洞**     | 固件难以更新，容易因旧版本被利用          |
+| **无认证机制**   | 默认密码/硬编码密码常见                   |
+| **代码审计不足** | 多数为开源或快速开发，缺乏充分安全测试    |
+| **接口暴露**     | UART/SPI 等调试接口未加保护，易被物理攻击 |
+| **数据未加密**   | 本地通信或传输未使用加密，数据容易被窃取  |
+| **供应链攻击**   | 第三方模块或代码未经验证，可能存在后门    |
+
+##### 安全建议
+
+- 关闭不必要的 I/O 接口
+- 固件使用签名验证机制
+- 启用安全启动（Secure Boot）机制
+- 强化物理访问控制
+- 使用专用硬件加密模块（如 TPM）
+- 严格控制 OTA（Over-The-Air）更新机制
+
+实战记忆小贴士
+
+> **树莓派像迷你电脑，操作系统能跑不少；
+> Arduino 简而精，小程序搞定大工程；
+> FPGA 可编程，逻辑设计跑得灵。**
 
 ### 1. Static Systems
 
@@ -1872,17 +1940,50 @@ The mindset of immutable architecture is often described with the analogy of pet
 - **可版本控制的基础设施**
 - **自动化管理 & 安全可控**
 
-## Virtualized Systems
+## Virtualized Systems - 虚拟化系统
+
+虚拟化是一种**在一台物理计算机上同时运行多个操作系统或应用程序**的技术，核心在于抽象硬件资源。
+
+它实现了：
+
+- 多个系统共享一组硬件资源
+- 异构 OS 共存
+- 灵活部署、弹性扩容
+
+| 优势         | 描述                                     |
+| ------------ | ---------------------------------------- |
+| **节省成本** | 减少物理服务器数量，降低电力、冷却、空间 |
+| **灵活部署** | 快速创建/销毁 VM、弹性负载调整           |
+| **灾难恢复** | 快速恢复 VM 备份/快照                    |
+| **资源优化** | 支持动态资源调配（弹性 Elasticity）      |
+| **沙箱测试** | 安全测试、运行可疑代码而不影响宿主机     |
 
 Virtualization technology is used to host one or more OSs within the memory of a single host computer or to run applications that are not compatible with the host OS. This mechanism allows virtually any OS to operate on any hardware. It also allows multiple OSs to work simultaneously on the same hardware. Common examples include VMware Workstation Pro, VMware vSphere and vSphere Hypervisor, VMware Fusion for Mac, Microsoft Hyper-V Server, Oracle VirtualBox, Citrix Hypervisor, and Parallels Desktop for Mac.
 
 Organizations are consistently implementing more virtualization technologies due to the huge cost savings available. For example, an organization may be able to reduce 100 physical servers to just 10 physical servers, with each physical server hosting 10 virtual servers. This reduces HVAC costs, power costs, and overall operating costs.
 
+### 核心组件与架构
+
+#### 1.Hypervisor（虚拟机管理器）
+
+虚拟化的核心组件，负责创建、管理和运行虚拟机（VM）。
+
 The hypervisor, also known as the virtual machine monitor/manager (VMM), is the component of virtualization that creates, manages, and operates the virtual machines. The computer running the hypervisor is known as the host OS, and the OSs running within a hypervisor-supported virtual machine are known as guest OSs or virtualized systems.
 
-A type I hypervisor is a native or bare-metal hypervisor (Figure 9.3, top). In this configuration, there is no host OS; instead, the hypervisor installs directly onto the hardware where the host OS would normally reside. Type 1 hypervisors are often used to support server virtualization. This allows for maximization of the hardware resources while eliminating any risks or resource reduction caused by a host OS.
+| 类型                  | 特征                        | 应用场景                                        |
+| --------------------- | --------------------------- | ----------------------------------------------- |
+| **Type I（裸金属）**  | 安装在物理硬件上，无宿主 OS | 高性能场景，如 VMware ESXi、Hyper-V Server      |
+| **Type II（宿主型）** | 安装在现有操作系统之上      | 桌面测试开发，如 VMware Workstation、VirtualBox |
 
-A type II hypervisor is a hosted hypervisor (Figure 9.3, bottom). In this configuration, a standard regular OS is present on the hardware, and then the hypervisor is installed as another software application. Type II hypervisors are often used in relation to desktop deployments, where the guest OSs offer safe sandbox areas to test new code, allow the execution of legacy applications, support apps from alternate OSs, and provide the user with access to the capabilities of a host OS.
+**A type I hypervisor** is a native or bare-metal hypervisor (Figure 9.3, top). In this configuration, there is no host OS; instead, the hypervisor installs directly onto the hardware where the host OS would normally reside. Type 1 hypervisors are often used to support server virtualization. This allows for maximization of the hardware resources while eliminating any risks or resource reduction caused by a host OS.
+
+**A type II hypervisor** is a hosted hypervisor (Figure 9.3, bottom). In this configuration, a standard regular OS is present on the hardware, and then the hypervisor is installed as another software application. Type II hypervisors are often used in relation to desktop deployments, where the guest OSs offer safe sandbox areas to test new code, allow the execution of legacy applications, support apps from alternate OSs, and provide the user with access to the capabilities of a host OS.
+
+#### 2. Host 与 Guest
+
+**Host OS / Host Hardware**：安装 Hypervisor 的物理机器或系统
+
+**Guest OS**：运行于 Hypervisor 上的虚拟操作系统
 
 Cloud computing is a natural extension and evolution of virtualization, the internet, distributed architecture, and the need for ubiquitous access to data and resources. However, it does have some potential security issues, including privacy concerns, regulation compliance difficulties, use of open versus closed source solutions, adoption of open standards, and whether or not cloud-based data is actually secured (or even securable). See Chapter 16 for details on cloud computing.
 
@@ -1896,7 +1997,14 @@ In relation to security, virtualization offers several benefits. It is often eas
 
 Virtualization is used for a wide variety of new architectures and system design solutions. Locally (or at least within an organization’s private infrastructure), virtualization can be used to host servers, client OSs, limited user interfaces (i.e., virtual desktops), applications, and more.
 
-### 1. Virtual Software
+### 虚拟化的相关技术
+
+#### 1. Virtual Software / Application
+
+软件层级的虚拟化，让应用被“隔离执行”：
+
+- 如：Microsoft App-V、VMware ThinApp、Sandboxie
+- 沙箱机制，阻断对实际 OS 的改动
 
 A virtual application or virtual software is a software product deployed in such a way that it is fooled into believing it is interacting with a full host OS. A virtual (or virtualized) application has been packaged or encapsulated so that it can execute but operate without full access to the host OS. A virtual application is isolated from the host OS so that it cannot make any direct or permanent changes to the host OS. Any changes, such as file writes, configuration file or registry modifications, or system setting alterations are intercepted by the isolation manager and recorded (typically into a single file). This allows the contained software to perceive it has interaction with the OS, without that interaction actually taking place. Thus, the virtualized application executes just like any regularly installed application, but it is only interacting and changing with a virtual representation of the OS, not the actual OS. In many instances, this concept is sandboxing. There are many products that provide software virtualization, including Citrix Virtual Apps, Microsoft App-V, Oracle Secure Global Desktop, Sandboxie, and VMware ThinApp.
 
@@ -1906,19 +2014,30 @@ Some software virtualization solutions enable applications from one OS to be ope
 
 The concept software virtualization has evolved into its own virtualization derivative concept known as containerization, which is covered in a later section, “Containerization.”
 
-### 2. Virtualized Networking
+#### 2. Virtualized Networking
+
+虚拟网络可构建虚拟交换机、虚拟 LAN：
+
+- 网络隔离更灵活
+- 支持软件定义网络（SDN）
+- 可在 VM 之间定义内部网络（不出物理网卡）
 
 The concept of OS virtualization has given rise to other virtualization topics, such as virtualized networks. A virtualized network or network virtualization is the combination of hardware and software networking components into a single integrated entity. The resulting solution allows for software control over all network functions: management, traffic shaping, address assignment, and so on. A single management console or interface can be used to oversee every aspect of the virtual network, a task that required physical presence at each hardware component in the past. Virtualized networks have become a popular means of infrastructure deployment and management by corporations worldwide. They allow organizations to implement or adapt other interesting network solutions, including SDNs, virtual SANs, guest OSs, and port isolation.
 
 Custom virtual network segmentation can be used in relation to virtual machines to make guest OSs members of the same network division as that of the host, or guest OSs can be placed into alternate network divisions. A virtual machine can be made a member of a different network segment from that of the host or placed into a network that only exists virtually and does not relate to the physical network media (effectively an SDN; see Chapter 11).
 
-### 3. Software-Defined Everything
+#### 3. SDx （Software-Defined Everything）
+
+- 软件定义数据中心（SDDC）
+- 虚拟桌面架构（VDI）
+- 虚拟移动基础架构（VMI）
+- 软件定义可视化（SDV）
 
 Virtualization extends beyond just servers and networking. Software-defined everything (SDx) refers to a trend of replacing hardware with software using virtualization. SDx includes virtualization, virtualized software, virtual networking, containerization, serverless architecture, infrastructure as code, SDN (Chapter 11), VSAN (Chapter 11), software-defined storage (SDS) (Chapter 11), VDI, VMI, SDV, and software-defined data center (SDDC).
 
 The SDx examples that are not defined elsewhere (either in this chapter or in Chapter 11) are discussed here.
 
-Virtual desktop infrastructure (VDI) is a means to reduce the security risk and performance requirements of end devices by hosting desktop/workstation OS virtual machines on central servers that are remotely accessed by users. Thus, VDI is also known as a virtual desktop environment (VDE). Users can connect to the server to access their desktop from almost any system, including from mobile devices. Persistent virtual desktops retain a customizable desktop for the user. Nonpersistent virtual desktops are identical and static for all users. If a user makes changes, the desktop reverts to a known state after the user logs off. (See the discussion of static systems earlier in this chapter under “Static Systems.”)
+**Virtual desktop infrastructure (VDI)** is a means to reduce the security risk and performance requirements of end devices by hosting desktop/workstation OS virtual machines on central servers that are remotely accessed by users. Thus, VDI is also known as a virtual desktop environment (VDE). Users can connect to the server to access their desktop from almost any system, including from mobile devices. Persistent virtual desktops retain a customizable desktop for the user. Nonpersistent virtual desktops are identical and static for all users. If a user makes changes, the desktop reverts to a known state after the user logs off. (See the discussion of static systems earlier in this chapter under “Static Systems.”)
 
 The term virtual desktop can refer to at least three different types of technology:
 
@@ -1926,19 +2045,75 @@ The term virtual desktop can refer to at least three different types of technolo
 - An extension of the virtual application concept encapsulating multiple applications and some form of “desktop” or shell for portability or crossOS operation. This technology offers some of the features/benefits/applications of one platform to users of another without the need for using multiple computers, dual-booting, or virtualizing an entire OS platform.
 - An extended or expanded desktop larger than the display being used allows the user to employ multiple application layouts, switching between them using keystrokes or mouse movements.
 
-VDI has been adopted into mobile devices and has already been widely used in relation to tablets and laptop computers. It is a means to retain storage control on central servers, gain access to higher levels of system processing and other resources, and allow lower-end devices access to software and services beyond their hardware’s capacity. This has led to virtual mobile infrastructure (VMI), where the OS of a mobile device is virtualized on a central server. Thus, most of the actions and activities of the traditional mobile device are no longer occurring on the mobile device itself. This remote virtualization allows an organization greater control and security than when using a standard mobile device platform. It can also enable personally owned devices to interact with the VDI without increasing the risk profile.
+VDI has been adopted into mobile devices and has already been widely used in relation to tablets and laptop computers. It is a means to retain storage control on central servers, gain access to higher levels of system processing and other resources, and allow lower-end devices access to software and services beyond their hardware’s capacity. 
+
+This has led to **virtual mobile infrastructure (VMI)**, where the OS of a mobile device is virtualized on a central server. Thus, most of the actions and activities of the traditional mobile device are no longer occurring on the mobile device itself. This remote virtualization allows an organization greater control and security than when using a standard mobile device platform. It can also enable personally owned devices to interact with the VDI without increasing the risk profile.
 
 A thin client is a computer or mobile device with low to modest capability or a virtual interface that is used to remotely access and control a mainframe, virtual machine, VDI, or VMI. Thin clients were common in the 1980s when most computation took place on a central mainframe computer. Today, thin clients are being reintroduced as a means to reduce the expenses of high-end endpoint devices where local computation and storage are not required or are a significant security risk. A thin client can be used to access a centralized resource hosted on premises or in the cloud. All processing/storage is performed on the server or central system, so the thin client provides the user with display, keyboard, and mouse/touchscreen functionality.
 
-Software-defined visibility (SDV) is a framework to automate the processes of network monitoring and response. The goal is to enable the analysis of every packet and make deep intelligence-based decisions on forwarding, dropping, or otherwise responding to threats. SDV is intended to benefit companies, security entities, and managed service providers (MSPs). The goal of SDV is to automate detection, reaction, and response. SDV provides security and IT management with oversight into all aspects of the company network, both on-premises and in the cloud, with an emphasis on defense and efficiency. SDV is another derivative of IaC.
+**Software-defined visibility (SDV)** is a framework to automate the processes of network monitoring and response. The goal is to enable the analysis of every packet and make deep intelligence-based decisions on forwarding, dropping, or otherwise responding to threats. SDV is intended to benefit companies, security entities, and managed service providers (MSPs). The goal of SDV is to automate detection, reaction, and response. SDV provides security and IT management with oversight into all aspects of the company network, both on-premises and in the cloud, with an emphasis on defense and efficiency. SDV is another derivative of IaC.
 
-Software-defined data center (SDDC) or virtual data center (VDC) is the concept of replacing physical IT elements with solutions provided virtually, and often by an external third party, such as a cloud service provider (CSP). SDDC is effectively another XaaS concept, namely IT as a service (ITaaS). It is similar to infrastructure as a service (IaaS), and thus some claim it is nothing more than a marketing or advertising term of misdirection.
+**Software-defined data center (SDDC)** or virtual data center (VDC) is the concept of replacing physical IT elements with solutions provided virtually, and often by an external third party, such as a cloud service provider (CSP). SDDC is effectively another XaaS concept, namely IT as a service (ITaaS). It is similar to infrastructure as a service (IaaS), and thus some claim it is nothing more than a marketing or advertising term of misdirection.
 
 #### Services Integration
 
 Services integration, cloud integration, systems integration, and integration platform as a service (iPaaS) is the design and architecture of an IT/IS solution that stitches together elements from on-premises and cloud sources into a seamless productive environment. The goals of services integration are to eliminate data silos (a situation where data is contained in one area and thus inaccessible to other applications or business units), expand access, clarify processing visibility, and improve functional connectivity of onsite and offsite resources. This can also be viewed as an example of SDDC. See Chapter 16 for more on cloud services.
 
 ### 4. Virtualization Security Mangement
+
+#### 安全优势与挑战
+
+##### ✅ 安全优势
+
+| 优势         | 说明                     |
+| ------------ | ------------------------ |
+| **隔离性强** | VM 间、VM 与宿主系统隔离 |
+| **快速恢复** | 快照机制支持秒级恢复     |
+| **集中管理** | 安全配置和策略可统一部署 |
+
+##### ⚠️ 安全挑战
+
+| 问题                        | 风险描述                                 |
+| --------------------------- | ---------------------------------------- |
+| **VM Escape（逃逸）**       | 虚拟机代码突破 Hypervisor 隔离，如 VENOM |
+| **VM Sprawl（虚拟机蔓延）** | 缺乏统一管理，造成安全隐患               |
+| **宿主机被攻击**            | 会导致所有 VM 同时暴露风险               |
+| **Hypervisor 攻击面大**     | 成为攻击者优先目标，需定期更新修补       |
+| **影子 IT（Shadow IT）**    | 未授权创建虚拟系统，绕过 IT 控制         |
+
+#### Elasticity vs Scalability
+
+| 概念                        | 描述                           | 举例                       |
+| --------------------------- | ------------------------------ | -------------------------- |
+| **Elasticity（弹性）**      | 系统动态增减资源以应对波动负载 | 云主机根据负载自动调整 CPU |
+| **Scalability（可扩展性）** | 系统结构具备横向或纵向扩展能力 | 增加节点来处理更大业务规模 |
+
+> **区别：** 弹性是即时调整，扩展性是结构性增强。
+
+#### 虚拟桌面与远程虚拟化
+
+##### Virtual Desktop Infrastructure（VDI）
+
+- **集中托管桌面系统**，用户远程访问
+- 分为 **Persistent**（可持久保存变更）和 **Nonpersistent**（会重置）
+
+##### Virtual Mobile Infrastructure（VMI）
+
+- 移动设备桌面集中在服务器运行，提高数据安全
+
+##### Thin Client（瘦客户端）
+
+- 本地仅提供显示/输入，依赖远程计算资源
+
+#### 虚拟化安全建议（CISSP 考点）
+
+| 控制措施               | 说明                           |
+| ---------------------- | ------------------------------ |
+| 只做虚拟化用途的宿主机 | 避免主机被非虚拟操作干扰或感染 |
+| 定期更新 Hypervisor    | 防止利用漏洞如 VM Escape       |
+| 快照与备份机制         | 实现 VM 恢复能力               |
+| 统一 VM 镜像库管理     | 避免 VM Sprawl 和配置漂移      |
+| 对虚拟网络分段         | 降低横向移动风险，增强隔离性   |
 
 The primary software component in virtualization is a hypervisor. The hypervisor manages the VMs, virtual data storage, and virtual network components. As an additional layer of software on the physical server, it represents an additional attack surface. If an attacker can compromise a physical host, the attacker can potentially access all of the virtual systems hosted on the physical server. Administrators often take extra care to ensure that virtual hosts are hardened.
 
@@ -1968,7 +2143,38 @@ Shadow IT is a term used to describe the IT components (physical or virtual) dep
 
 Shadow IT usually does not follow company security policy, and it might not be kept current and updated with patches. Shadow IT often lacks proper documentation, is not under consistent oversight and control, and may not be reliable or fault tolerant. Shadow IT greatly increases the risk of disclosure of sensitive, confidential, proprietary, and personal information to unauthorized insiders and outsiders. Shadow IT can be composed of physical devices, virtual machines, or cloud services.
 
-## Containerization
+## Containerization - 容器化
+
+容器化是一种**操作系统层级的虚拟化技术（OS-level Virtualization）**。与传统 VM 不同，容器共享主机操作系统内核，但每个容器**运行在独立的用户空间**中，具备自己的文件系统、网络堆栈、进程表等。
+
+### 容器 vs 虚拟机：对比
+
+| 项目         | 虚拟机 VM                 | 容器（Container）    |
+| ------------ | ------------------------- | -------------------- |
+| **单位**     | 一个完整系统（含 OS）     | 单个应用或服务       |
+| **启动速度** | 几分钟                    | 秒级                 |
+| **资源占用** | 重（每个 VM 都有完整 OS） | 轻量（共享宿主 OS）  |
+| **隔离级别** | 强（完整 VM 隔离）        | 相对弱（共享内核）   |
+| **适合场景** | 多样 OS 环境部署          | 高密度部署、快速交付 |
+
+### 优势
+
+- 🚀 启动快：容器启动只需几秒，适合弹性场景
+- 📉 资源高效：共享内核，节省内存与存储
+- 🔧 一致性：容器运行环境一致，减少“在我电脑上没问题”问题
+- 🔁 易于持续集成/部署（CI/CD）
+- 📦 易于构建微服务架构
+
+### 容器技术栈例子
+
+| 名称               | 功能说明                               |
+| ------------------ | -------------------------------------- |
+| **Docker**         | 主流容器平台，支持构建、打包、发布容器 |
+| **Kubernetes**     | 容器编排平台，管理数百上千容器         |
+| **LXC / LXD**      | Linux 容器虚拟化机制                   |
+| **Podman / CRI-O** | 替代 Docker 的无守护进程容器运行时     |
+
+> 🚨 注意：容器并不等同于完全隔离，需加强安全管理，如最小权限、网络隔离等。
 
 Containerization is the next stage in the evolution of the virtualization trend for both internally hosted systems and cloud providers and services. A virtual machine–based system uses a hypervisor installed onto the bare metal of the host server and then operates a full guest OS within each virtual machine, and each virtual machine often supports only a single primary application. This is a resource-wasteful design and reveals its origins as separate physical machines.
 
@@ -1976,13 +2182,91 @@ Containerization or OS-virtualization is based on the concept of eliminating the
 
 There are many different technological solutions that are grouped into the concept of containerization. Some refer to the application instances as containers, zones, cells, virtual private servers, partitions, virtual environments, virtual kernels, or jails. Some containerization solutions allow for multiple concurrent applications within a single container, whereas others are limited to one per container. Many containerization solutions allow for customization of how much interaction applications in separate containers is allowed.
 
-## Serverless Architecture
+## Serverless Architecture - 无服务器架构
+
+Serverless 架构是云平台中一种**事件驱动型计算模型**，也称为 **函数即服务（FaaS, Function as a Service）**。在这种架构中：
+
+- 开发者只关注代码本身（业务逻辑）
+- 服务器的配置、运维由云服务商负责
+- **函数按调用计费**，无需长时间保持运行
+
+### 与 PaaS 的区别
+
+| 项目       | PaaS                           | Serverless（FaaS）           |
+| ---------- | ------------------------------ | ---------------------------- |
+| 托管单位   | 整个平台（web 应用、数据库等） | 单个函数                     |
+| 计费方式   | 运行时长、资源使用             | 按调用次数与运行时间计费     |
+| 启动方式   | 常驻服务                       | 被调用时才启动               |
+| 运维复杂度 | 较高                           | 极低，几乎无需关心服务器细节 |
+
+### 特点
+
+- 💡 **事件驱动**：函数仅在特定事件触发时执行
+- ⚙️ **高扩展性**：平台自动横向扩展，支持并发调用
+- 💰 **成本优化**：函数不运行就不计费
+- 🚫 **无状态化**：函数执行前后不保存状态
+
+### 典型应用场景
+
+- HTTP API 网关请求响应
+- 数据处理管道（ETL）
+- 定时任务调度
+- 触发自动缩放或告警处理
+
+### 安全与考点提示（CISSP Focus）
+
+| 风险点                           | 应对策略                                  |
+| -------------------------------- | ----------------------------------------- |
+| 容器逃逸（Container Escape）     | 使用 AppArmor、SELinux、seccomp 加固      |
+| 容器映像漏洞                     | 使用签名验证、安全镜像仓库（如 Notary）   |
+| 跨容器攻击                       | 网络策略隔离，最小权限配置                |
+| 无服务器函数滥用                 | API Gateway 限流、身份验证机制、监控      |
+| 函数依赖外部服务                 | 加强通信加密，确保第三方安全性            |
+| 资源滥用攻击（Denial of Wallet） | 设置调用频率和资源限制（timeout、memory） |
+
+### 容器与 Serverless 的结合
+
+现代云应用可同时采用这两种架构：
+
+- **容器**适合需要一定状态保持、长生命周期的服务
+- **Serverless** 适合**突发、事件触发型、小型服务**
+
+**在 Kubernetes 中也可以运行 Serverless 架构**，如：
+
+- Knative
+- OpenFaaS
+- AWS Fargate
 
 Serverless architecture is a cloud computing concept where code is managed by the customer and the platform (i.e., supporting hardware and software) or server is managed by the cloud service provider (CSP). There is always a physical server running the code, but this execution model allows the software designer/architect/programmer/developer to focus on the logic of their code and not have to be concerned about the parameters or limitations of a specific server. This is also known as function as a service (FaaS).
 
 Applications developed on serverless architecture are similar to microservices, and each function is crafted to operate independently and autonomously. This allows each function to be independently scaled by the CSP (Cloud Service Provider). This is distinct from platform as a service (PaaS), where an entire execution environment or platform is spun up to host an application, and it is always running, consuming resources, racking up costs, even when it is not actively being used. With serverless architecture or FaaS, the functions run only when called and then terminate when their operations are completed, thus minimizing costs.
 
-## Mobile Devices
+| 特性       | 容器化                     | 无服务器（FaaS）             |
+| ---------- | -------------------------- | ---------------------------- |
+| 启动时间   | 秒级                       | 毫秒级（冷启动可能慢）       |
+| 生命周期   | 通常较长                   | 极短，按次执行               |
+| 管理复杂度 | 中（需管理容器与平台）     | 低（完全托管）               |
+| 状态性     | 可有状态                   | 无状态                       |
+| 使用场景   | 微服务、后台任务、数据处理 | 事件响应、轻量服务、API 函数 |
+
+## Mobile Devices - 移动设备
+
+**PMD / POD / PED / PMD**：都表示个人所有的移动电子设备。
+
+设备可能携带敏感数据、照片、公司文档，是**安全隐患**的载体。
+
+#### 核心安全机制概览
+
+| 安全功能             | 简述                                        |
+| -------------------- | ------------------------------------------- |
+| **MDM / UEM / MAM**  | 管理移动设备、应用和内容的控制平台          |
+| **认证机制**         | PIN、密码、生物识别、NFC、USB key           |
+| **全盘加密（FDE）**  | 屏幕锁定后，端口禁用，保障数据安全          |
+| **远程抹除**         | 设备遗失/被盗后的紧急数据清除机制           |
+| **设备锁定与屏幕锁** | 多次失败登录后的延迟或自动抹除策略          |
+| **位置服务控制**     | GPS、WiFi、基站、蓝牙辅助定位，涉及隐私风险 |
+| **应用控制/白名单**  | 限制可安装/运行的 App，防止恶意程序         |
+| **推送通知**         | 可成为社工、恶意链接传播渠道                |
 
 A device owned by an individual can be referenced using any of these terms: portable device, mobile device, personal mobile device (PMD), personal electronic device or portable electronic device (PED), and personally owned device (POD).
 
@@ -1998,6 +2282,10 @@ Two of the most widely used device OSs are Android and iOS.
 
 #### Android
 
+- 开源，允许第三方应用和系统替代（如 LineageOS）
+- 可通过 APK sideload 安装应用
+- 安全增强版：**SEAndroid**（引入 MAC, sandbox）
+
 Android is a mobile device OS based on Linux, which was acquired by Google in 2005.
 
 In 2008, the first devices hosting Android were made available to the public. The Android source code is made open source through the Apache license, but most devices also include proprietary software. Although it’s mostly intended for use on phones and tablets, Android is being used on a wide range of devices, including televisions, game consoles, digital cameras, microwaves, watches, e-readers, cordless phones, and ski goggles.
@@ -2012,9 +2300,59 @@ Security-Enhanced Android (SEAndroid) is a security improvement for Android. SEA
 
 #### iOS
 
+- Apple 闭源系统，仅支持官方 App Store
+- 系统本身稳定、安全性高
+- **越狱（Jailbreaking）** 会破坏默认安全模型
+
 iOS is the mobile device OS from Apple that is standard on the iPhone, iPad, and Apple TV. iOS isn’t licensed for use on any non-Apple hardware. Thus, Apple is in full control of the features and capabilities of iOS. However, iOS is not really an example of a static environment, because users can install any of over two million apps from the Apple App Store (although it can be argued that iOS is a static OS.)
 
 ### 1. Mobile Device Security Features
+
+#### 高风险操作与控制建议
+
+| 风险行为             | 建议与应对                                 |
+| -------------------- | ------------------------------------------ |
+| **Root / Jailbreak** | 禁止接入企业资源；操作系统权限过高，风险大 |
+| **Sideloading**      | 限制安装未知来源 App，开启应用签名校验     |
+| **Custom Firmware**  | 不允许未经审查的系统镜像，可能含后门       |
+| **第三方 App Store** | 禁用，防止恶意程序通过绕过官方审核入侵     |
+| **启用 OTG 外设**    | 如果非必要，应由 MDM 控制禁止 USB 接口使用 |
+
+#### 位置与数据暴露风险控制
+
+| 功能                  | 安全建议                                   |
+| --------------------- | ------------------------------------------ |
+| **GPS / Geolocation** | 控制权限、禁用敏感场景中定位               |
+| **Geotagging**        | 禁用照片/视频的位置信息写入                |
+| **Geofencing**        | 配置为自动开启/禁用功能（如摄像头、Wi-Fi） |
+| **WiPS / 蓝牙定位**   | 可辅助室内定位，注意权限边界与隐私披露     |
+
+#### 存储与连接安全
+
+| 组件       | 风险点             | 控制方式                   |
+| ---------- | ------------------ | -------------------------- |
+| 可移动存储 | 数据拷贝与恶意注入 | 禁用或强加密               |
+| USB OTG    | 可连接 U 盘等设备  | MDM 限制、控制启用         |
+| 无线连接   | 蓝牙/Wi-Fi 劫持    | 配置安全认证与自动关闭策略 |
+
+#### 文本与消息通信风险
+
+| 类型            | 风险                       | 建议                                     |
+| --------------- | -------------------------- | ---------------------------------------- |
+| SMS / MMS / RCS | Smishing（短信钓鱼）、窃听 | 尽量使用加密通讯工具（Signal、WhatsApp） |
+| 非运营商 IM     | 例如 Slack、微信、Teams    | 限制访问敏感信息、保持更新               |
+| 推送通知        | 可嵌入恶意链接             | 谨慎启用，浏览器需防范 push locker 攻击  |
+
+#### 辅助机制
+
+- **Asset Tracking**：追踪设备、应用、数据使用状态
+- **Inventory Control**：用于货品管理，结合扫码/RFID/NFC
+- **Key Management**：需关注 RNG 质量与本地安全存储
+- **Credential Management**：使用密码保险箱 + 主密码或 MFA
+
+#### 总结
+
+移动设备作为便捷的生产力工具，必须通过 **全面的技术措施（加密、认证、管理平台）+ 安全策略（行为控制、设备注册）** 来确保它们在企业/个人环境中的**可控性、安全性与可用性**。
 
 #### 1. Mobile Device Management
 
@@ -2190,11 +2528,22 @@ Short Message Service (SMS), Multimedia Messaging Service (MMS), and Rich Commun
 
 Many non-telco/non-carrier texting and messaging services are supported via apps on mobile devices. These include Google Hangouts, Android Messenger, Facebook Messenger, WeChat, Apple/iPhone iMessages, WhatsApp, Slack, Discord, and Microsoft Teams. It is important to keep any messaging service app updated and restrict its use to nonsensitive content.
 
-### 2. Mobile Device Deployment Policies
+### 2. Mobile Device Deployment Policies - 移动设备部署策略
 
 A number of deployment models are available for allowing and/or providing mobile devices for employees to use while at work and to perform work tasks when away from the office. A mobile device deployment policy must address the wide range of security concerns regarding the use of a PED in relation to the organization’s IT infrastructure and business tasks.
 
 Users need to understand the benefits, restrictions, and consequences of using mobile devices at work and for work. Reading and signing off on the BYOD, COPE, CYOD, COMS/COBO, etc., policy along with attending an overview or training program may be sufficient to accomplish reasonable awareness. These topics are covered in the next sections
+
+#### 主要部署模型对比
+
+| 模型名称        | 全称                                | 所属设备             | 控制权                   | 安全性评估                   | 用户体验                 |
+| --------------- | ----------------------------------- | -------------------- | ------------------------ | ---------------------------- | ------------------------ |
+| **BYOD**        | Bring Your Own Device               | 用户个人设备         | 用户主控，企业有限控制   | ❌ 最弱，风险高               | ✅ 体验最好               |
+| **COPE**        | Corporate-Owned, Personally Enabled | 企业提供             | 企业主控，用户可私人使用 | ✅ 可控性强，但混合数据有隐患 | 较好                     |
+| **CYOD**        | Choose Your Own Device              | 用户选购（或企业购） | 共享控制                 | ⚠️ 安全复杂，管理棘手         | 中等                     |
+| **COBO / COMS** | Corporate-Owned, Business-Only      | 企业专用设备         | 企业完全控制             | ✅✅ 最安全                    | ❌ 用户体验最差（需双机） |
+
+**记忆提示**：BYOD 是自由但危险；COBO 是严格但安全；COPE 和 CYOD 是中间方案。
 
 #### 1.Bring Your Own Device (BYOD)
 
@@ -2222,61 +2571,135 @@ A corporate-owned mobile strategy (COMS) or corporate-owned, business-only (COBO
 
 This is the best option for both the organization as well as the individual worker. The option maintains clear separation between work activities and personal activities, since the device is for work use exclusively. This option protects company resources from personal activity risks, and it protects personal data from unauthorized or unethical organizational access. Yes, it is a hassle to carry a second device for personal activities, but that inconvenience is well worth the security benefits for both parties.
 
-#### Mobile Device Deployment Policy Details
+#### Mobile Device Deployment Policy Details - 关键政策模块解析
 
 No matter which mobile device deployment policy you select and implement, your policy needs to address the many device security features listed earlier in this section. You can ensure this by defining required features and how they are to be configured for company security policy compliance. The mobile device deployment policy must also address several other concerns that are operational, legal, and logistic based as well. 
 
-##### 1. Data Ownership
+##### 1.**数据所有权（Data Ownership）**
+
+- 明确：企业数据 vs 个人数据
+- 支持数据隔离技术：如 **MDM 分区、容器、分区备份**
+- 建议：备份机制要覆盖两类数据（避免 remote wipe 导致彻底丢失）
 
 When a personal device is used for business tasks, commingling of personal data and business data is likely to occur. Some devices can support storage segmentation, but not all devices can provide data-type isolation. Establishing data ownership can be complicated. For example, if a device is lost or stolen, the company may wish to trigger a remote wipe, clearing the device of all valuable information. However, the employee will often be resistant to this, especially if there is any hope that the device will be found or returned. A wipe may remove all business and personal data, which may be a significant loss to the individualespecially if the device is recovered, because then the wipe would seem to have been an overreaction. Clear policies about data ownership should be established. Some MDM/UEM solutions can provide data isolation/segmentation and support business data sanitization without affecting personal data.
 
 The mobile device deployment policy regarding data ownership should address backups for mobile devices. Business data and personal data should be protected by a backup solution—either a single solution for all data on the device or separate solutions for each type or class of data. Backups reduce the risk of data loss in the event of a remote-wipe event as well as device failure or damage.
 
-##### 2. Support Ownership
+##### 2. **技术支持责任（Support Ownership）**
+
+- 明确：由谁提供维护、换机、技术支持
+- BYOD 模式下支持责任在用户端，COBO 模式下则为企业负责
 
 When an employee’s mobile device experiences a failure, a fault, or damage, who is responsible for the device’s repair, replacement, or technical support? The mobile device deployment policy should define what support will be provided by the company and what support is left to the individual and, if relevant, their service provider.
 
-##### 3. Patch and Update Management
+##### 3. **补丁与更新管理**（Patch and Update Management）
+
+- 管理操作系统和应用更新：
+  - 自动 vs 人工审核 vs 企业推送
+
+- 管理方式：OTA / Wi-Fi / 管理控制台
+- 注意不同设备的版本兼容问题（如 Android 碎片化）
 
 The mobile device deployment policy should define the means and mechanisms of secure patch management and update management for a personally owned mobile device. Is the user responsible for installing updates? Should the user install all available updates? Should the organization test updates prior to on-device installation? Are updates to be handled over the air (via service provider) or over Wi-Fi? Are there versions of the mobile OS that cannot be used? What patch or update level is required? These issues should be addressed both for the primary OS of the device and for all apps installed on the device.
 
-##### 4. Security Product Management
+##### 4. **安全软件与工具安装**（Security Product Management）
+
+- 强制部署：防病毒、防间谍、防火墙、HIDS
+- 明确推荐工具 + 配置要求
+- 可由 MDM/UEM 统一部署策略
 
 The mobile device deployment policy should dictate whether antivirus, antimalware, antispyware scanners, firewalls, HIDS, or other security tools are to be installed on mobile devices. The policy should indicate which products/apps are recommended for use, as well as the settings for those solutions.
 
-##### 5. Forensics
+##### 5. **数字取证支持**（Forensics）
+
+- 员工必须知晓：
+  - 涉案设备可能被调查/收缴
+  - 数据提取过程可能破坏私有数据
+- 企业设备可预设后门访问（主密码、远程管理）
 
 The mobile device deployment policy should address forensics and investigations related to mobile devices. Users need to be aware that in the event of a security violation or a criminal activity, their devices might be involved. An investigation would mandate gathering evidence from those devices. Some processes of evidence gathering can be destructive, and some legal investigations require the confiscation of devices. An owner of a personal device may refuse access to the contents of their device, even when that content is, in theory, the property of the organization. A company-owned device could have a secondary account, a master password, or remote management tool preinstalled that would grant the organization the ability to access the device’s contents without the user’s consent.
 
-##### 6. Privacy
+##### 6. **隐私声明**（Privacy）
+
+- BYOD/CYOD 模式中用户隐私受限
+
+- 企业监控范围应明确：
+  - GPS、App 使用、流量、日志
+
+- 明确：是否允许下班后监控、追踪
 
 The mobile device deployment policy should address privacy and monitoring. When a personal device is used for business tasks, the user often loses some or all of the privacy they enjoyed prior to using their mobile device at work. Workers may need to agree to be tracked and monitored on their mobile device, even when not on company property and outside work hours. A personal device in use under BYOD or CYOD should be considered by the individual to be quasi-company property.
 
 A primary way for a worker to protect their privacy in regard to a mobile device is to not use a single device for both work and personal activities.
 
-##### 7. Onboarding/Offboarding
+#### 操作策略
+
+##### 7. **设备启用与退役**（Onboarding/Offboarding）
+
+**启用**时：
+
+- 强制安装安全软件、配置文件
+- 签署使用协议
+
+**退役**时：
+
+- 企业数据彻底删除
+- 是否擦除全部数据需提前告知用户
 
 The mobile device deployment policy should address personal mobile device onboarding and offboarding procedures. Mobile device onboarding includes installing security, management, and productivity apps along with implementing secure and productive configuration settings. These configuration enforcement processes can be implemented by an MDM/UEM solution. Mobile device offboarding includes a formal wipe of the business data along with the removal of any business-specific applications. In some cases, a full device wipe and factory reset may be prescribed. Either of these processes can result in the loss of or modification of personal data. You should make your users aware of those risks before subjecting their devices to an onboarding/offboarding process.
 
-##### 8. Adherence to Corporate Policies
+##### 8. **企业政策一致性（Policy Adherence）**
+
+- 明确：
+  - 使用个人设备不代表免责
+  - 所有设备必须遵守组织的使用条款
 
 A mobile device deployment policy should clearly indicate that using a personal mobile device for business activities doesn’t exclude a worker from adhering to corporate policies. A worker should treat mobile device equipment as company property and thus stay in compliance with all restrictions, even when off premises and during off hours.
 
-##### 9. User Acceptance
+##### 9. **用户知情与同意（User Acceptance）**
+
+- 用户需签署使用协议
+
+- 企业必须说明所有追踪、安全控制与可能影响
 
 A mobile device deployment policy must be clear and specific about all the elements of using a personal device at work. For many users, the restrictions, security settings, and MDM/ UEM tracking implemented under company policy will be much more onerous than they expect. Thus, you should make the effort to fully explain the details of a mobile device deployment policy before allowing a personal device into your production environment. Only after an employee has expressed consent and acceptance, typically through a signature, should their device be onboarded.
 
-Architecture/Infrastructure Considerations
+#### Architecture/Infrastructure Considerations - 基础设施影响
+
+**设备数量激增**：更多 IP、无线覆盖需求
+
+**带宽压力**：Wi-Fi 频道拥挤
+
+**监控资源增加**：更多流量需被 IDS/IPS 分析
+
+**隔离控制**：VLAN、NAC、QoS 调度等成为必要配套
 
 When implementing mobile device deployment policies, organizations should evaluate their network and security design, architecture, and infrastructure. If every worker brings in a personal device, the number of endpoint devices on the network may double. This requires planning to handle IP assignments, communications isolation, data-priority management, and increased intrusion detection system (IDS)/intrusion prevention system (IPS) monitoring load, as well as increased bandwidth consumption, both internally and across any internet link. Most mobile devices are wireless enabled, so this will likely require a more robust wireless network and dealing with Wi-Fi congestion and interference. Your mobile device deployment policy must be considered in light of the additional infrastructure costs it will trigger.
 
-##### 10. Legal Concerns
+##### 10. 法律与合规风险 （Legal Concerns）
+
+企业律师应评估：
+
+- 数据外泄责任归属
+- BYOD 模式下的法律证据合规性
+
+风险与员工满意度之间需权衡
 
 Company attorneys should evaluate the legal concerns of mobile devices. Using personal devices in the execution of business tasks probably means an increased burden of liability and risk of data leakage. Mobile devices may make employees happy, but it might not be a worthwhile or cost-effective endeavor for your organization if it increases risk and legal liability significantly.
 
 ##### 11. Acceptable Use Policy
 
 The mobile device deployment policy should either reference the company acceptable use policy (AUP) or include a mobile device–specific version focusing on unique issues. The use of personal mobile devices at work is accompanied by an increased risk of information disclosure, distraction, and access to inappropriate content. Workers should remain mindful that the primary goal when at work is to accomplish productivity tasks.
+
+#### 特殊功能管控要点
+
+| 功能                                     | 风险               | 建议                             |
+| ---------------------------------------- | ------------------ | -------------------------------- |
+| **摄像头 / 麦克风** Onboard Camera/Video | 物理信息泄露       | MDM + 地理围栏关闭（如进会议室） |
+| **Wi-Fi Direct**                         | 明文传输风险       | 仅在支持 WPA2/3 情况下使用       |
+| **热点 / Tethering**                     | 绕过公司网络审计   | 严格禁用                         |
+| **NFC / Contactless Pay**                | 可被克隆滥用       | 强制认证才能交易                 |
+| **SIM Cloning**                          | 电话欺诈、身份盗用 | 实施运营商层安全设置，如 PIN 锁  |
 
 ##### 12. Onboard Camera/Video
 
@@ -2312,7 +2735,16 @@ Your organization is unlikely to see any additional risk based on mobile payment
 
 Subscriber identity module (SIM) cards are used to associate a device with a subscriber’s identity and service at a mobile or wireless telco. SIMs can be easily swapped between devices and cloned to abuse a victim’s telco services. If a SIM card is cloned, then the cloned SIMs may be able to connect other devices to the telecommunications services and link the use back to the account of the original owner. Physical control must be maintained on mobile devices and an account or service lock established on mobile services with the telco carrier.
 
-## Essential Security Protection Mechanisms
+#### CISSP 备考重点
+
+- 熟记四种部署模型特性及适用场景
+- 掌握设备安全策略中的各项细节（更新、权限、数据管理）
+- 理解企业安全策略与用户隐私的平衡
+- 熟悉法律、合规、取证等实际应用问题
+
+## Essential Security Protection Mechanisms - 基本安全保护机制
+
+**构建可信计算系统必须从操作系统内核开始保障安全，通过硬件、软件、策略协同完成“最小权限 + 完全隔离”的安全模型**。
 
 All third-party software is written by someone other than the OS creator, that software might cause problems. Thus, treating all non-OS software as potentially damaging allows the OS to prevent many disastrous occurrences through the use of software management protection mechanisms.
 
@@ -2320,7 +2752,26 @@ The OS must employ protection mechanisms to keep the computing environment stabl
 
 Computer system designers should adhere to a number of common protection mechanisms when designing secure systems. These principles are specific instances of the more general security rules that govern safe computing practices. Designing security into a system during the earliest stages of development will help ensure that the overall security architecture has the best chance for success and reliability.
 
-### 1. Process Isolation
+### 1. Process Isolation（进程隔离）
+
+进程隔离是指**操作系统分配给每个进程独立的内存地址空间**，确保它不能访问其他进程的数据或指令。
+
+✅ 安全收益
+
+- 防止**未授权访问**数据（如进程间窃取密码）
+- 防止**破坏性写入**（如内存溢出攻击）
+- 实现最小权限 & 稳定性提升
+
+🧠 实际例子
+
+- Windows / Linux 的**用户空间 vs 内核空间**
+- 各浏览器标签页运行在**独立进程**
+- Java 虚拟机运行多个线程的隔离逻辑
+- 云平台中运行的容器或 VM：每个租户在**沙箱环境中运行**
+
+💡 面试记忆口诀：
+
+> “一进程，一小世界，互不打扰，安全有道。”
 
 Process isolation requires that the OS provide separate memory spaces for each process’s instructions and data. It also requires that the OS enforce those boundaries, preventing one process from reading or writing data that belongs to another process. There are two major advantages to using this technique:
 
@@ -2331,23 +2782,106 @@ Without such controls, a poorly designed process could go haywire and write data
 
 Many modern OSs address the need for process isolation by implementing virtual machines on a per-user or per-process basis. A virtual machine presents a user or process with a processing environment—including memory, address space, and other key system resources and services—that allows that user or process to behave as though they have sole, exclusive access to the entire computer. This allows each user or process to operate independently without requiring it to take cognizance of other users or processes that might be active simultaneously on the same machine. As part of the mediated access to the system that the OS provides, it maps virtual resources and access in user mode so that they use supervisory mode calls to access corresponding real resources. This not only makes things easier for programmers, but also protects individual users and processes from one another.
 
-### 2. Hardware Segmentation
+### 2. Hardware Segmentation（硬件分段）
+
+硬件分段是通过**物理级别的访问控制**实现不同等级资源的隔离，超越了纯软件方法。
+
+✅ 安全收益
+
+- 防止高安全级别的信息被低级访问
+- 比如：CPU 提供不同等级的访问权限环（如 Ring 0, Ring 3）
+
+🧠 应用场景
+
+- **军事级系统（Multilevel Secure Systems）**：如军方内网，系统物理划分处理不同密级数据
+- Intel 的 **VT-d**：可用硬件强制阻止 DMA 攻击
+- ARM TrustZone：将 SoC 分成“安全世界”与“非安全世界”
+
+💡 与进程隔离对比
+
+| 特性     | Process Isolation | Hardware Segmentation |
+| -------- | ----------------- | --------------------- |
+| 类型     | 软件机制          | 硬件机制              |
+| 成本     | 低                | 高                    |
+| 灵活性   | 高                | 低                    |
+| 应用范围 | 广泛              | 高安全等级特定场景    |
 
 Hardware segmentation is similar to process isolation in purpose—it prevents access to information that belongs to a different process/security level. The main difference is that hardware segmentation enforces these requirements through the use of physical hardware controls rather than the logical process isolation controls imposed by an OS. Such implementations are rare, and they are generally restricted to national security implementations, where the extra cost and complexity is offset by the sensitivity of the information involved and the risks inherent in unauthorized access or disclosure.
 
-### 3. System Security Policy
+### 3. System Security Policy（系统安全策略）
+
+这是一份**以系统为单位定义的详细安全规范文档**，它指导系统从设计、开发、测试、上线到退役的安全管理。
+
+🔐 特别强调：**贯穿全生命周期**（SDLC 的安全设计）
+
+✍️ 内容包括：
+
+- 信息分类和标记
+- 权限控制策略（RBAC、MAC、DAC）
+- 信息流控制（特别是多级安全）
+- 审计与日志策略
+- 系统间的信任边界定义
+
+🧠 CISSP 考点例子
+
+- 系统开发者应根据此策略决定：是否允许“从高密级流向低密级”
+- 参考模型如：**Bell-LaPadula**（保密性导向）和 **Biba**（完整性导向）
+
+💡 考试陷阱提醒
+
+> “系统安全策略≠组织级信息安全政策”。前者是**技术性细则文档**，后者是**战略性制度纲领**。
+
+##### 总结对照表：三大机制功能差异
+
+| 机制                   | 类型       | 控制级别    | 实现方式             | 典型用途         |
+| ---------------------- | ---------- | ----------- | -------------------- | ---------------- |
+| Process Isolation      | 软件层     | 每个进程    | OS 提供虚拟地址空间  | 桌面/服务器/容器 |
+| Hardware Segmentation  | 硬件层     | 进程/安全域 | CPU/MMU 提供访问权限 | 军用、嵌入式系统 |
+| System Security Policy | 文档规范层 | 全系统      | 策略和指导原则       | SDLC、合规、认证 |
 
 Just as security policy guides the day-to-day security operations, processes, and procedures in organizations, they have an important role to play when designing and implementing systems. This is equally true whether a system is entirely hardware based, entirely software based, or a combination of both. In this case, the role of a system security policy is to inform and guide the design, development, implementation, testing, and maintenance of a particular system. Thus, this kind of security policy tightly targets a single implementation effort. (Although it may be adapted from other, similar efforts, it should reflect the target as accurately and completely as possible.)
 
 For system developers, a system security policy is best encountered in the form of a document that defines a set of rules, practices, and procedures that describe how the system should manage, protect, and distribute sensitive information. Security policies that prevent information flow from higher security levels to lower security levels are called multilevel security policies. As a system is developed, the security policy should be designed, built, implemented, and tested as it relates to all applicable system components or elements, including any or all of the following: physical hardware components, firmware, software, and how the organization interacts with and uses the system. The overall point is that security must be considered for the entire life of the project. When security is applied only at the end, it typically fails.
 
-## Common Security Architecture Flaws and Issues
+##### CISSP 考试总结
+
+- **记关键词**：
+  - 进程隔离：虚拟内存，最小权限，内存边界
+  - 硬件分段：物理隔离，Ring模型，敏感系统
+  - 安全策略：设计阶段，信息流控制，多级安全（MLS）
+- **应对场景题**：
+  - 如果场景涉及系统失稳，**Process Isolation** 是首选机制
+  - 如果是政府高敏系统，选择 **Hardware Segmentation**
+  - 如果是 SDLC 阶段问题，应答 **System Security Policy**
+
+## Common Security Architecture Flaws and Issues - 常见安全架构缺陷与问题
 
 No security architecture is totally secure. Every computer system has weaknesses and vulnerabilities. The goal of security models and architectures is to address as many known weaknesses as possible. Due to this fact, corrective actions must be taken to resolve security issues. The following sections present some common security issues that affect computer systems in relation to vulnerabilities of security architectures. You should understand each of the issues and how they can degrade the overall security of your system. Some issues and flaws overlap one another and are used in creative ways to attack systems. Although the following discussion covers the most common flaws, the list is not exhaustive. Attackers are very clever.
 
 Many attacks and exploits are covered elsewhere that are also relevant to this chapter’s content, such as Denial of Service (DoS) (Chapter 17), buffer overflow (Chapter 21), malware (Chapter 21), escalation of privilege (Chapter 21), and maintenance hooks/backdoors (Chapter 21). We covered numerous malicious issues earlier in this chapter, such as emanation eavesdropping, the cold boot attack against memory, phlashing, mobile-code-based client-side attacks, exploitation of local internet caches, and VM escaping. Several additional adversarial threats are included here, such covert channels, design/coding flaws, rootkits, and incremental attacks.
 
-### 1. Covert Channels
+### 1. Covert Channels（隐蔽通道）
+
+隐蔽通道是指**非授权、未监控的通信路径**，可以用来**规避系统安全控制**、秘密传输信息。
+
+🎯 安全模型视角
+
+- 破坏**强制访问控制（MAC）模型**
+- 打破“**安全等级不能向下流动（no write down）**”原则
+- 是 **Multilevel Security (MLS)** 系统的一大挑战
+
+🧠 类型与例子
+
+| 类型                       | 描述                       | 举例                                  |
+| -------------------------- | -------------------------- | ------------------------------------- |
+| **Covert Timing Channel**  | 利用时间差传递信息         | 控制风扇转速、网络利用率变化等        |
+| **Covert Storage Channel** | 利用共享存储区偷偷传输数据 | 使用磁盘坏块、Slack Space、未分配空间 |
+
+🛡️ 防御策略
+
+- 详细审计 & 日志分析
+- 强制访问控制 & 隔离机制
+- 检查非典型通信行为
 
 A covert channel is a method that is used to pass information over a path that is not normally used for communication. Because the path is not normally used for communication, it may not be protected by the system’s normal security controls. Using a covert channel provides a means to violate, bypass, or circumvent a security policy undetected. Covert channels are one of the important examples of vulnerabilities of security architectures.
 
@@ -2374,7 +2908,28 @@ Here are examples of covert storage channels; notice that they all involve placi
 
 Both types of covert channels rely on the use of communication techniques to exchange information with otherwise unauthorized subjects. Because the covert channel is outside the normal data transfer environment, detecting it can be difficult. The best defense is to implement detailed and thorough auditing of all user and application activities and analyze log files for any covert channel activity, which may be anomalous behavior or may elicit known malicious activities via heuristics or pattern matching.
 
-### 2. Attacks Based on Design or Coding Flaws
+### 2. Design or Coding Flaws（设计或编码缺陷）
+
+不安全的系统往往源于**一开始设计阶段就没有考虑安全**，而非开发后补丁不力。
+
+常见缺陷
+
+- **Backdoors / Maintenance Hooks**：调试时期留下的非法访问入口
+- **缓冲区溢出、未检查输入、异常处理缺失**
+- **代码未遵循最小权限原则**
+
+🧪 典型攻击
+
+- SQL Injection
+- Cross-site Scripting (XSS)
+- Privilege Escalation via crashed privileged process
+
+🧰 防御策略
+
+- **SDL（Secure Development Lifecycle）**
+- 代码审查 + 静态/动态分析工具
+- **OWASP Top 10 学习与应用**
+- 定期安全测试、模糊测试（Fuzzing）
 
 Certain attacks may result from poor design techniques, questionable implementation practices and procedures, or poor or inadequate testing. Some attacks may result from deliberate design decisions when special points of entry, built into code to circumvent access controls, login, or other security checks often added to code while under development, are not removed when that code is put into production. For what we hope are obvious reasons, such points of egress are properly called maintenance hooks or backdoors because they avoid security measures by design. Extensive testing and code review are required to uncover such covert means of access, which are easy to remove during final phases of development but can be incredibly difficult to detect during the testing and maintenance phases.
 
@@ -2384,7 +2939,24 @@ Humans will never write completely secure (flawless) code. Any program that does
 
 Perfect security might be impossible, but you can definitely take many strong measures to better secure your code. Source code analysis tools implemented throughout the development cycle will minimize the number of flaws in the production release, and the flaws identified prior to production release will cost much less to mitigate. All programs that are executed directly or indirectly must be fully tested to comply with your security model. Make sure you have the latest version of any software installed, and be aware of any known security vulnerabilities. Because each security model, and each security policy, is different, you must ensure that the software you execute does not exceed the authority you allow. Writing secure code is difficult, but it’s certainly possible. Make sure all programs you use are designed to address security concerns. The concepts of code review and testing are covered in Chapter 15, “Security Assessment and Testing.”
 
-### 3. Rootkits
+### 3. Rootkits（根套件）
+
+Rootkit 是一种**深度嵌入操作系统核心**的恶意软件，用来**隐藏恶意行为并逃避检测**。
+
+🧬 行为特征
+
+- 替换或 Hook 核心模块、驱动、DLL
+- 隐藏文件、端口、进程、服务等
+- 可实现**持续控制与信息窃取**
+
+⚠️ 难点与对抗
+
+- **高隐蔽性**：传统杀毒软件难发现
+- 检测方式：
+  - 文件 Hash 值监测
+  - HIDS / FIM / 内核完整性检查工具（如 Tripwire）
+- **恢复唯一安全方法**：
+  - 全盘清洗 + 重装系统 + 可信备份恢复（Reconstitution）
 
 A rootkit is malware that embeds itself deep within an OS. The term is a derivative of the concept of rooting and a utility kit of hacking tools. Rooting is gaining total or full control over a system.
 
@@ -2396,13 +2968,41 @@ There are often no noticeable symptoms or indicators of compromise related to a 
 
 A means to potentially detect the presence of a rootkit is to notice when system files, such as device drivers and dynamic-link libraries (DLLs), have a file size and/or hash value change. File hash tracking can be performed manually by an administrator or automatically by HIDSs and system monitoring security tools.
 
-### 4. Incremental Attacks
+### 4. Incremental Attacks（渐进式攻击）
+
+此类攻击**慢慢渗透、逐步侵害系统完整性或金钱资产**，不易被察觉。
+
+4.1 Data Diddling（数据篡改）
+
+- 修改关键业务数据的输入/处理/输出，造成微小但有积累性的问题。
+- 常用于内部人员篡改工资、考试成绩、财务数据。
+- 防御手段：
+  - **数据完整性检查（Hash/Checksum）**
+  - **FIM（File Integrity Monitoring）**
+
+4.2 Salami Attack（意大利香肠攻击）
+
+- 从每笔交易中**“切一小片”**资产汇入攻击者账户
+- 虽无真实案例，但高度可能性存在
+- 防御手段：
+  - 最小交易阈值监测
+  - 分离职责（SoD）
+  - 员工行为审计
 
 Some forms of attack occur in slow, gradual increments rather than through obvious or recognizable attempts to compromise system security or integrity. Two such forms of incremental attack are data diddling and the salami attack.
 
 Data diddling occurs when an attacker gains access to a system and makes small, random, or incremental changes to data during storage, processing, input, output, or transaction rather than obviously altering file contents or damaging or deleting entire files. Such changes can be difficult to detect unless files and data are protected by encryption or unless some kind of integrity check (such as a checksum or message digest) is routinely performed and applied each time a file is read or written. Encrypted filesystems, file-level encryption techniques, or some form of file monitoring (which includes integrity checks performed by file integrity monitoring [FIM] tools) usually offer adequate guarantees that no data diddling is under way. Data diddling is often considered an attack performed more often by insiders rather than outsiders (external intruders). It should be obvious that since data diddling is an attack that alters data, it is considered an active attack.
 
 The salami attack is more mythical by all published reports. The name of the attack refers to a systematic whittling at assets in accounts or other records with financial value, where very small amounts are deducted from balances regularly and routinely. Metaphorically, the attack may be explained as stealing a very thin slice from a salami each time it’s put on the slicing machine when it’s being accessed by a paying customer. In reality, though no documented examples of such an attack are available, most security experts concede that salami attacks are possible, especially when organizational insiders could be involved. Only by proper separation of duties and proper control over code can organizations completely prevent or eliminate such an attack. Setting financial transaction monitors to track very small transfers of funds or other items of value should help to detect such activity; regular employee notification of the practice should help to discourage attempts at such attacks.
+
+##### 总结与考试记忆技巧
+
+| 名称               | 类型         | 危害               | 防御手段                       |
+| ------------------ | ------------ | ------------------ | ------------------------------ |
+| Covert Channel     | 非预期通信   | 绕过访问控制       | 日志分析、访问审计、MLS建模    |
+| Design Flaws       | 设计失误     | 植入后门、引发漏洞 | 安全开发生命周期（SDL）、OWASP |
+| Rootkit            | 深度系统控制 | 隐蔽持久控制       | HIDS、FIM、重装系统            |
+| Incremental Attack | 渐进式渗透   | 数据/财产损失      | 数据完整性校验、SoD、阈值监控  |
 
 ## Summary
 
